@@ -1,0 +1,17 @@
+.DS_Store
+canvas-front/node_modules/
+canvas-front/dist/
+canvas-front/npm-debug.log*
+canvas-front/yarn-debug.log*
+canvas-front/yarn-error.log*
+canvas-front/test/unit/coverage
+
+canvas-backend/node_modules/
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
