@@ -7,6 +7,7 @@ canvas-front/yarn-error.log*
 canvas-front/test/unit/coverage
 
 canvas-backend/node_modules/
+canvas-backend/db
 
 # Editor directories and files
 .idea
