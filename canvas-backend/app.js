@@ -5,7 +5,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let stylus = require('stylus');
-const flash = require('connect-flash');
+const configurePassport = require('./auth/passport-jwt-config');
 
 
 let index = require('./routes/index');
@@ -24,13 +24,14 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('express-session')({ secret: 'jennisgriffitz', resave: true, saveUninitialized: true }));
+// app.use(require('express-session')({ secret: 'jennisgriffitz', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
+configurePassport();
+// app.use(passport.session());
+// app.use(flash());
 
 app.use('/', index);
 app.use('/users', users);
