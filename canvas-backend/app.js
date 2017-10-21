@@ -10,6 +10,9 @@ const configurePassport = require('./auth/passport-jwt-config');
 
 let index = require('./routes/index');
 let users = require('./routes/users');
+let profiles = require('./routes/profiles');
+let portfolios = require('./routes/portfolios');
+let photo_offers = require('./routes/photo-offers');
 
 const passport = require('./auth/passport.js');
 
@@ -35,6 +38,9 @@ configurePassport();
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/profiles', profiles);
+app.use('/portfolios', portfolios);
+app.use('/photo-offers', photo_offers);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

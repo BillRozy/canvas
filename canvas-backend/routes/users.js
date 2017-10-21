@@ -6,17 +6,24 @@ const passport = require('../auth/passport.js');
 const User = require('../models').user;
 const omit = require('json-omit');
 const SecureCfg = require('../config/secure-config');
+const authorizedRoles = require('../auth/roles-authorize');
 const Log = require('../logger');
 
 /* GET users listing. */
-router.get('/', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }) , function(req, res) {
-  res.send('respond with a resource');
+router.get('/current', passport.authenticate('jwt', { session: false }),authorizedRoles('ROLE_ADMIN') ,(req, res) => {
+  User.findAll()
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+
 });
 
 router.post('/signin', (req, res) => {
   const {username, password} = req.body;
   Promise.coroutine(function* () {
-    const validate = yield User.sync();
     const user = yield User.findOne({where: {username}});
     if (!user) {
       res.json({success: false, msg: 'Authentication failed'});
@@ -45,5 +52,11 @@ router.post('/signup', (req, res) => {
       Log.error(err);
     });
 });
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
 
 module.exports = router;
