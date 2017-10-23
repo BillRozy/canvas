@@ -28,14 +28,18 @@ router.get('/self', passport.authenticate('jwt', { session: false }) ,(req, res)
 router.post('/signin', (req, res) => {
   const {username, password} = req.body;
   Promise.coroutine(function* () {
-    const user = yield User.findOne({where: {username}});
+    const user = yield User.findOne(
+      {
+        where: {username},
+        include: [ 'role' ],
+      });
     if (!user) {
       res.json({success: false, msg: 'Authentication failed'});
     }
     const isValidPassword = yield user.validPassword(password);
     if (isValidPassword) {
       const token = jwt.encode(omit(user.dataValues, [ 'password' ]), SecureCfg.jwtSecret);
-      res.json({success: true, token});
+      res.json({user, token});
     } else {
       res.json({success: false, msg: 'Authentication failed'});
     }

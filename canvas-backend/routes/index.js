@@ -13,10 +13,10 @@ router.get('/', function(req, res, next) {
 
 router.get('/price-extent', function(req, res, next) {
   Promise.coroutine(function* () {
-    const minVideo = yield models.video_offer.min('price');
-    const maxVideo = yield models.video_offer.max('price');
-    const minPhoto = yield models.photo_offer.min('price');
-    const maxPhoto = yield models.photo_offer.max('price');
+    const minVideo = yield models.videoOffer.min('price');
+    const maxVideo = yield models.videoOffer.max('price');
+    const minPhoto = yield models.photoOffer.min('price');
+    const maxPhoto = yield models.photoOffer.max('price');
     const result = {
       video: {
         min: minVideo || 0,

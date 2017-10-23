@@ -90,5 +90,5 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-@import '~assets/css/startsection.styl'
+// @import '~assets/css/startsection.styl'
 </style>

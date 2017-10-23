@@ -24,12 +24,12 @@ export default {
     }
   },
   mounted () {
-    axios.get('/api/doormanprices')
+    axios.get('/api/price-extent')
       .then(responce => {
-        console.log(responce)
+        this.$log.debug(responce)
       })
       .catch(error => {
-        console.log(error)
+        this.$log.error(error)
       })
   }
 }

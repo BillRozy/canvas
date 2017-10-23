@@ -13,6 +13,7 @@
         input(type="button", @click="login", value="Войти")
 </template>
 <script>
+import Naming from '@/store/naming'
 export default {
   name: '',
   data: () => ({
@@ -22,11 +23,15 @@ export default {
   }),
   methods: {
     login () {
-      this.$http({
-        method: 'post',
-        url: '/users/sign_in',
-        data: {user: { email: this.username, password: this.password, remember_me: true }},
-        rememberMe: true
+      this.$store.dispatch(Naming.Actions.SIGN_IN, {
+        username: this.username,
+        password: this.password
+      })
+      .then(() => {
+        this.$router.push('/');
+      })
+      .catch(() => {
+        this.$router.push('/sign_in');
       })
     }
   }

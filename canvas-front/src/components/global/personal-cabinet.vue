@@ -1,35 +1,38 @@
 <template lang='pug'>
 .personal-cabinet
   .personal-cabinet-wrapper(v-if='isSigned')
-    img.header-avatar(:src='current_user.profile.avatar', onerror="this.style.display='none'")
-    a#name_header_link(:href='current_user.profile.link') {{current_user.profile.name}}
+    img.header-avatar(onerror="this.style.display='none'")
+    a#name_header_link {{username}}
     #profile-block-menu-button(clicked='false', @click='menuOpened = !menuOpened')
-  .personal-cabinet-wrapper(v-else='')
+  .personal-cabinet-wrapper(v-else)
     router-link(to='sign_in') Войти
     router-link(to='sign_up') Регистрация
   #profile-block-menu(v-show='menuOpened')
     div(v-if='isSigned')
-      a(:href='current_user.profile.link') Profile
-      div(v-if='isSigned && current_user.operator')
-        a(:href='current_user.portfolio.link') Portfolio
-      a(:href='current_user.destroy.link') Sign out
+      a Profile
+      div(v-if='isSigned')
+        a Portfolio
+      a Sign out
 </template>
 <script>
 export default {
-  name: '',
   data: () => ({
-    current_user: null,
     menuOpened: false
   }),
   computed: {
+    username(){
+      return this.$store.state.user.username;
+    },
     isSigned () {
-      return this.current_user !== null
+      return this.$store.getters.isSigned;
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
-@import '~assets/css/consts';
+$header-critical-size 768px
+$header-mini-height 60px
+// @import '~assets/css/consts';
 #profile-block-menu-button
   display inline-block
   width 40px
