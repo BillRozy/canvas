@@ -23,14 +23,17 @@ module.exports = (sequelize, DataTypes) => {
     let values = Object.assign({}, this.get());
 
     delete values.password;
+    values.role = values.role.map(function(role) {
+      return role.title;
+    });
     return values;
   };
   User.associate = function(models) {
     User.belongsToMany(models.role, {through: 'user_roles', as: 'role'});
     User.hasMany(models.photo);
-    User.hasMany(models.photo_offer);
+    User.hasMany(models.photoOffer);
     User.hasMany(models.video);
-    User.hasMany(models.video_offer);
+    User.hasMany(models.videoOffer);
     User.hasMany(models.comment);
     User.hasMany(models.rating);
     User.hasOne(models.portfolio);

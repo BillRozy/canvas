@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  let photo_offer = sequelize.define('photo_offer', {
+  let photoOffer = sequelize.define('photoOffer', {
     category: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  photo_offer.associate = function(models) {
-    photo_offer.belongsTo(models.user);
+  photoOffer.associate = function(models) {
+    photoOffer.belongsTo(models.user);
   };
-  return photo_offer;
+  return photoOffer;
 };

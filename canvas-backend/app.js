@@ -13,6 +13,8 @@ let users = require('./routes/users');
 let profiles = require('./routes/profiles');
 let portfolios = require('./routes/portfolios');
 let photo_offers = require('./routes/photo-offers');
+let video_offers = require('./routes/video-offers');
+let comments = require('./routes/comments');
 
 const passport = require('./auth/passport.js');
 
@@ -41,6 +43,8 @@ app.use('/users', users);
 app.use('/profiles', profiles);
 app.use('/portfolios', portfolios);
 app.use('/photo-offers', photo_offers);
+app.use('/video-offers', video_offers);
+app.use('/video-offers', comments);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

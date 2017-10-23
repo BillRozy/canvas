@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  let video_offer = sequelize.define('video_offer', {
+  let videoOffer = sequelize.define('videoOffer', {
     category: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  video_offer.associate = function(models) {
-    video_offer.belongsTo(models.user);
+  videoOffer.associate = function(models) {
+    videoOffer.belongsTo(models.user);
   };
-  return video_offer;
+  return videoOffer;
 };

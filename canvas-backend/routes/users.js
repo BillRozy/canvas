@@ -10,7 +10,7 @@ const authorizedRoles = require('../auth/roles-authorize');
 const Log = require('../logger');
 
 /* GET users listing. */
-router.get('/current', passport.authenticate('jwt', { session: false }),authorizedRoles('ROLE_ADMIN') ,(req, res) => {
+router.get('/', passport.authenticate('jwt', { session: false }),authorizedRoles('ROLE_ADMIN') ,(req, res) => {
   User.findAll()
     .then(users => {
       res.json(users);
@@ -18,7 +18,11 @@ router.get('/current', passport.authenticate('jwt', { session: false }),authoriz
     .catch(err => {
       res.json(err);
     });
+});
 
+/* GET users listing. */
+router.get('/self', passport.authenticate('jwt', { session: false }) ,(req, res) => {
+  res.json(req.user);
 });
 
 router.post('/signin', (req, res) => {
