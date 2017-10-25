@@ -2,6 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from '@/vue-instance'
 import App from './App'
+/* eslint-disable no-undef */
+require('@/assets/css/startsection.styl');
 
 
 Vue.config.productionTip = false
