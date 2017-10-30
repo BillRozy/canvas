@@ -3,6 +3,7 @@ let router = express.Router();
 const Promise = require('bluebird');
 const jwt = require('jwt-simple');
 const passport = require('../auth/passport.js');
+const models = require('../models');
 const User = require('../models').user;
 const omit = require('json-omit');
 const SecureCfg = require('../config/secure-config');
@@ -84,7 +85,7 @@ router.get('/:id/profile',(req, res) => {
 });
 
 /* POST user's profile. */
-router.post('/:id/profile',(req, res) => {
+router.post('/:id/profile',passport.authenticate('jwt', { session: false }),(req, res) => {
   const id = req.param('id');
   const data = req.body;
   Promise.coroutine(function* () {
@@ -107,15 +108,24 @@ router.get('/:id/portfolio',(req, res) => {
   const id = req.param('id');
   Promise.coroutine(function* () {
     const user = yield User.findById(id);
-    if (!user) {
+    if (!user && !user.isOperator) {
       res.json({success: false, msg: 'Can\'t find user'});
     }
-    const portfolio = yield user.getPortfolio();
+    let portfolio = yield user.getPortfolio({
+      include: [
+        {
+          model: models.rating,
+        },
+        {
+          model: models.comment,
+          include: [ {model: User} ],
+        },
+      ],
+    });
     if (!portfolio) {
-      res.json({success: false, msg: 'Can\'t find portfolio'});
-    } else {
-      res.json(portfolio);
+      portfolio = user.createPortfolio();
     }
+    res.json(portfolio);
   })().catch(err => Log.error(err));
 });
 

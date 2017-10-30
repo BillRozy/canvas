@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+  User.prototype.isOperator = function() {
+    return this.role && this.role.map(role => role.title).includes('ROLE_OPERATOR');
+  };
 
   User.prototype.validPassword = function(password) {
     return SecureHelp.verifyPassword(password, this.password);

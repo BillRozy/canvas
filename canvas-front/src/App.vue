@@ -17,6 +17,7 @@ import Events from '@/components/global/events.vue'
 import Login from '@/components/auth/login.vue'
 import Signup from '@/components/auth/signup.vue'
 import Naming from '@/store/naming.js';
+import axios from 'axios';
 export default {
   components: {
     About, Catalog, Doorman, Events, CanvasHeader, Login, Signup
@@ -38,6 +39,7 @@ export default {
       this.$store.commit(Naming.Mutations.SET_CURRENT_USER, {
         user: json.user
       })
+      axios.defaults.headers.common.Authorization = 'Bearer ' + json.token;
     }
   }
 
@@ -47,7 +49,7 @@ export default {
 <style lang="stylus" scoped>
 p
   font-size 2em
-  
+
   text-align center
 main
   height 100%

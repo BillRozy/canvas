@@ -106,35 +106,6 @@ header
         display flex
         border-bottom 1px darkgray solid
 
-  #profile-block-menu
-    display flex
-    position absolute
-    width 20%
-    right -20%
-    flex-direction column
-    height 150px
-    background rgba(100,100,100,0.98)
-    transition 0.2s
-    z-index 150
-    top $header-mini-height
-
-    &.activated
-      right: 0
-
-    @media screen and (max-width: $header-critical-size)
-      width 40%
-      right -40%
-    a
-      display flex
-      align-content center
-      box-sizing border-box
-      padding-left 10px
-      height 100%
-      min-height 50px
-      align-items center
-      border-bottom 1px darkgray solid
-      color whitesmoke
-
   .menu-button
     float left
     position relative

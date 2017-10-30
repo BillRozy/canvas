@@ -1,8 +1,5 @@
 'use strict';
-const SecureHelp = require('../helpers/security');
 const Log = require('../logger');
-const bcrypt = require('bcrypt');
-const config = require('../config/secure-config');
 const models = require('../models');
 const Promise = require('bluebird');
 
@@ -69,30 +66,9 @@ module.exports = {
           include: [ 'role' ],
         }
       );
-
-      // const user_role1 = yield models.user_roles.create(
-      //   {
-      //     userId: 1,
-      //     roleId: 1,
-      //   },
-      // );
-      // const user_role2 = yield models.user_roles.create(
-      //   {
-      //     userId: 2,
-      //     roleId: 2,
-      //   },
-      // );
-      // const user_role3 = yield models.user_roles.create(
-      //   {
-      //     userId: 3,
-      //     roleId: 3,
-      //   },
-      // );
       const y1 = yield user1.setRole([ roleAdmin, roleOperator, roleUser ]);
       const y2 = yield user2.setRole([ roleOperator, roleUser ]);
       const y3 = yield user3.setRole([ roleUser ]);
-      const usRoles = yield user1.getRole();
-      Log.info(usRoles[0].title);
       // user.addRole(role, { through: { userId: user.id, 'roleId': role.id }});
     })().catch(err => Log.error(err));
 

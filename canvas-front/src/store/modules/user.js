@@ -31,6 +31,7 @@ const actions = {
           commit(Naming.Mutations.SET_CURRENT_USER, {
             user: response.data.user
           })
+          axios.defaults.headers.common.Authorization = 'Bearer ' + response.token;
           resolve()
         })
         .catch(err => {
@@ -62,7 +63,31 @@ const actions = {
           reject(err)
         })
     })
-  }
+  },
+  [Naming.Actions.GET_PORTFOLIO] ({ state, commit }, {userid}) {
+    return new Promise((resolve, reject) => {
+      axios.get(`/api/users/${userid}/portfolio`)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(err => {
+          $log.error(TAG, err)
+          reject(err)
+        })
+    })
+  },
+  [Naming.Actions.POST_COMMENT] ({ state, commit }, comment) {
+    return new Promise((resolve, reject) => {
+      axios.post(`/api/comments`, comment)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(err => {
+          $log.error(TAG, err)
+          reject(err)
+        })
+    })
+  },
 }
 
 const getters = {

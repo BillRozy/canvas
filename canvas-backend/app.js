@@ -46,6 +46,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/profiles', profiles);
 app.use('/portfolios', portfolios);
+app.use('/comments', comments);
 app.use('/photo-offers', photo_offers);
 app.use('/video-offers', video_offers);
 app.use('/video-offers', comments);

@@ -6,6 +6,7 @@ import Events from '@/components/global/events.vue'
 import Login from '@/components/auth/login.vue'
 import Signup from '@/components/auth/signup.vue'
 import Profile from '@/components/global/profile.vue'
+import Portfolio from '@/components/global/portfolio.vue'
 import ErrorPage from '@/components/global/error404.vue'
 
 const routes = [
@@ -16,6 +17,7 @@ const routes = [
   { path: '/sign_in', component: Login },
   { path: '/sign_up', component: Signup },
   { path: '/users/:id/profile', component: Profile },
+  { path: '/users/:id/portfolio', component: Portfolio },
   { path: '/404', component: ErrorPage },
   {
     path: '*',

@@ -20,14 +20,12 @@ router.get('/:id',(req, res) => {
 });
 
 /* POST comment listing. */
-router.post('/portfolio/:id', passport.authenticate('jwt', { session: false }),(req, res) => {
-  const id = req.params.id;
+router.post('/', passport.authenticate('jwt', { session: false }),(req, res) => {
   if (!req.body) {
     res.status(500).json({msg: 'Empty Body'});
   }
   const toAdd = JSON.parse(JSON.stringify(req.body));
   toAdd.userId = req.user.id;
-  toAdd.portfolioId = id;
   comment.create(toAdd)
     .then(c => {
       res.json(c);

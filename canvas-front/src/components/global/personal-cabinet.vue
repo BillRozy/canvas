@@ -9,9 +9,8 @@
     router-link(to='sign_up') Регистрация
   #profile-block-menu(v-show='menuOpened')
     div(v-if='isSigned')
-      router-link(:to='linkToProfile') a Profile
-      div(v-if='isSigned')
-        a Portfolio
+      router-link(:to='linkToProfile') Profile
+      router-link(:to='linkToPortfolio') Портфолио
       a Sign out
 </template>
 <script>
@@ -28,14 +27,15 @@ export default {
     },
     linkToProfile() {
       return `/users/${this.$store.state.user.id}/profile`;
+    },
+    linkToPortfolio() {
+      return `/users/${this.$store.state.user.id}/portfolio`;
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
-$header-critical-size 768px
-$header-mini-height 60px
-// @import '~assets/css/consts';
+@import '~assets/css/consts'
 #profile-block-menu-button
   display inline-block
   width 40px
@@ -73,4 +73,28 @@ $header-mini-height 60px
   width auto
   max-width $header-mini-height
   max-height $header-mini-height
+#profile-block-menu
+  display flex
+  position absolute
+  width 20%
+  right: 0
+  flex-direction column
+  height 150px
+  background rgba(100,100,100,0.98)
+  transition 0.2s
+  z-index 150
+  top $header-mini-height
+
+  @media screen and (max-width: $header-critical-size)
+    width 40%
+  a
+    display flex
+    align-content center
+    box-sizing border-box
+    padding-left 10px
+    height 100%
+    min-height 50px
+    align-items center
+    border-bottom 1px darkgray solid
+    color whitesmoke
 </style>
