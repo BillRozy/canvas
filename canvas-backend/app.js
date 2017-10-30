@@ -5,6 +5,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let stylus = require('stylus');
+const history = require('connect-history-api-fallback');
 const configurePassport = require('./auth/passport-jwt-config');
 
 
@@ -37,6 +38,9 @@ app.use(passport.initialize());
 configurePassport();
 // app.use(passport.session());
 // app.use(flash());
+app.use(history({
+  index: '/',
+}));
 
 app.use('/', index);
 app.use('/users', users);
