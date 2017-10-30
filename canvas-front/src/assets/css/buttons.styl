@@ -1,0 +1,129 @@
+.simple_button
+  display block
+  width 75px
+  height 75px
+  box-sizing border-box
+  border-radius 10px
+  text-align center
+  &:hover
+    cursor pointer
+
+.social-button
+  box-sizing border-box
+  width 50px
+  height 50px
+  &:hover
+    cursor pointer
+    filter drop-shadow(1px 1px 3px black)
+
+#facebook
+  background url("~assets/images/icons/facebook.png") no-repeat 50% 50%
+  background-size cover
+
+#vk
+  background url("~assets/images/icons/vk.png") no-repeat 50% 50%
+  background-size cover
+
+#insta
+  background url("~assets/images/icons/inst.png") no-repeat 50% 50%
+  background-size cover
+
+
+.button_150_50
+  width 150px
+  height 50px
+
+.button_centered
+  margin 5px auto
+
+.delete_button
+  display block
+  width 30px
+  height 30px
+  box-sizing border-box
+  border 1px solid black
+  border-radius 5px
+  background white url('~assets/images/icons/delete_icon.png') no-repeat 50% 50%
+  background-size cover
+
+.photo_position
+  position absolute
+  top 5%
+  left 5%
+
+.inline_button
+  display inline-block
+
+#edit_portfolio_button
+  background transparent url('~assets/images/icons/edit_icon.png') no-repeat 50% 50%
+  background-size 75%
+
+#done_edit_portfolio_button
+  background transparent url('~assets/images/icons/done_icon.png') no-repeat 50% 50%
+  background-size 75%
+
+#goToTopBtn
+  width 50px
+  height 50px
+  display none
+  position fixed
+  bottom 20px
+  right 30px
+  z-index 99
+  border none
+  outline none
+  background url('~assets/images/icons/back_to_top.png') no-repeat 50% 50%
+  background-size cover
+  color white
+  cursor pointer
+  padding 15px
+  border-radius 10px
+  &:hover
+    background-color #555
+
+#skip-button-block
+  display flex
+  justify-content space-around
+  flex-direction column
+  align-items center
+  top calc(50% - 100px)
+  right 0
+  position absolute
+  width 100px
+  height 150px
+  color white
+
+#skip-button
+  width 100px
+  height 100px
+  &:hover
+    cursor pointer
+    filter drop-shadow(1px 1px 3px darkgray)
+
+.swap-section
+  display flex
+  justify-content center
+  align-items center
+  width 100px
+  height 35px
+  background rgba(176,194,210,0.4)
+  border 1px rgba(176,194,210,0.4) solid
+  transition 0.2s
+  font-family 'Bebas'
+  font-weight 400
+  &:hover
+    cursor pointer
+    border 1px black solid
+    .swap-section-button
+      transform rotate(-180deg)
+
+.swap-section-button
+  content ""
+  height 30px
+  width 30px
+  top 0
+  left 0
+  background url("~assets/images/reload.png") no-repeat 50% 50%
+  background-size cover
+  margin-right 10px
+  transition 0.2s

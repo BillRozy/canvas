@@ -3,7 +3,13 @@
 import Vue from '@/vue-instance'
 import App from './App'
 /* eslint-disable no-undef */
+require('@/assets/css/basics.styl')
+require('@/assets/css/buttons.styl')
+require('@/assets/css/custom.styl')
 require('@/assets/css/startsection.styl');
+require('@/assets/css/section-filters.styl')
+require('@/assets/css/nouislider.min.css')
+require('@/assets/css/medias.styl')
 
 
 Vue.config.productionTip = false

@@ -4,7 +4,9 @@ const naming = {
   },
 
   Actions: {
-    SIGN_IN: 'sign in'
+    SIGN_IN: 'sign in',
+    GET_PROFILE: 'get profile',
+    POST_PROFILE: 'post profile',
   }
 }
 

@@ -66,5 +66,58 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/* GET user's profile. */
+router.get('/:id/profile',(req, res) => {
+  const id = req.param('id');
+  Promise.coroutine(function* () {
+    const user = yield User.findById(id);
+    if (!user) {
+      res.json({success: false, msg: 'Can\'t find user'});
+    }
+    const profile = yield user.getProfile();
+    if (!profile) {
+      res.json({success: false, msg: 'Can\'t find profile'});
+    } else {
+      res.json(profile);
+    }
+  })().catch(err => Log.error(err));
+});
+
+/* POST user's profile. */
+router.post('/:id/profile',(req, res) => {
+  const id = req.param('id');
+  const data = req.body;
+  Promise.coroutine(function* () {
+    const user = yield User.findById(id);
+    if (!user) {
+      res.json({success: false, msg: 'Can\'t find user'});
+    }
+    const profile = yield user.getProfile();
+    if (!profile) {
+      res.json({success: false, msg: 'Can\'t find profile'});
+    } else {
+      const rows = yield profile.update(data);
+      res.json({success: true});
+    }
+  })().catch(err => Log.error(err));
+});
+
+/* GET user's portfolio. */
+router.get('/:id/portfolio',(req, res) => {
+  const id = req.param('id');
+  Promise.coroutine(function* () {
+    const user = yield User.findById(id);
+    if (!user) {
+      res.json({success: false, msg: 'Can\'t find user'});
+    }
+    const portfolio = yield user.getPortfolio();
+    if (!portfolio) {
+      res.json({success: false, msg: 'Can\'t find portfolio'});
+    } else {
+      res.json(portfolio);
+    }
+  })().catch(err => Log.error(err));
+});
+
 
 module.exports = router;

@@ -9,7 +9,7 @@
     router-link(to='sign_up') Регистрация
   #profile-block-menu(v-show='menuOpened')
     div(v-if='isSigned')
-      a Profile
+      router-link(:to='linkToProfile') a Profile
       div(v-if='isSigned')
         a Portfolio
       a Sign out
@@ -25,6 +25,9 @@ export default {
     },
     isSigned () {
       return this.$store.getters.isSigned;
+    },
+    linkToProfile() {
+      return `/users/${this.$store.state.user.id}/profile`;
     }
   }
 }

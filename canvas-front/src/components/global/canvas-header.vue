@@ -27,20 +27,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-$header-height 80px
-$footer_height 80px
-$header-mini-height 60px
-$standard-font-size 10px
-$header-critical-size 768px
-$min_width 320px
-$filter_size 70px
-$screen-xsm-min 481px
-$screen-sm-min 735px
-$screen-md-min 959px
-$screen-lg-min 1200px
-$screen-hd-min 1420px
-$size-of-stub 30%
-$size-of-stripe 70%
+@import '~assets/css/consts'
 header
   // position fixed
   background white
