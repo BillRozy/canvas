@@ -15,12 +15,12 @@
 export default {
   data() {
     return {
-      
+
     }
   },
   computed: {
-    user() {return this.comment_data.username},
-    avatarsrc() { return this.comment_data.avatar || ''},
+    user() {return this.comment_data.user.profile.name},
+    avatarsrc() { return this.comment_data.user.profile.avatar || ''},
     text() { return this.comment_data.body},
     date() { return this.comment_data.createdAt},
   },

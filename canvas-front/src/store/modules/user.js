@@ -88,6 +88,30 @@ const actions = {
         })
     })
   },
+  [Naming.Actions.POST_PHOTO_OFFER] ({ state, commit }, offer) {
+    return new Promise((resolve, reject) => {
+      axios.post(`/api/photo-offers`, offer)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(err => {
+          $log.error(TAG, err)
+          reject(err)
+        })
+    })
+  },
+  [Naming.Actions.POST_VIDEO_OFFER] ({ state, commit }, offer) {
+    return new Promise((resolve, reject) => {
+      axios.post(`/api/video-offers`, offer)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(err => {
+          $log.error(TAG, err)
+          reject(err)
+        })
+    })
+  },
 }
 
 const getters = {

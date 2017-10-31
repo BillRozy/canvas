@@ -1,4 +1,5 @@
 'use strict';
+const videoCategories = [ 'Клипы', 'Творческие', 'Свадьбы', 'Праздники', 'Вечеринки', 'Love story', 'Коммерческие', 'Другие', 'Motion Design' ];
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('videoOffers', {
@@ -10,7 +11,8 @@ module.exports = {
       },
       category: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM,
+        values: videoCategories,
       },
       price: {
         type: Sequelize.FLOAT,
@@ -24,6 +26,14 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'users',
+          key: 'id',
+        },
+      },
+      portfolioId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'portfolios',
           key: 'id',
         },
       },

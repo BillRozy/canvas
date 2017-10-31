@@ -49,7 +49,7 @@ app.use('/portfolios', portfolios);
 app.use('/comments', comments);
 app.use('/photo-offers', photo_offers);
 app.use('/video-offers', video_offers);
-app.use('/video-offers', comments);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

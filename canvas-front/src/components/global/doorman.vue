@@ -25,8 +25,8 @@ export default {
   },
   mounted () {
     axios.get('/api/price-extent')
-      .then(responce => {
-        this.$log.debug(responce)
+      .then(response => {
+        this.$log.debug(response)
       })
       .catch(error => {
         this.$log.error(error)

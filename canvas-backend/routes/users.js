@@ -117,15 +117,34 @@ router.get('/:id/portfolio',(req, res) => {
           model: models.rating,
         },
         {
+          model: models.photoOffer,
+        },
+        {
+          model: models.videoOffer,
+        },
+        {
           model: models.comment,
-          include: [ {model: User} ],
+          include: [ {
+            model: User,
+            attributes: {
+              exclude: [ 'password', 'createdAt', 'updatedAt' ],
+            },
+            include: [ {
+              model: models.profile,
+              attributes: [ 'avatar', 'name', 'surname' ],
+            } ],
+          } ],
         },
       ],
     });
     if (!portfolio) {
-      portfolio = user.createPortfolio();
+      portfolio = yield user.createPortfolio();
     }
-    res.json(portfolio);
+    // additions
+    const json = portfolio.get();
+    json.photoCategories = models.photoOffer.rawAttributes.category.values;
+    json.videoCategories = models.videoOffer.rawAttributes.category.values;
+    res.json(json);
   })().catch(err => Log.error(err));
 });
 

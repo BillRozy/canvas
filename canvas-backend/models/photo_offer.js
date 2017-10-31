@@ -1,8 +1,10 @@
 'use strict';
+const photoCategories = [ 'TFP','Fashion','Свадебная','Детская и семейная', 'Праздники', 'Концерты и вечеринки',
+  'Персональная', 'Love Story', 'Коммерческая','Интерьерная','Предметная','Другие' ];
 module.exports = (sequelize, DataTypes) => {
   let photoOffer = sequelize.define('photoOffer', {
     category: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM(photoCategories),
       allowNull: false,
     },
     price: {
@@ -14,9 +16,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    portfolioId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
   photoOffer.associate = function(models) {
     photoOffer.belongsTo(models.user);
+    photoOffer.belongsTo(models.portfolio);
   };
   return photoOffer;
 };

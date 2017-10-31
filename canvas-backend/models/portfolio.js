@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     portfolio.belongsTo(models.user);
     portfolio.hasMany(models.rating);
     portfolio.hasMany(models.comment);
+    portfolio.hasMany(models.photoOffer);
+    portfolio.hasMany(models.videoOffer);
   };
   return portfolio;
 };
