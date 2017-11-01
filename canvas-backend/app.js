@@ -1,3 +1,4 @@
+global.__basedir = __dirname;
 let express = require('express');
 let path = require('path');
 let favicon = require('serve-favicon');
@@ -16,6 +17,7 @@ let portfolios = require('./routes/portfolios');
 let photo_offers = require('./routes/photo-offers');
 let video_offers = require('./routes/video-offers');
 let comments = require('./routes/comments');
+let photos = require('./routes/photos');
 
 const passport = require('./auth/passport.js');
 
@@ -49,6 +51,7 @@ app.use('/portfolios', portfolios);
 app.use('/comments', comments);
 app.use('/photo-offers', photo_offers);
 app.use('/video-offers', video_offers);
+app.use('/photos', photos);
 
 
 // catch 404 and forward to error handler

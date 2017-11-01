@@ -32,15 +32,21 @@ export default {
   },
   router,
   store,
-  mounted() {
+  created() {
     const user = localStorage.getItem('current_user');
     if(user) {
       const json = JSON.parse(user);
       this.$store.commit(Naming.Mutations.SET_CURRENT_USER, {
         user: json.user
       })
+      this.$store.commit(Naming.Mutations.SET_TOKEN, {
+        token: json.token
+      })
       axios.defaults.headers.common.Authorization = 'Bearer ' + json.token;
     }
+  },
+  mounted() {
+
   }
 
 }

@@ -1,6 +1,7 @@
 const naming = {
   Mutations: {
-    SET_CURRENT_USER: 'set current user'
+    SET_CURRENT_USER: 'set current user',
+    SET_TOKEN: 'set token'
   },
 
   Actions: {

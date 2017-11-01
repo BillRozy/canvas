@@ -9,6 +9,7 @@ require('@/assets/css/custom.styl')
 require('@/assets/css/startsection.styl');
 require('@/assets/css/section-filters.styl')
 require('@/assets/css/nouislider.min.css')
+require('@/assets/css/dropzone.min.css')
 require('@/assets/css/medias.styl')
 
 

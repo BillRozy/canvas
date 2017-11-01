@@ -7,6 +7,7 @@ const TAG = 'UserStore'
 const state = {
   id: null,
   username: null,
+  token: null,
   roles: [],
   profile: {},
   ready: false
@@ -19,6 +20,9 @@ const mutations = {
     payload.user.role.forEach(r => {
       state.roles.push(r);
     })
+  },
+  [Naming.Mutations.SET_TOKEN] (state, payload) {
+    state.token = payload.token;
   }
 }
 
@@ -30,6 +34,9 @@ const actions = {
           localStorage.setItem('current_user', JSON.stringify(response.data))
           commit(Naming.Mutations.SET_CURRENT_USER, {
             user: response.data.user
+          }),
+          commit(Naming.Mutations.SET_TOKEN, {
+            token: response.data.token,
           })
           axios.defaults.headers.common.Authorization = 'Bearer ' + response.token;
           resolve()
