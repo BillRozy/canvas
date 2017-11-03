@@ -43,6 +43,9 @@
               div(v-if="signed_in && isOwner")
                  .add-new-item(@click="addNewItem")
             .slider-container
+              .showcase(v-for="photo in photos", v-if="photo.category === offer.category")
+                .image_plugin_container
+                  img(:src="'/api/uploads/' + photo.path")
     .tab_item
       .container
         spoiler(title="Видеосъемка")
@@ -96,6 +99,9 @@ export default {
     },
     comments(){
       return this.portfolio.comments;
+    },
+    photos(){
+      return this.portfolio.user.photos;
     },
     photoOffers(){
       return this.portfolio.photoOffers;

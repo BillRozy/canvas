@@ -10,7 +10,7 @@ Dropzone.autoDiscover = false;
 export default {
   name: "",
   data: () => ({
-    category: 'wedding',
+    category: 'Fashion',
   }),
   computed:{
     token() {
@@ -18,20 +18,21 @@ export default {
     }
   },
   mounted(){
-    this.$log.info(this.token);
     const myDropzone = new Dropzone('.place-for-drop', {
-      url: "/api/photos/" + this.category + "/upload",
-      paramName: "photos",
+      url: "/api/photos/?category=" + this.category,
+      paramName: () => {
+        return 'photos';
+      },
+      maxFilesize: 5, // MB
+      maxFiles: 10,
+      uploadMultiple: true,
+      parallelUploads: 10,
       headers: {"Authorization": 'Bearer ' + this.token},
-      uploadMultiple: true
     });
     this.$el.querySelector(".place-for-drop").classList.add("dropzone");
-    myDropzone.on('success', (file, data) => {
+    myDropzone.on('successmultiple', (file, data) => {
       this.$log.debug(data);
     });
-    myDropzone.on('processingmultiple', (files) => {
-      this.$log.debug(files);
-    })
   }
 }
 </script>

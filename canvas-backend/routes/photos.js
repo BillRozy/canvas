@@ -1,23 +1,28 @@
 let express = require('express');
 let router = express.Router();
+const path = require('path');
 const Promise = require('bluebird');
 const passport = require('../auth/passport.js');
 const models = require('../models');
 const authorizedRoles = require('../auth/roles-authorize');
 const Log = require('../logger');
-const upload = require('../helpers/uploader');
+const uploadPhotos = require('../helpers/uploader').uploadPhotos;
 
-router.post('/:category/upload', passport.authenticate('jwt', { session: false }), authorizedRoles('ROLE_OPERATOR') ,upload.array('photos'),(req, res) => {
+router.post('/', passport.authenticate('jwt', { session: false }),uploadPhotos, authorizedRoles('ROLE_OPERATOR') ,(req, res) => {
   const userId = req.user.id;
-  const category = req.params.category;
+  const category = req.query.category;
+  if (!category) {
+    res.status(400).json({message: 'wrong category'});
+  }
   const resJson = [];
-  Log.info('i GOT: ' + req.files);
+  Log.info('i GOT: ' + req.files.length);
   let files = [];
   for (let i = 0; i < req.files.length; ++i) {
+    const parsed = path.parse(req.files[i].filename);
     const obj = {
       userId,
       category,
-      path: req.files[i].path,
+      path: `${parsed.name}${parsed.ext}`,
     };
     files.push(models.photo.create(obj).then(ph => resJson.push(ph)));
   }

@@ -43,6 +43,7 @@ configurePassport();
 app.use(history({
   index: '/',
 }));
+app.use('/uploads', express.static(path.join(__dirname + '/uploads')));
 
 app.use('/', index);
 app.use('/users', users);

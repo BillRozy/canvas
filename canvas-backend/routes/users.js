@@ -123,6 +123,13 @@ router.get('/:id/portfolio',(req, res) => {
           model: models.videoOffer,
         },
         {
+          model: User,
+          include: [
+            {
+              model: models.photo,
+            } ],
+        },
+        {
           model: models.comment,
           include: [ {
             model: User,

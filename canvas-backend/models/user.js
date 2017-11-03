@@ -26,9 +26,12 @@ module.exports = (sequelize, DataTypes) => {
     let values = Object.assign({}, this.get());
 
     delete values.password;
-    values.role = values.role.map(function(role) {
-      return role.title;
-    });
+    if (values.role) {
+      values.role = values.role.map(function(role) {
+        return role.title;
+      });
+    }
+
     return values;
   };
   User.associate = function(models) {
