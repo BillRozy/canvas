@@ -9,9 +9,9 @@
     router-link(to='sign_up') Регистрация
   #profile-block-menu(v-show='menuOpened')
     div(v-if='isSigned')
-      router-link(:to='linkToProfile') Profile
+      router-link(:to='linkToProfile') Профиль
       router-link(:to='linkToPortfolio') Портфолио
-      a Sign out
+      a Выйти
 </template>
 <script>
 export default {

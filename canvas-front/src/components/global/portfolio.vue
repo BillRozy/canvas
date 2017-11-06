@@ -2,23 +2,23 @@
 .page-wrapper
   .portfolio-main-section
     #switch-buttons-block
-      #photocamera-button.tabs_button.tabs_button_fade.active_tab_button.active_tab_button_fade(clicked='true')
-      #videocamera-button.tabs_button.tabs_button_fade(clicked='false')
-      .simple_button(v-if='isOwner && inEditMode', id='done_edit_portfolio_button')
-      .simple_button(v-if='isOwner && !inEditMode',id='edit_portfolio_button')
+      #photocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='photo'}", @click="setTab('photo')")
+      #videocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='video'}", @click="setTab('video')")
+      .simple_button(v-if='isOwner && inEditMode', id='done_edit_portfolio_button', @click="inEditMode=false")
+      .simple_button(v-if='isOwner && !inEditMode',id='edit_portfolio_button', @click="inEditMode=true")
     #categories_container.tabs_container_fade
-      #photo-categories-block.tab_item_fade.active_tab_fade
+      #photo-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='photo'}")
         .horizontal_flex(v-for="offer in appliedPhotoCategories")
           .photo-category.link-to-category {{offer}}
           .delete_button(v-if="isOwner && inEditMode")
         .horizontal_flex(v-if="isOwner")
-          .link-to-category(@click="addPhotoOffer") Добавить
-      #video-categories-block.tab_item_fade
+          .link-to-category(v-if="isOwner && inEditMode", @click="addPhotoOffer") Добавить
+      #video-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='video'}")
         .horizontal_flex(v-for="offer in appliedVideoCategories")
           .photo-category.link-to-category {{offer}}
           .delete_button(v-if="isOwner && inEditMode")
         .horizontal_flex(v-if="isOwner")
-          .link-to-category(@click="addVideoOffer") Добавить
+          .link-to-category(v-if="isOwner && inEditMode", @click="addVideoOffer") Добавить
     .info_and_avatar_block
       a(href='')
         img.avatar-photo(src='avatar')
@@ -33,28 +33,26 @@
     #show-info-author-button(clicked='false') Personal info
   #onButton-clicked-author-block.moving-block-with-information(style='display: none;')
   .tabs_container
-    .tab_item.active_tab
+    .tab_item(v-if="pageSelector==='photo'")
       .container
         spoiler(title="Фотосъемка")
           .shooting-block(v-for="offer in photoOffers")
             .shooting-description-block
               div {{offer.category}}
               div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-              div(v-if="signed_in && isOwner")
-                 .add-new-item(@click="addNewItem")
+              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
             .slider-container
               .showcase(v-for="photo in photos", v-if="photo.category === offer.category")
                 .image_plugin_container
                   img(:src="'/api/uploads/' + photo.path")
-    .tab_item
+    .tab_item(v-if="pageSelector==='video'")
       .container
         spoiler(title="Видеосъемка")
           .videography-block(v-for="offer in videoOffers")
             .videography-description-block
               div {{offer.category}}
               div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-              div(v-if="signed_in && isOwner")
-                 .add-new-item(@click="addNewItem")
+              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
             .slider-container
   #comments.container
     spoiler(title="Комментарии")
@@ -62,6 +60,7 @@
       new-comment(:portfolio_id="portfolio.id", :user="$store.state.user.username", :avatarsrc="$store.state.user.profile.avatar")
 </template>
 <script>
+/* eslint-disable no-unused-vars */
 import Naming from '@/store/naming';
 import Spoiler from '@/components/global/spoiler.vue'
 import Comment from '@/components/global/comment.vue'
@@ -75,11 +74,14 @@ const videoCategories = [
    'Клипы', 'Творческие', 'Свадьбы', 'Праздники', 'Вечеринки',
    'Love story', 'Коммерческие', 'Другие', 'Motion Design'
 ];
+const PHOTO_PAGE = 'photo';
+const VIDEO_PAGE = 'video';
 export default {
   name: "",
   data: () => ({
     portfolio: {},
     inEditMode: false,
+    pageSelector: PHOTO_PAGE,
   }),
   components: {
     Comment, Spoiler, NewComment
@@ -137,6 +139,7 @@ export default {
     },
   },
   created() {
+    this.pageSelector = [VIDEO_PAGE, PHOTO_PAGE].includes(this.$route.query.tab ) ? this.$route.query.tab : PHOTO_PAGE;
     this.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userid: this.$route.params.id})
     .then(portfolio => {
       this.portfolio = portfolio;
@@ -164,6 +167,10 @@ export default {
     },
     addNewItem(){
 
+    },
+    setTab(tab){
+      this.pageSelector = tab;
+      this.$router.push(this.$route.path + `?tab=${tab}`)
     }
   },
   mounted(){}
@@ -512,6 +519,13 @@ export default {
   height 100%
   margin-right 5px
 
+.add-new-item
+  display block
+  width calc(100% - 40px)
+  height 100%
+  background url("~assets/images/icons/add_icon.png") no-repeat 50% 50%
+  background-size 50%
+
 .img-in-gallery
   display block
   height 100%
@@ -554,18 +568,18 @@ export default {
 .track a.next:active
   background-position -64px -198px
 
-.spoiler-title
-  background-color lightyellow
-  height 75px
-  line-height 75px
+.tab_item_fade
+  opacity 0.5
+  pointer-events none
 
-.spoiler-title h1
-  margin 0
+.active_tab
+   display block
 
-.spoiler-body
-  display flex
-  flex-direction column
-  justify-content space-around
-  align-content center
-  align-items center
+.active_tab_fade
+  opacity 1
+  pointer-events:auto
+
+.active_tab_button
+  opacity 1 !important
+
 </style>
