@@ -21,6 +21,16 @@ const mutations = {
       state.roles.push(r);
     })
   },
+  [Naming.Mutations.REMOVE_CURRENT_USER] (state) {
+    state.username = null;
+    state.id = null;
+    state.token = null;
+    state.role = null;
+    localStorage.removeItem('current_user');
+  },
+  [Naming.Mutations.SET_CURRENT_USER_PROFILE] (state, payload) {
+    state.profile = payload.profile
+  },
   [Naming.Mutations.SET_TOKEN] (state, payload) {
     state.token = payload.token;
   }

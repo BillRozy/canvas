@@ -127,6 +127,10 @@ router.get('/:id/portfolio',(req, res) => {
           include: [
             {
               model: models.photo,
+            },
+            {
+              model: models.profile,
+              attributes: [ 'avatar', 'name', 'surname' ],
             } ],
         },
         {

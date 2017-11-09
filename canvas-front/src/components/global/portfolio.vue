@@ -90,11 +90,17 @@ export default {
     isOwner() {
       return this.portfolio.userId === this.$store.state.user.id;
     },
+    user() {
+      return this.portfolio.user || {};
+    },
+    profile() {
+      return this.user.profile || {};
+    },
     name(){
-
+      return this.profile.name || '';
     },
     surname(){
-
+      return this.profile.surname || '';
     },
     signed_in(){
       return true;

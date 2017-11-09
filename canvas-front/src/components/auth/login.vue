@@ -28,10 +28,10 @@ export default {
         password: this.password
       })
       .then(() => {
-        this.$router.push('/');
+        location.reload();
       })
-      .catch(() => {
-        this.$router.push('/sign_in');
+      .catch(err => {
+        this.$log.error(err)
       })
     }
   }
@@ -47,6 +47,7 @@ export default {
   height calc(100% - 60px)
 
 .login-form
+  background white
   border 1px solid black
   max-width 400px
   margin 0 auto

@@ -1,7 +1,12 @@
 const naming = {
   Mutations: {
+    REMOVE_CURRENT_USER: 'remove current user',
     SET_CURRENT_USER: 'set current user',
-    SET_TOKEN: 'set token'
+    SET_CURRENT_USER_PROFILE: 'set current user profile',
+    SET_TOKEN: 'set token',
+    SET_MODAL_CONTAINER: 'set Modal Container',
+    SET_MODAL_CONTENT: 'set Modal Content',
+    SET_MODAL_VISIBILITY: 'set Modal Visibility',
   },
 
   Actions: {

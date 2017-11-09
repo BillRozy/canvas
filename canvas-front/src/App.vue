@@ -4,6 +4,7 @@ main#App
   transition
     keep-alive
       router-view
+  popup(v-show='visible', @close='closeModal', ref="modalWindow")
 </template>
 
 <script>
@@ -16,11 +17,12 @@ import Doorman from '@/components/global/doorman.vue'
 import Events from '@/components/global/events.vue'
 import Login from '@/components/auth/login.vue'
 import Signup from '@/components/auth/signup.vue'
+import Popup from '@/components/global/popup';
 import Naming from '@/store/naming.js';
 import axios from 'axios';
 export default {
   components: {
-    About, Catalog, Doorman, Events, CanvasHeader, Login, Signup
+    About, Catalog, Doorman, Events, CanvasHeader, Login, Signup, Popup
   },
   data () {
     return {
@@ -28,10 +30,22 @@ export default {
     }
   },
   computed: {
-
+    visible() {
+      return this.$store.state.popup.visible;
+    },
   },
   router,
   store,
+  methods: {
+    closeModal() {
+      if (this.$store.state.popup.onCloseCallback) {
+        this.$store.state.popup.onCloseCallback();
+      }
+      this.$store.commit(Naming.Mutations.SET_MODAL_VISIBILITY, {
+        visibility: false,
+      });
+    },
+  },
   created() {
     const user = localStorage.getItem('current_user');
     if(user) {
@@ -43,10 +57,20 @@ export default {
         token: json.token
       })
       axios.defaults.headers.common.Authorization = 'Bearer ' + json.token;
+      this.$store.dispatch(Naming.Actions.GET_PROFILE, {
+        userid: json.user.id,
+      }).then(profile => {
+        this.$store.commit(Naming.Mutations.SET_CURRENT_USER_PROFILE, {
+          profile
+        })
+      })
     }
   },
   mounted() {
-
+    const modal = this.$refs.modalWindow;
+    this.$store.commit(Naming.Mutations.SET_MODAL_CONTAINER, {
+      container: modal.getContainer(),
+    });
   }
 
 }

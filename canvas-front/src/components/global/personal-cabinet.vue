@@ -5,15 +5,21 @@
     a#name_header_link {{username}}
     #profile-block-menu-button(clicked='false', @click='menuOpened = !menuOpened')
   .personal-cabinet-wrapper(v-else)
-    router-link(to='sign_in') Войти
+    div(@click="openSignInPopup") Войти
     router-link(to='sign_up') Регистрация
   #profile-block-menu(v-show='menuOpened')
     div(v-if='isSigned')
       router-link(:to='linkToProfile') Профиль
       router-link(:to='linkToPortfolio') Портфолио
-      a Выйти
+      div(@click="signOut") Выйти
 </template>
 <script>
+import Vue from '@/vue-instance';
+import LoginComponent from '@/components/auth/login'
+import Naming from '@/store/naming'
+const LoginConstructor = Vue.component('login', LoginComponent);
+const Login = new LoginConstructor();
+Login.$mount();
 export default {
   data: () => ({
     menuOpened: false
@@ -30,6 +36,16 @@ export default {
     },
     linkToPortfolio() {
       return `/users/${this.$store.state.user.id}/portfolio`;
+    }
+  },
+  methods: {
+    openSignInPopup(){
+      Login.$store = this.$store;
+      this.showPopup(Login.$el)
+    },
+    signOut(){
+      this.$store.commit(Naming.Mutations.REMOVE_CURRENT_USER)
+      location.reload();
     }
   }
 }
