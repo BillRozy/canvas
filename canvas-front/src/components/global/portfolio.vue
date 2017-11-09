@@ -41,10 +41,12 @@
               div {{offer.category}}
               div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
               .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
-            .slider-container
-              .showcase(v-for="photo in photos", v-if="photo.category === offer.category")
-                .image_plugin_container
-                  img(:src="'/api/uploads/' + photo.path")
+            .swiper-container
+              .swiper-wrapper
+                .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
+                  img(:src="'/api/uploads/' + photo.path", @click="openImageInModal")
+              .swiper-button-prev
+              .swiper-button-next
     .tab_item(v-if="pageSelector==='video'")
       .container
         spoiler(title="Видеосъемка")
@@ -65,6 +67,7 @@ import Naming from '@/store/naming';
 import Spoiler from '@/components/global/spoiler.vue'
 import Comment from '@/components/global/comment.vue'
 import NewComment from '@/components/global/new-comment.vue'
+import Swiper from 'swiper';
 const TAG = "Portfolio";
 const photoCategories = [
   'TFP','Fashion','Свадебная','Детская и семейная', 'Праздники', 'Концерты и вечеринки',
@@ -79,6 +82,7 @@ const VIDEO_PAGE = 'video';
 export default {
   name: "",
   data: () => ({
+    loaded: false,
     portfolio: {},
     inEditMode: false,
     pageSelector: PHOTO_PAGE,
@@ -149,12 +153,18 @@ export default {
     this.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userid: this.$route.params.id})
     .then(portfolio => {
       this.portfolio = portfolio;
+      this.loaded = true;
     })
     .catch(err => {
       this.$log.error(TAG, err);
     })
   },
   methods: {
+    openImageInModal(e){
+      const img = document.createElement('img');
+      img.src = e.target.src;
+      this.showPopup(img)
+    },
     addPhotoOffer(){
       this.$store.dispatch(Naming.Actions.POST_PHOTO_OFFER, {
         portfolioId: this.portfolio.id,
@@ -179,7 +189,32 @@ export default {
       this.$router.push(this.$route.path + `?tab=${tab}`)
     }
   },
-  mounted(){}
+
+  mounted(){
+    const stopper = setInterval(()=>{
+      if(this.loaded){
+        const sliders = this.$el.querySelectorAll('.swiper-container');
+        this.$log.info(i)
+        for (var i = 0; i < sliders.length; ++i) {
+          this.$log.info(i)
+          var item = sliders[i];
+          new Swiper ('.swiper-container', {
+            // Navigation arrows
+            slidesPerView: 'auto',
+            grabCursor: true,
+            spaceBetween: 10,
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
+          })
+        }
+        clearInterval(stopper)
+      }
+    },1000)
+
+  }
+
 }
 </script>
 <style lang="stylus" scoped>

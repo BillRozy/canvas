@@ -18,7 +18,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
   .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -53,6 +53,13 @@ export default {
   background-color: transparent;
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-container img{
+  max-height: 100%;
+  max-width:100%;
+  width: auto;
+  height: auto;
 }
 
 .modal-header h3 {
