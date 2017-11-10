@@ -19,6 +19,20 @@ router.get('/:id',(req, res) => {
     });
 });
 
+router.delete('/:id',(req, res) => {
+  const id = req.param('id');
+  photoOffer.findById(id)
+    .then(offer => {
+      return offer.destroy();
+    })
+    .then(() => {
+      res.json({message: 'OK'});
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
 router.get('/',(req, res) => {
   photoOffer.findAll()
     .then(offers => {

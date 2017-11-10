@@ -127,6 +127,9 @@ router.get('/:id/portfolio',(req, res) => {
           include: [
             {
               model: models.photo,
+              order: [
+                [ { model: models.photo }, 'createdAt', 'DESC' ],
+              ],
             },
             {
               model: models.profile,

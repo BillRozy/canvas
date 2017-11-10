@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import mutations from '@/store/mutations'
+import actions from '@/store/actions'
 import user from '@/store/modules/user'
 import catalog from '@/store/modules/catalog'
 import popup from '@/store/modules/modal'
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
   },
   state: {
   },
-  mutations
+  mutations,
+  actions,
 })
 
 export default store

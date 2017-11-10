@@ -20,6 +20,7 @@ const naming = {
     POST_VIDEO_OFFER: 'post video offer',
     POST_PHOTO_OFFER: 'post photo offer',
     GET_PRICE_EXTENT: 'get price extent',
+    DELETE_OFFER: 'delete offer',
   }
 }
 

@@ -10,7 +10,7 @@
       #photo-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='photo'}")
         .horizontal_flex(v-for="offer in appliedPhotoCategories")
           .photo-category.link-to-category {{offer}}
-          .delete_button(v-if="isOwner && inEditMode")
+          .delete_button(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
         .horizontal_flex(v-if="isOwner")
           .link-to-category(v-if="isOwner && inEditMode", @click="addPhotoOffer") Добавить
       #video-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='video'}")
@@ -40,8 +40,8 @@
             .shooting-description-block
               div {{offer.category}}
               div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
-            .swiper-container
+              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem(offer.category)")
+            .swiper-container(:data-category="offer.category")
               .swiper-wrapper
                 .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
                   img(:src="'/api/uploads/' + photo.path", @click="openImageInModal")
@@ -63,10 +63,16 @@
 </template>
 <script>
 /* eslint-disable no-unused-vars */
+import Vue from '@/vue-instance'
+import EventBus from '@/eventbus'
 import Naming from '@/store/naming';
 import Spoiler from '@/components/global/spoiler.vue'
 import Comment from '@/components/global/comment.vue'
 import NewComment from '@/components/global/new-comment.vue'
+import Uploader from '@/components/global/uploader'
+const UploaderConstructor = Vue.component('uploader', Uploader)
+import NewOffer from '@/components/portfolio/add-new-offer'
+const NewOfferConstructor = Vue.component('add-new-offer', NewOffer)
 import Swiper from 'swiper';
 const TAG = "Portfolio";
 const photoCategories = [
@@ -79,6 +85,7 @@ const videoCategories = [
 ];
 const PHOTO_PAGE = 'photo';
 const VIDEO_PAGE = 'video';
+
 export default {
   name: "",
   data: () => ({
@@ -86,6 +93,7 @@ export default {
     portfolio: {},
     inEditMode: false,
     pageSelector: PHOTO_PAGE,
+    swipers: {}
   }),
   components: {
     Comment, Spoiler, NewComment
@@ -165,13 +173,35 @@ export default {
       img.src = e.target.src;
       this.showPopup(img)
     },
-    addPhotoOffer(){
-      this.$store.dispatch(Naming.Actions.POST_PHOTO_OFFER, {
-        portfolioId: this.portfolio.id,
-        category: this.availablePhotoCategories[Math.floor(Math.random() * this.availablePhotoCategories.length)],
-        price: Math.floor(Math.random() * 1000),
-        description: 'test item'
+    deletePhotoOffer(category){
+      const offer = this.photoOffers.find(offer => offer.category === category);
+      this.$store.dispatch(Naming.Actions.DELETE_OFFER, {
+        id: offer.id,
       })
+      .then(() => {
+        this.portfolio.photoOffers = this.photoOffers.filter(of=> of.id != offer.id)
+      })
+      .catch(err => {
+        this.$log.error(err)
+      })
+    },
+    addPhotoOffer(){
+      const form = new NewOfferConstructor({
+        propsData: {
+          mode: 'photo',
+          categories: this.availablePhotoCategories,
+          portfolio_id: this.portfolio.id,
+        }
+      })
+      form.$store = this.$store
+      form.$mount();
+      this.showPopup(form.$el);
+      // this.$store.dispatch(Naming.Actions.POST_PHOTO_OFFER, {
+      //   portfolioId: this.portfolio.id,
+      //   category: this.availablePhotoCategories[Math.floor(Math.random() * this.availablePhotoCategories.length)],
+      //   price: Math.floor(Math.random() * 1000),
+      //   description: 'test item'
+      // })
     },
     addVideoOffer(){
       this.$store.dispatch(Naming.Actions.POST_VIDEO_OFFER, {
@@ -181,7 +211,14 @@ export default {
         description: 'test item'
       })
     },
-    addNewItem(){
+    addNewItem(category){
+      const uploader = new UploaderConstructor();
+      uploader.category = category;
+      uploader.$store = this.$store;
+      uploader.$mount();
+      this.showPopup(uploader.$el);
+    },
+    removePhoto(id){
 
     },
     setTab(tab){
@@ -198,7 +235,7 @@ export default {
         for (var i = 0; i < sliders.length; ++i) {
           this.$log.info(i)
           var item = sliders[i];
-          new Swiper ('.swiper-container', {
+          this.swipers[item.dataset.category] = new Swiper (item, {
             // Navigation arrows
             slidesPerView: 'auto',
             grabCursor: true,
@@ -212,6 +249,20 @@ export default {
         clearInterval(stopper)
       }
     },1000)
+    EventBus.$on(EventBus.Events.PHOTO_UPDATE, ({photos}) => {
+      const affectedCategories = [];
+      photos.forEach(photo => {
+        this.photos.unshift(photo);
+        if(!affectedCategories.includes(photo.category)){
+          affectedCategories.push(photo.category)
+        }
+      })
+      this.$nextTick(done => {
+        affectedCategories.forEach(category => {
+          this.swipers[category].update();
+        })
+      })
+    });
 
   }
 
