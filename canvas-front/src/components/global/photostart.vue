@@ -72,32 +72,45 @@
 import noUiSlider from 'nouislider'
 export default {
   data: () => ({
-    onPriceTab: true
+    onPriceTab: true,
+    slider: null,
   }),
+  computed: {
+    prices(){
+      return this.$store.state.catalog.photo.priceExtent;
+    }
+  },
   methods: {
     showVideo () {
       this.$parent.swapPage()
+    },
+    createSlider(){
+      noUiSlider.create(this.slider, {
+        start: [ this.prices.min, this.prices.max ],
+        step: 1,
+        connect: true,
+        range: {
+          'min': this.prices.min,
+          'max': this.prices.max
+        }
+      })
+      const snapValues = [
+        this.$el.querySelector('.slider-left-value'),
+        this.$el.querySelector('.slider-right-value')
+      ]
+
+      this.slider.noUiSlider.on('update', function (values, handle) {
+        snapValues[handle].value = Math.round(values[handle])
+      })
+    }
+  },
+  watch: {
+    prices() {
+      this.createSlider();
     }
   },
   mounted () {
-    const slider = this.$el.querySelector('.slider')
-    noUiSlider.create(slider, {
-      start: [ 0, 100 ],
-      step: 1,
-      connect: true,
-      range: {
-        'min': 0,
-        'max': 100
-      }
-    })
-    const snapValues = [
-      this.$el.querySelector('.slider-left-value'),
-      this.$el.querySelector('.slider-right-value')
-    ]
-
-    slider.noUiSlider.on('update', function (values, handle) {
-      snapValues[handle].value = Math.round(values[handle])
-    })
+    this.slider = this.$el.querySelector('.slider')
   }
 }
 </script>

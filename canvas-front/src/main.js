@@ -11,6 +11,7 @@ require('@/assets/css/section-filters.styl')
 require('@/assets/css/nouislider.min.css')
 require('@/assets/css/dropzone.min.css')
 require('@/assets/css/swiper.min.css')
+require('@/assets/css/decoration.styl')
 require('@/assets/css/medias.styl')
 
 

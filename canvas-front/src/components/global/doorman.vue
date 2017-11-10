@@ -7,9 +7,9 @@
 
 </template>
 <script>
+import Naming from '@/store/naming'
 import Photostart from '@/components/global/photostart.vue'
 import Videostart from '@/components/global/videostart.vue'
-import axios from 'axios'
 export default {
   name: '',
   data: () => ({
@@ -24,13 +24,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('/api/price-extent')
-      .then(response => {
-        this.$log.debug(response)
-      })
-      .catch(error => {
-        this.$log.error(error)
-      })
+    this.$store.dispatch(Naming.Actions.GET_PRICE_EXTENT)
   }
 }
 </script>

@@ -11,7 +11,7 @@
     div(v-if='isSigned')
       router-link(:to='linkToProfile') Профиль
       router-link(:to='linkToPortfolio') Портфолио
-      div(@click="signOut") Выйти
+      a(@click="signOut") Выйти
 </template>
 <script>
 import Vue from '@/vue-instance';

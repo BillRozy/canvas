@@ -7,6 +7,8 @@ const naming = {
     SET_MODAL_CONTAINER: 'set Modal Container',
     SET_MODAL_CONTENT: 'set Modal Content',
     SET_MODAL_VISIBILITY: 'set Modal Visibility',
+    SET_VIDEO_PRICE_EXTENT: 'set video price extent',
+    SET_PHOTO_PRICE_EXTENT: 'set photo price extent',
   },
 
   Actions: {
@@ -17,6 +19,7 @@ const naming = {
     POST_COMMENT: 'post comment',
     POST_VIDEO_OFFER: 'post video offer',
     POST_PHOTO_OFFER: 'post photo offer',
+    GET_PRICE_EXTENT: 'get price extent',
   }
 }
 
