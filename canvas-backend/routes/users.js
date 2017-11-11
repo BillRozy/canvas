@@ -29,20 +29,20 @@ router.get('/self', passport.authenticate('jwt', { session: false }) ,(req, res)
 router.post('/signin', (req, res) => {
   const {username, password} = req.body;
   Promise.coroutine(function* () {
-    const user = yield User.findOne(
+    const user = yield User.unscoped().findOne(
       {
         where: {username},
         include: [ 'role' ],
       });
     if (!user) {
-      res.json({success: false, msg: 'Authentication failed'});
+      res.json({success: false, msg: 'Authentication failed: no user'});
     }
     const isValidPassword = yield user.validPassword(password);
     if (isValidPassword) {
       const token = jwt.encode(omit(user.dataValues, [ 'password' ]), SecureCfg.jwtSecret);
       res.json({user, token});
     } else {
-      res.json({success: false, msg: 'Authentication failed'});
+      res.json({success: false, msg: 'Authentication failed: password invalid'});
     }
   })().catch(err => Log.error(err));
 
@@ -111,54 +111,11 @@ router.get('/:id/portfolio',(req, res) => {
     if (!user && !user.isOperator) {
       res.json({success: false, msg: 'Can\'t find user'});
     }
-    let portfolio = yield user.getPortfolio({
-      include: [
-        {
-          model: models.rating,
-        },
-        {
-          model: models.photoOffer,
-        },
-        {
-          model: models.videoOffer,
-        },
-        {
-          model: User,
-          include: [
-            {
-              model: models.photo,
-              order: [
-                [ { model: models.photo }, 'createdAt', 'DESC' ],
-              ],
-            },
-            {
-              model: models.profile,
-              attributes: [ 'avatar', 'name', 'surname' ],
-            } ],
-        },
-        {
-          model: models.comment,
-          include: [ {
-            model: User,
-            attributes: {
-              exclude: [ 'password', 'createdAt', 'updatedAt' ],
-            },
-            include: [ {
-              model: models.profile,
-              attributes: [ 'avatar', 'name', 'surname' ],
-            } ],
-          } ],
-        },
-      ],
-    });
+    let portfolio = yield user.getPortfolio();
     if (!portfolio) {
       portfolio = yield user.createPortfolio();
     }
-    // additions
-    const json = portfolio.get();
-    json.photoCategories = models.photoOffer.rawAttributes.category.values;
-    json.videoCategories = models.videoOffer.rawAttributes.category.values;
-    res.json(json);
+    res.json(portfolio);
   })().catch(err => Log.error(err));
 });
 

@@ -12,7 +12,7 @@ module.exports = function() {
   opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
   opts.secretOrKey = securityConfig.jwtSecret;
   passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({
+    User.unscoped().findOne({
       where: {'id': jwt_payload.id},
       include: [ 'role' ],
     })

@@ -44,6 +44,22 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.rating);
     User.hasOne(models.portfolio);
     User.hasOne(models.profile);
+    User.addScope('defaultScope', {
+      include: [ {
+        model: models.profile,
+        attributes: [ 'avatar', 'name', 'surname' ],
+      } ],
+      attributes: {
+        exclude: [ 'password', 'createdAt', 'updatedAt' ],
+      },
+    },{override: true});
+
+    User.addScope('unsafe', {
+      include: [ {
+        model: models.profile,
+        attributes: [ 'avatar', 'name', 'surname' ],
+      } ],
+    },{override: true});
   };
   User.hook('beforeCreate', (user) => {
     return SecureHelp.hashPassword(user.password)

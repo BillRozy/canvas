@@ -24,6 +24,17 @@ module.exports = (sequelize, DataTypes) => {
   photoOffer.associate = function(models) {
     photoOffer.belongsTo(models.user);
     photoOffer.belongsTo(models.portfolio);
+    photoOffer.addScope('defaultScope',
+      {
+        include: [ {
+          model: models.user,
+          include: [ {
+            model: models.photo,
+            where: {category: {$col: sequelize.literal('photoOffers.category')}},
+          } ],
+        } ],
+      }
+      ,{override: true});
   };
   return photoOffer;
 };

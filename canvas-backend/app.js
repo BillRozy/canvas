@@ -18,6 +18,7 @@ let photo_offers = require('./routes/photo-offers');
 let video_offers = require('./routes/video-offers');
 let comments = require('./routes/comments');
 let photos = require('./routes/photos');
+let catalog = require('./routes/catalog');
 
 const passport = require('./auth/passport.js');
 
@@ -53,6 +54,7 @@ app.use('/comments', comments);
 app.use('/photo-offers', photo_offers);
 app.use('/video-offers', video_offers);
 app.use('/photos', photos);
+app.use('/catalog', catalog);
 
 
 // catch 404 and forward to error handler

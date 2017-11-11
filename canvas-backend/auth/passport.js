@@ -8,7 +8,7 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     User.sync()
       .then(()=> {
-        return User.findOne({where: { username }});
+        return User.unscoped().findOne({where: { username }});
       })
       .then(user => {
         if (!user) {return done(null, false, { message: 'Incorrect username.' });}

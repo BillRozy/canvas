@@ -32,6 +32,7 @@
   .pagination-block
 </template>
 <script>
+import axios from 'axios';
 export default {
   name: "",
   data: () => ({
@@ -40,7 +41,16 @@ export default {
       min: 0
     },
     categories: []
-  })
+  }),
+  mounted(){
+    axios.get('/api/catalog/photo')
+    .then(response => {
+      this.$log.info(response.data)
+    })
+    .catch(err => {
+      this.$log.error(err)
+    })
+  }
 }
 </script>
 <style lang="stylus" scoped>

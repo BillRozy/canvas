@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
   comment.associate = function(models) {
     comment.belongsTo(models.user);
     comment.belongsTo(models.portfolio);
+    comment.addScope('defaultScope', {
+      include: [ {
+        model: models.user,
+      } ],
+    },{override: true});
   };
   return comment;
 };
