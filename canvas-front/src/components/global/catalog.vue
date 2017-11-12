@@ -29,23 +29,30 @@
           a.swap-button
         noscript This form requires that you have javascript enabled to work properly please enable javascript in your browser
   .catalog-finded-items
+    catalog-item(v-for="offer in offers", :offer="offer", key="offer.id")
   .pagination-block
 </template>
 <script>
 import axios from 'axios';
+import CatalogItem from '@/components/catalog/catalog-item'
 export default {
   name: "",
+  components: {
+    CatalogItem
+  },
   data: () => ({
     price: {
       max: 100,
       min: 0
     },
+    offers: [],
     categories: []
   }),
   mounted(){
     axios.get('/api/catalog/photo')
     .then(response => {
       this.$log.info(response.data)
+      this.offers = response.data
     })
     .catch(err => {
       this.$log.error(err)

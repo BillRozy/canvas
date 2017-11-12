@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         attributes: [ 'avatar', 'name', 'surname' ],
       } ],
       attributes: {
-        exclude: [ 'password', 'createdAt', 'updatedAt' ],
+        exclude: [ 'password' ],
       },
     },{override: true});
 

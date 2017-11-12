@@ -1,5 +1,7 @@
 'use strict';
 const models = require('../models');
+const Promise = require('bluebird').Promise;
+const Log = require('../logger');
 
 class Catalog {
   constructor(scope) {
@@ -18,18 +20,25 @@ class Catalog {
   }
 
   query(opts) {
-    if (!opts) {
-      return this.getAllOffers();
-    }
-    return new Promise((resolve, reject) => {
-      this.model.findAll(this._createQuery(opts))
-        .then(offers => {
-          resolve(offers);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
+    const self = this;
+    return Promise.coroutine(function* () {
+      let result = [];
+      if (!opts) {
+        result = yield self.getAllOffers();
+      } else {
+        const offers = yield self.model.findAll(self._createQuery(opts));
+        for (let i = 0; i < offers.length; i++) {
+          const offerUser = yield offers[i].getUser();
+          const photos = yield offerUser.getPhotos({
+            where: {'category': offers[i].category},
+            limit: 5,
+          });
+          result.push(offers[i].get());
+          result[i].photos = photos;
+        }
+      }
+      return result;
+    })();
   }
 
   _createQuery(opts) {
