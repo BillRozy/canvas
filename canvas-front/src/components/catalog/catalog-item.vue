@@ -7,9 +7,9 @@
       a.name-of-author {{offer.user.profile.name + " " + offer.user.profile.surname}}
     .catalog-item-card-price.catalog-item-card-field {{offer.price + " РУБ/ЧАС"}}
     .catalog-item-card-rating.catalog-item-card-field
-    .catalog-item-card-skills.catalog-item-card-field {{offer.user.createdAt}}
+    .catalog-item-card-skills.catalog-item-card-field {{periodOnCanvas}}
     .catalog-item-card-more.catalog-item-card-field
-      a(href="") Подробнее...
+      a(@click="goToPortfolio") Подробнее...
   .catalog-item-card-back-side(v-show="fronted")
     .catalog-item-card-examples
       .swiper-container.gallery-top(:data-category="offer.category")
@@ -38,6 +38,14 @@ export default {
   computed: {
     photos(){
       return this.offer.photos;
+    },
+    periodOnCanvas(){
+      return ((Date.now() - (new Date(this.offer.user.createdAt)).getTime()) / 1000 / 60 / 60).toFixed() + ' часов на сайте'
+    }
+  },
+  methods: {
+    goToPortfolio(){
+      this.$router.push(`/users/${this.offer.userId}/portfolio`)
     }
   },
   mounted(){
@@ -45,6 +53,7 @@ export default {
         spaceBetween: 10,
         centeredSlides: true,
         slideToClickedSlide: true,
+        grabCursor: true,
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
@@ -172,7 +181,7 @@ export default {
     align-items center
     position relative
     width 100%
-    max-width 1200px
+    max-width 810px
     min-width 600px
     height 440px
     border 2px solid black
@@ -269,8 +278,14 @@ export default {
   margin-right auto
 
 .swiper-slide
+  overflow hidden
+  display flex
+  justify-content center
+  align-items center
   background-size cover
   background-position center
+  img
+    max-width 100%
 
 .gallery-top
   height 80%
@@ -285,6 +300,9 @@ export default {
   width 25%
   height 100%
   opacity 0.4
+  img
+    &:hover
+      cursor pointer
 
 .gallery-thumbs .swiper-slide-active
   opacity 1

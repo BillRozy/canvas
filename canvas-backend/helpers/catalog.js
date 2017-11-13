@@ -26,6 +26,7 @@ class Catalog {
       if (!opts) {
         result = yield self.getAllOffers();
       } else {
+        console.log('Created query: ' + JSON.stringify(self._createQuery(opts)));
         const offers = yield self.model.findAll(self._createQuery(opts));
         for (let i = 0; i < offers.length; i++) {
           const offerUser = yield offers[i].getUser();
@@ -49,8 +50,11 @@ class Catalog {
     };
     if (opts.name) {
       query.where.name = {
-        $like: `%${opts.name}`,
+        $like: `%${opts.name}%`,
       };
+    }
+    if (opts.category) {
+      query.where.category = opts.category;
     }
     const priceQuery = {};
     if (opts.price && opts.price.min) {

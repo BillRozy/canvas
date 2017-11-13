@@ -8,6 +8,7 @@ const Log = require('../logger');
 
 /* GET users listing. */
 router.get('/photo',(req, res) => {
+  console.log('Query: ' + JSON.stringify(req.query));
   PhotoCatalog.query(req.query)
     .then(offers => {
       res.json(offers);

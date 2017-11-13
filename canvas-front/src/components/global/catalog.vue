@@ -33,6 +33,7 @@
   .pagination-block
 </template>
 <script>
+import Consts from '@/consts';
 import axios from 'axios';
 import CatalogItem from '@/components/catalog/catalog-item'
 export default {
@@ -46,10 +47,10 @@ export default {
       min: 0
     },
     offers: [],
-    categories: []
+    categories: Consts.PHOTO_CATEGORIES
   }),
   mounted(){
-    axios.get('/api/catalog/photo')
+    axios.get(`/api/catalog/photo?${this.objToQueryString(this.$route.query)}`)
     .then(response => {
       this.$log.info(response.data)
       this.offers = response.data
@@ -57,6 +58,18 @@ export default {
     .catch(err => {
       this.$log.error(err)
     })
+  },
+  methods: {
+    objToQueryString(obj){
+      let res = '';
+      if(!obj){
+        return res;
+      }
+      Object.keys(obj).forEach(key => {
+        res += `${key}=${obj[key]}`
+      })
+      return res;
+    }
   }
 }
 </script>

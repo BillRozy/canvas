@@ -74,15 +74,10 @@ const UploaderConstructor = Vue.component('uploader', Uploader)
 import NewOffer from '@/components/portfolio/add-new-offer'
 const NewOfferConstructor = Vue.component('add-new-offer', NewOffer)
 import Swiper from 'swiper';
+import Consts from '@/consts';
 const TAG = "Portfolio";
-const photoCategories = [
-  'TFP','Fashion','Свадебная','Детская и семейная', 'Праздники', 'Концерты и вечеринки',
-  'Персональная', 'Love Story', 'Коммерческая','Интерьерная','Предметная','Другие'
-];
-const videoCategories = [
-   'Клипы', 'Творческие', 'Свадьбы', 'Праздники', 'Вечеринки',
-   'Love story', 'Коммерческие', 'Другие', 'Motion Design'
-];
+const photoCategories = Consts.PHOTO_CATEGORIES;
+const videoCategories = Consts.VIDEO_CATEGORIES;
 const PHOTO_PAGE = 'photo';
 const VIDEO_PAGE = 'video';
 
