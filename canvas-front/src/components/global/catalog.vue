@@ -69,7 +69,7 @@ export default {
         sort: this.sort,
         category: this.category,
       }
-      this.objToQueryString(obj)
+      this.$router.go(`/api/catalog/photo?${this.objToQueryString(obj)}`)
     },
     objToQueryString(obj){
       let res = '';
@@ -77,7 +77,7 @@ export default {
         return res;
       }
       Object.keys(obj).forEach(key => {
-        res += `${key}=${obj[key]}`
+        res += `${key}=${obj[key]}&`
       })
       return res;
     }
