@@ -12,20 +12,20 @@
             input(type="number", v-model="price.max")
           .form-element-with-title
             label Сортировка
-            select
+            select(v-model="sort")
               option Цена
               option Популярность
               option Категория
         .center-button-block
-          input(type="button", value="Искать")
+          input(type="button", value="Искать", @click="applyFilter")
         .form-cells-block
           .form-element-with-title
             label Категория:
-            select
+            select(v-model="category")
               option(v-for="category in categories") {{category}}
           .form-element-with-title
             label Поиск по имени
-            input(type="text", placeholder="author")
+            input(type="text", placeholder="author", v-model="name")
           a.swap-button
         noscript This form requires that you have javascript enabled to work properly please enable javascript in your browser
   .catalog-finded-items
@@ -46,7 +46,10 @@ export default {
       max: 100,
       min: 0
     },
+    name: '',
+    sort: 'Цена',
     offers: [],
+    category: Consts.PHOTO_CATEGORIES[0],
     categories: Consts.PHOTO_CATEGORIES
   }),
   mounted(){
@@ -60,6 +63,14 @@ export default {
     })
   },
   methods: {
+    applyFilter(){
+      const obj = {
+        name: this.name,
+        sort: this.sort,
+        category: this.category,
+      }
+      this.objToQueryString(obj)
+    },
     objToQueryString(obj){
       let res = '';
       if(!obj){
