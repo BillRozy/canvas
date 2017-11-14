@@ -53,23 +53,28 @@ export default {
     categories: Consts.PHOTO_CATEGORIES
   }),
   mounted(){
-    axios.get(`/api/catalog/photo?${this.objToQueryString(this.$route.query)}`)
-    .then(response => {
-      this.$log.info(response.data)
-      this.offers = response.data
-    })
-    .catch(err => {
-      this.$log.error(err)
-    })
+    this.queryServer(this.objToQueryString(this.$route.query), 'photo')
   },
+
   methods: {
+    queryServer(query, mode){
+      axios.get(`/api/catalog/${mode}?${query}`)
+      .then(response => {
+        this.$log.info(response.data)
+        this.offers = response.data
+      })
+      .catch(err => {
+        this.$log.error(err)
+      })
+    },
     applyFilter(){
       const obj = {
         name: this.name,
         sort: this.sort,
         category: this.category,
       }
-      this.$router.go(`/api/catalog/photo?${this.objToQueryString(obj)}`)
+      //this.queryServer(this.objToQueryString(obj), 'photo')
+      this.$router.push(`/catalog/photo?${this.objToQueryString(obj)}`)
     },
     objToQueryString(obj){
       let res = '';
@@ -197,7 +202,7 @@ export default {
 
 .top-filter-catalog-block
   box-sizing border-box
-  width 90%
+  width 98%
   height 90%
   display flex
   border 4px dotted gray
