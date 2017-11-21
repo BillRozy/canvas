@@ -17,9 +17,15 @@ const state = {
 
 const mutations = {
   [Naming.Mutations.SET_VIDEO_PRICE_EXTENT](state, { extent }) {
+    if(extent.min === extent.max){
+      extent.max = extent.min + 100;
+    }
     state.video.priceExtent = extent;
   },
   [Naming.Mutations.SET_PHOTO_PRICE_EXTENT](state, { extent }) {
+    if(extent.min === extent.max){
+      extent.max = extent.min + 100;
+    }
     state.photo.priceExtent = extent;
   },
 };

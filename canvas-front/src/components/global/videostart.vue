@@ -2,17 +2,17 @@
 .scrollable-section
   .transparent-block300
   #videoslide.whitestripe(v-show='onPriceTab')
-    h1 - Video -
-    h2 average per hour
+    h1 - ВИДЕОСЪЕМКА -
+    h2 Средняя цена за час
     .slider-section
       input.slider-left-value(type='text')
       .slider
       input.slider-right-value(type='text')
     .two-buttons-adaptive-pane
-      input.btn-search(type='submit', value='SEARCH', @click='onPriceTab = false;')
+      input.btn-search(type='submit', value='ИСКАТЬ', @click='onPriceTab = false;')
       .swap-section(@click='showPhoto')
         .swap-section-button
-        div ON Photo
+        div К ФОТО
   #videoslide-filters.whitestripe(v-show='!onPriceTab')
     .filter-and-controls-section
       .filter-section-back-step К ЦЕНЕ
@@ -60,32 +60,53 @@
 import noUiSlider from 'nouislider'
 export default {
   data: () => ({
-    onPriceTab: true
+    onPriceTab: true,
+    slider: null,
   }),
+  computed: {
+    prices(){
+      return this.$store.state.catalog.video.priceExtent;
+    }
+  },
   methods: {
-    showPhoto () {
+    showPhoto() {
       this.$parent.swapPage()
+    },
+    createSlider(){
+      noUiSlider.create(this.slider, {
+        start: [ this.prices.min, this.prices.max ],
+        step: 1,
+        connect: true,
+        range: {
+          'min': this.prices.min,
+          'max': this.prices.max
+        }
+      })
+      const snapValues = [
+        this.$el.querySelector('.slider-left-value'),
+        this.$el.querySelector('.slider-right-value')
+      ]
+
+      this.slider.noUiSlider.on('update', function (values, handle) {
+        snapValues[handle].value = Math.round(values[handle])
+      })
+    }
+  },
+
+  watch: {
+    prices() {
+      this.slider.noUiSlider.updateOptions({
+        range: {
+          'min': this.prices.min,
+          'max': this.prices.max
+        }
+      });
     }
   },
   mounted () {
-    const slider = this.$el.querySelector('.slider')
-    noUiSlider.create(slider, {
-      start: [ 0, 100 ],
-      step: 1,
-      connect: true,
-      range: {
-        'min': 0,
-        'max': 100
-      }
-    })
-    const snapValues = [
-      this.$el.querySelector('.slider-left-value'),
-      this.$el.querySelector('.slider-right-value')
-    ]
+    this.slider = this.$el.querySelector('.slider')
+    this.createSlider();
 
-    slider.noUiSlider.on('update', function (values, handle) {
-      snapValues[handle].value = Math.round(values[handle])
-    })
   }
 }
 </script>

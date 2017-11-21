@@ -2,20 +2,20 @@
 .scrollable-section
   .transparent-block300
   #photoslide.whitestripe(v-show='onPriceTab')
-    h1 - Photo -
-    h2 average per hour
+    h1 - ФОТОСЪЕМКА -
+    h2 Средняя цена за час
     .slider-section
       input.slider-left-value(type='text')
       .slider
       input.slider-right-value(type='text')
     .two-buttons-adaptive-pane
-      input.btn-search(type='submit', value='SEARCH', @click='onPriceTab = false;')
+      input.btn-search(type='submit', value='ИСКАТЬ', @click='onPriceTab = false;')
       .swap-section(@click='showVideo')
         .swap-section-button
-        div ON VIDEO
+        div К ВИДЕО
   #photoslide-filters.whitestripe(v-show='!onPriceTab')
     .filter-and-controls-section
-      .filter-section-back-step ON PRICE
+      .filter-section-back-step К ЦЕНЕ
         .filter-section-back-step-button(@click='onPriceTab = true;')
       .filter-section
         a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'TFP')")
@@ -105,12 +105,22 @@ export default {
     }
   },
   watch: {
-    prices() {
-      this.createSlider();
+    prices: {
+      handler: function () {
+        this.slider.noUiSlider.updateOptions({
+          range: {
+            'min': this.prices.min,
+            'max': this.prices.max
+          }
+        });
+      },
+      deep: true
     }
   },
   mounted () {
     this.slider = this.$el.querySelector('.slider')
+    this.createSlider();
+
   }
 }
 </script>
