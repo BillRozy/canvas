@@ -2,15 +2,15 @@ let express = require('express');
 let router = express.Router();
 const Promise = require('bluebird');
 const passport = require('../auth/passport.js');
-const photoOffer = require('../models').photoOffer;
-const User = require('../models').user;
+const PhotoOffer = require('../models').PhotoOffer;
+const User = require('../models').User;
 const authorizedRoles = require('../auth/roles-authorize');
 const Log = require('../logger');
 
 /* GET users listing. */
 router.get('/:id',(req, res) => {
   const id = req.param('id');
-  photoOffer.findById(id)
+  PhotoOffer.findById(id)
     .then(offer => {
       res.json(offer);
     })
@@ -21,7 +21,7 @@ router.get('/:id',(req, res) => {
 
 router.delete('/:id',(req, res) => {
   const id = req.param('id');
-  photoOffer.findById(id)
+  PhotoOffer.findById(id)
     .then(offer => {
       return offer.destroy();
     })
@@ -34,7 +34,7 @@ router.delete('/:id',(req, res) => {
 });
 
 router.get('/',(req, res) => {
-  photoOffer.findAll()
+  PhotoOffer.findAll()
     .then(offers => {
       res.json(offers);
     })
@@ -65,7 +65,7 @@ router.post('/', passport.authenticate('jwt', { session: false }),authorizedRole
   }
   const toAdd = JSON.parse(JSON.stringify(req.body));
   toAdd.userId = req.user.id;
-  photoOffer.create(toAdd)
+  PhotoOffer.create(toAdd)
     .then(offer => {
       res.json(offer);
     })

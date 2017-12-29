@@ -36,8 +36,11 @@ export default {
       this.$store.dispatch(Naming.Actions.POST_PHOTO_OFFER, {
         portfolioId: this.portfolio_id,
         category: this.category,
-        price: this.price,
+        price: parseFloat(this.price),
         description: this.descr,
+      })
+      .then(() => {
+        this.hidePopup();
       })
     }
   }

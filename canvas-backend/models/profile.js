@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  let profile = sequelize.define('profile', {
+  let Profile = sequelize.define('Profile', {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  profile.associate = function(models) {
-    profile.belongsTo(models.user);
+  Profile.associate = function(models) {
+    Profile.belongsTo(models.User, {foreignKey: 'userId', as: 'user'});
   };
-  return profile;
+  return Profile;
 };

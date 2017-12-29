@@ -1,14 +1,14 @@
 let express = require('express');
 let router = express.Router();
 const passport = require('../auth/passport.js');
-const portfolio = require('../models').portfolio;
+const Portfolio = require('../models').Portfolio;
 const authorizedRoles = require('../auth/roles-authorize');
 const Log = require('../logger');
 
 /* GET users listing. */
 router.get('/:id',(req, res) => {
   const id = req.param('id');
-  portfolio.findById(id)
+  Portfolio.findById(id)
     .then(portfolio => {
       res.json(portfolio);
     })
@@ -18,7 +18,7 @@ router.get('/:id',(req, res) => {
 });
 
 router.get('/',passport.authenticate('jwt', { session: false }), authorizedRoles('ROLE_ADMIN'),(req, res) => {
-  portfolio.findAll()
+  Portfolio.findAll()
     .then(portfolios => {
       res.json(portfolios);
     })

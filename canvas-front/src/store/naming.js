@@ -4,14 +4,18 @@ const naming = {
     SET_CURRENT_USER: 'set current user',
     SET_CURRENT_USER_PROFILE: 'set current user profile',
     SET_TOKEN: 'set token',
+    SET_READY: 'set ready',
     SET_MODAL_CONTAINER: 'set Modal Container',
     SET_MODAL_CONTENT: 'set Modal Content',
     SET_MODAL_VISIBILITY: 'set Modal Visibility',
     SET_VIDEO_PRICE_EXTENT: 'set video price extent',
     SET_PHOTO_PRICE_EXTENT: 'set photo price extent',
+    REMOVE_OFFER: 'remove offer',
+    ADD_PHOTO_OFFER: 'add photo offer',
   },
 
   Actions: {
+    USER_INFO: 'user info',
     SIGN_IN: 'sign in',
     GET_PROFILE: 'get profile',
     POST_PROFILE: 'post profile',

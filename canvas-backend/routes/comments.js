@@ -2,15 +2,15 @@ let express = require('express');
 let router = express.Router();
 const Promise = require('bluebird');
 const passport = require('../auth/passport.js');
-const comment = require('../models').comment;
-const User = require('../models').user;
+const Comment = require('../models').Comment;
+const User = require('../models').User;
 const authorizedRoles = require('../auth/roles-authorize');
 const Log = require('../logger');
 
 /* GET users listing. */
 router.get('/:id',(req, res) => {
   const id = req.params.id;
-  comment.findById(id)
+  Comment.findById(id)
     .then(c => {
       res.json(c);
     })
@@ -26,7 +26,7 @@ router.post('/', passport.authenticate('jwt', { session: false }),(req, res) => 
   }
   const toAdd = JSON.parse(JSON.stringify(req.body));
   toAdd.userId = req.user.id;
-  comment.create(toAdd)
+  Comment.create(toAdd)
     .then(c => {
       res.json(c);
     })
@@ -37,7 +37,7 @@ router.post('/', passport.authenticate('jwt', { session: false }),(req, res) => 
 
 // get all
 router.get('/',passport.authenticate('jwt', { session: false }),authorizedRoles('ROLE_OPERATOR'),(req, res) => {
-  comment.findAll()
+  Comment.findAll()
     .then(comments => {
       res.json(comments);
     })

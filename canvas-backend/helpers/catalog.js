@@ -5,7 +5,7 @@ const Log = require('../logger');
 
 class Catalog {
   constructor(scope) {
-    this.model = (scope && scope === 'video') ? models.videoOffer : models.photoOffer;
+    this.model = (scope && scope === 'video') ? models.VideoOffer : models.PhotoOffer;
   }
   getAllOffers() {
     return new Promise((resolve, reject) => {

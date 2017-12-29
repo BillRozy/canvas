@@ -1,7 +1,7 @@
 'use strict';
 const videoCategories = [ 'Клипы', 'Творческие', 'Свадьбы', 'Праздники', 'Вечеринки', 'Love story', 'Коммерческие', 'Другие', 'Motion Design' ];
 module.exports = (sequelize, DataTypes) => {
-  let videoOffer = sequelize.define('videoOffer', {
+  let VideoOffer = sequelize.define('VideoOffer', {
     category: {
       type: DataTypes.ENUM(videoCategories),
       allowNull: false,
@@ -20,9 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  videoOffer.associate = function(models) {
-    videoOffer.belongsTo(models.user);
-    videoOffer.belongsTo(models.portfolio);
+  VideoOffer.associate = function(models) {
+    VideoOffer.belongsTo(models.User, {foreignKey: 'userId', as: 'user'});
+    VideoOffer.belongsTo(models.Portfolio, {foreignKey: 'portfolioId', as: 'portfolio'});
   };
-  return videoOffer;
+  return VideoOffer;
 };

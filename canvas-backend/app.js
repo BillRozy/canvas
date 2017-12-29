@@ -19,11 +19,11 @@ let video_offers = require('./routes/video-offers');
 let comments = require('./routes/comments');
 let photos = require('./routes/photos');
 let catalog = require('./routes/catalog');
+let ratings = require('./routes/ratings');
 
 const passport = require('./auth/passport.js');
 
 let app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -55,6 +55,7 @@ app.use('/photo-offers', photo_offers);
 app.use('/video-offers', video_offers);
 app.use('/photos', photos);
 app.use('/catalog', catalog);
+app.use('/ratings', ratings);
 
 
 // catch 404 and forward to error handler

@@ -12,7 +12,7 @@ header
     router-link#logo(to='/')
       .header_decor_triangle
     router-link(to='events') Новости
-  personal-cabinet
+  personal-cabinet(v-if="$store.state.session.ready")
 </template>
 <script>
 import PersonalCabinet from '@/components/global/personal-cabinet.vue'

@@ -102,17 +102,21 @@ export default {
       this.slider.noUiSlider.on('update', function (values, handle) {
         snapValues[handle].value = Math.round(values[handle])
       })
+    },
+    updateSliderExtent(){
+      this.slider.noUiSlider.updateOptions({
+        range: {
+          min: this.prices.min,
+          max: this.prices.max
+        }
+      });
+      this.slider.noUiSlider.set([this.prices.min, this.prices.max]);
     }
   },
   watch: {
     prices: {
       handler: function () {
-        this.slider.noUiSlider.updateOptions({
-          range: {
-            'min': this.prices.min,
-            'max': this.prices.max
-          }
-        });
+        this.updateSliderExtent();
       },
       deep: true
     }

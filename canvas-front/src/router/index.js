@@ -9,6 +9,7 @@ import Profile from '@/components/global/profile.vue'
 import Portfolio from '@/components/global/portfolio.vue'
 import Upload from '@/components/global/uploader.vue'
 import ErrorPage from '@/components/global/error404.vue'
+import store from '@/store'
 
 const routes = [
   { path: '/', component: Doorman },
@@ -18,7 +19,10 @@ const routes = [
   { path: '/sign_in', component: Login },
   { path: '/sign_up', component: Signup },
   { path: '/users/:id/profile', component: Profile },
-  { path: '/users/:id/portfolio', component: Portfolio },
+  {
+    path: '/users/:id/portfolio',
+    component: Portfolio,
+  },
   { path: '/upload', component: Upload },
   { path: '/404', component: ErrorPage },
   {
@@ -30,5 +34,49 @@ const router = new VueRouter({
   routes,
   mode: 'history'
 })
+
+router.beforeEach((to, from, next) => {
+  function proceed() {
+    if (store.getters.currentUser)
+      next()
+    else
+      next('/')
+  }
+
+  // we must wait for the store to be initialized
+  if (!store.state.session.ready) {
+    store.watch(
+      (state) => state.session.ready,
+      (value) => {
+        if (value == true)
+          proceed()
+      }
+    )
+  }
+  else
+    proceed()
+});
+
+// const waitForCurrentUser = (to, from, next) => {
+//   function proceed() {
+//     if (store.getters.currentUser)
+//       next()
+//     else
+//       next('/')
+//   }
+//
+//   // we must wait for the store to be initialized
+//   if (!store.state.session.ready) {
+//     store.watch(
+//       (state) => state.session.ready,
+//       (value) => {
+//         if (value == true)
+//           proceed()
+//       }
+//     )
+//   }
+//   else
+//     proceed()
+// }
 
 export default router

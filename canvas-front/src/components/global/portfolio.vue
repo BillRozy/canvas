@@ -8,7 +8,7 @@
       .simple_button(v-if='isOwner && !inEditMode',id='edit_portfolio_button', @click="inEditMode=true")
     #categories_container.tabs_container_fade
       #photo-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='photo'}")
-        .horizontal_flex(v-for="offer in appliedPhotoCategories")
+        .horizontal_flex(v-for="(offer, index) in appliedPhotoCategories", :key="index")
           .photo-category.link-to-category {{offer}}
           .delete_button(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
         .horizontal_flex(v-if="isOwner")
@@ -26,8 +26,8 @@
         span.name-of-author {{name}}
         span.name-of-author {{surname}}
     #rating-regards-block
-      #rating-wrapper(v-if='signed_in')
-      #rating-wrapper(v-else='', style='pointer-events:none;')
+      #rating-wrapper(v-if="!!portfolio.rating")
+        interactive-rating(:prop_portfolio_id="portfolio.id", :prop_rating="portfolio.rating", :prop_state="ratingState")
   #contact-and-info-buttons-block
     #contact-author-button(clicked='false')  Contact
     #show-info-author-button(clicked='false') Personal info
@@ -59,7 +59,7 @@
   #comments.container
     spoiler(title="Комментарии")
       comment(v-for="comment in comments", :comment_data="comment", key="comment.id")
-      new-comment(:portfolio_id="portfolio.id", :user="$store.state.user.username", :avatarsrc="$store.state.user.profile.avatar")
+      new-comment(:portfolio_id="portfolio.id", :user="$store.getters.currentUser.username", :avatarsrc="$store.getters.currentUser.profile.avatar")
 </template>
 <script>
 /* eslint-disable no-unused-vars */
@@ -69,6 +69,7 @@ import Naming from '@/store/naming';
 import Spoiler from '@/components/global/spoiler.vue'
 import Comment from '@/components/global/comment.vue'
 import NewComment from '@/components/global/new-comment.vue'
+import InteractiveRating from '@/components/portfolio/interactive-rating';
 import Uploader from '@/components/global/uploader'
 const UploaderConstructor = Vue.component('uploader', Uploader)
 import NewOffer from '@/components/portfolio/add-new-offer'
@@ -91,11 +92,32 @@ export default {
     swipers: {}
   }),
   components: {
-    Comment, Spoiler, NewComment
+    Comment, Spoiler, NewComment, InteractiveRating
+  },
+  beforeRouteEnter (to, from, next) {
+
+    next(vm => {
+      if(to.params.id === vm.$store.getters.currentUser.id + ""){
+        vm.portfolio = vm.$store.getters.currentUser.portfolio;
+        vm.loaded = true;
+      } else {
+        vm.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userid: to.params.id})
+        .then(portfolio => {
+          vm.portfolio = portfolio;
+          vm.loaded = true;
+        })
+        .catch(err => {
+          vm.$log.error(TAG, err);
+        })
+      }
+    })
   },
   computed: {
     isOwner() {
-      return this.portfolio.userId === this.$store.state.user.id;
+      return this.$store.getters.currentUser && this.portfolio.userId === this.$store.getters.currentUser.id;
+    },
+    selfPortfolio(){
+      return this.$store.state.session.user.portfolio;
     },
     user() {
       return this.portfolio.user || {};
@@ -116,7 +138,7 @@ export default {
       return this.portfolio.comments;
     },
     photos(){
-      return this.portfolio.user.photos;
+      return this.user.photos;
     },
     photoOffers(){
       return this.portfolio.photoOffers;
@@ -150,17 +172,12 @@ export default {
     availableVideoCategories(){
       return videoCategories.filter(cat => !this.appliedVideoCategories.includes(cat));
     },
+    ratingState() {
+      return this.isOwner ? 'static' : 'interactive';
+    }
   },
   created() {
     this.pageSelector = [VIDEO_PAGE, PHOTO_PAGE].includes(this.$route.query.tab ) ? this.$route.query.tab : PHOTO_PAGE;
-    this.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userid: this.$route.params.id})
-    .then(portfolio => {
-      this.portfolio = portfolio;
-      this.loaded = true;
-    })
-    .catch(err => {
-      this.$log.error(TAG, err);
-    })
   },
   methods: {
     openImageInModal(e){
@@ -172,12 +189,6 @@ export default {
       const offer = this.photoOffers.find(offer => offer.category === category);
       this.$store.dispatch(Naming.Actions.DELETE_OFFER, {
         id: offer.id,
-      })
-      .then(() => {
-        this.portfolio.photoOffers = this.photoOffers.filter(of=> of.id != offer.id)
-      })
-      .catch(err => {
-        this.$log.error(err)
       })
     },
     addPhotoOffer(){
@@ -191,12 +202,6 @@ export default {
       form.$store = this.$store
       form.$mount();
       this.showPopup(form.$el);
-      // this.$store.dispatch(Naming.Actions.POST_PHOTO_OFFER, {
-      //   portfolioId: this.portfolio.id,
-      //   category: this.availablePhotoCategories[Math.floor(Math.random() * this.availablePhotoCategories.length)],
-      //   price: Math.floor(Math.random() * 1000),
-      //   description: 'test item'
-      // })
     },
     addVideoOffer(){
       this.$store.dispatch(Naming.Actions.POST_VIDEO_OFFER, {
@@ -259,6 +264,13 @@ export default {
       })
     });
 
+  },
+  watch: {
+    photos(){
+      Object.values(this.swipers).forEach(swiper => {
+        swiper.update();
+      })
+    }
   }
 
 }
@@ -377,6 +389,7 @@ export default {
 #rating-regards-block
   display flex
   justify-content center
+  align-items center
   width 40%
   height 100%
   order 4

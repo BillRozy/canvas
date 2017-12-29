@@ -90,17 +90,23 @@ export default {
       this.slider.noUiSlider.on('update', function (values, handle) {
         snapValues[handle].value = Math.round(values[handle])
       })
-    }
-  },
-
-  watch: {
-    prices() {
+    },
+    updateSliderExtent(){
       this.slider.noUiSlider.updateOptions({
         range: {
-          'min': this.prices.min,
-          'max': this.prices.max
+          min: this.prices.min,
+          max: this.prices.max
         }
       });
+      this.slider.noUiSlider.set([this.prices.min, this.prices.max]);
+    }
+  },
+  watch: {
+    prices: {
+      handler: function () {
+        this.updateSliderExtent();
+      },
+      deep: true
     }
   },
   mounted () {

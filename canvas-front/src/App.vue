@@ -50,20 +50,16 @@ export default {
     const user = localStorage.getItem('current_user');
     if(user) {
       const json = JSON.parse(user);
-      this.$store.commit(Naming.Mutations.SET_CURRENT_USER, {
-        user: json.user
-      })
       this.$store.commit(Naming.Mutations.SET_TOKEN, {
         token: json.token
       })
       axios.defaults.headers.common.Authorization = 'Bearer ' + json.token;
-      this.$store.dispatch(Naming.Actions.GET_PROFILE, {
-        userid: json.user.id,
-      }).then(profile => {
-        this.$store.commit(Naming.Mutations.SET_CURRENT_USER_PROFILE, {
-          profile
-        })
+      this.$store.dispatch(Naming.Actions.USER_INFO)
+      .then(() => {
+        this.$store.commit(Naming.Mutations.SET_READY);
       })
+    } else {
+      this.$store.commit(Naming.Mutations.SET_READY);
     }
   },
   mounted() {

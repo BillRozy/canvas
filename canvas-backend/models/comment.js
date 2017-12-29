@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  let comment = sequelize.define('comment', {
+  let Comment = sequelize.define('Comment', {
     body: DataTypes.STRING,
     userId: {
       type: DataTypes.INTEGER,
@@ -11,14 +11,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  comment.associate = function(models) {
-    comment.belongsTo(models.user);
-    comment.belongsTo(models.portfolio);
-    comment.addScope('defaultScope', {
+  Comment.associate = function(models) {
+    Comment.belongsTo(models.User, {foreignKey: 'userId', as: 'user'});
+    Comment.belongsTo(models.Portfolio, {foreignKey: 'portfolioId', as: 'portfolio'});
+    Comment.addScope('defaultScope', {
       include: [ {
-        model: models.user,
+        model: models.User,
+        as: 'user',
       } ],
     },{override: true});
   };
-  return comment;
+  return Comment;
 };

@@ -26,16 +26,16 @@ export default {
   }),
   computed: {
     username(){
-      return this.$store.state.user.username;
+      return this.$store.getters.currentUser.username;
     },
     isSigned () {
       return this.$store.getters.isSigned;
     },
     linkToProfile() {
-      return `/users/${this.$store.state.user.id}/profile`;
+      return `/users/${this.$store.getters.currentUser.id}/profile`;
     },
     linkToPortfolio() {
-      return `/users/${this.$store.state.user.id}/portfolio`;
+      return `/users/${this.$store.getters.currentUser.id}/portfolio`;
     }
   },
   methods: {

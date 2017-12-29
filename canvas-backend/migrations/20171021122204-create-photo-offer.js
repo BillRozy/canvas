@@ -3,7 +3,7 @@ const photoCategories = [ 'TFP','Fashion','Свадебная','Детская �
   'Персональная', 'Love Story', 'Коммерческая','Интерьерная','Предметная','Другие' ];
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('photoOffers', {
+    return queryInterface.createTable('PhotoOffers', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'users',
+          model: 'Users',
           key: 'id',
         },
       },
@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'portfolios',
+          model: 'Portfolios',
           key: 'id',
         },
       },

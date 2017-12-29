@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import mutations from '@/store/mutations'
 import actions from '@/store/actions'
-import user from '@/store/modules/user'
+import session from '@/store/modules/session'
 import catalog from '@/store/modules/catalog'
 import popup from '@/store/modules/modal'
 
@@ -9,7 +9,7 @@ import popup from '@/store/modules/modal'
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
-    user,
+    session,
     popup,
     catalog,
   },
