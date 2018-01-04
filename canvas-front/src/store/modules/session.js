@@ -57,8 +57,20 @@ const actions = {
           commit(Naming.Mutations.SET_TOKEN, {
             token: response.data.token,
           })
-          axios.defaults.headers.common.Authorization = 'Bearer ' + response.token;
+          axios.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
           resolve()
+        })
+        .catch(err => {
+          $log.error(TAG, err)
+          reject(err)
+        })
+    })
+  },
+  [Naming.Actions.SIGN_UP] ({ state, commit }, user) {
+    return new Promise((resolve, reject) => {
+      axios.post('/api/users/signup', user)
+        .then(response => {
+          resolve(response.data)
         })
         .catch(err => {
           $log.error(TAG, err)
@@ -137,6 +149,12 @@ const getters = {
   },
   currentUser(state){
     return state.user || {};
+  },
+  linkToProfile(state, getters) {
+    return `/users/${getters.currentUser.id}/profile`;
+  },
+  linkToPortfolio(state, getters) {
+    return `/users/${getters.currentUser.id}/portfolio`;
   }
 }
 

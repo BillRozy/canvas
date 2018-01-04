@@ -1,17 +1,19 @@
 <template lang="pug">
-.comment-block
-    .comment-user
-        img.comment-avatar(:src='avatarsrc')
-        |  {{user}}
-    .comment-body
-        | {{text}}
-    .comment-date
-        | Оставлено:
+article.media.box(style="width: 80%")
+  figure.media-left
+    p.image.is-64x64
+      img(:src='avatar')
+  .media-content
+    .content
+      p
+        strong {{user}}
         br
-        | {{date}}
+        | {{text}}   
+  .media-right {{date}}          
 </template>
 
 <script>
+import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 export default {
   data() {
     return {
@@ -23,6 +25,9 @@ export default {
     avatarsrc() { return this.comment_data.user.profile.avatar || ''},
     text() { return this.comment_data.body},
     date() { return this.comment_data.createdAt},
+    avatar(){
+      return this.comment_data.user.profile.avatar || defaultAvatar;
+    },
   },
   props: {
       comment_data: {required: true, default: {}}

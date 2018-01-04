@@ -1,17 +1,26 @@
 <template lang='pug'>
 .personal-cabinet
-  .personal-cabinet-wrapper(v-if='isSigned')
-    img.header-avatar(onerror="this.style.display='none'")
-    a#name_header_link {{username}}
-    #profile-block-menu-button(clicked='false', @click='menuOpened = !menuOpened')
-  .personal-cabinet-wrapper(v-else)
-    div(@click="openSignInPopup") Войти
-    router-link(to='sign_up') Регистрация
-  #profile-block-menu(v-show='menuOpened')
-    div(v-if='isSigned')
-      router-link(:to='linkToProfile') Профиль
-      router-link(:to='linkToPortfolio') Портфолио
-      a(@click="signOut") Выйти
+  .columns.is-gapless.is-marginless.is-pulled-left(v-if='isSigned', style="height: 100%; max-width: 250px; width: 100%")
+    .column
+      figure(style="height: 100%")
+        img.is-64x64(:src="avatar", style="height: 60px; width: 60px")
+    .column
+      router-link(:to="linkToProfile", style="padding-left: 10px;") {{username}}
+    .column.is-flex(style="align-items: center; justify-content: center")
+      b-dropdown(position="is-bottom-left", style="height: 100%")
+        button.button.dropped-button.is-shadowless(slot="trigger", style="height: 59px; width: 59px")
+          b-icon(icon="arrow-down-drop-circle")
+        b-dropdown-item(has-link)
+          router-link(:to='linkToProfile') Профиль
+        b-dropdown-item(has-link)
+          router-link(:to='linkToPortfolio') Портфолио
+        b-dropdown-item(has-link)
+          a(@click="signOut") Выйти
+  .columns.is-gapless.is-marginless(v-else)
+    .column.is-6
+      div(@click="openSignInPopup") Войти
+    .column.is-6
+      router-link(to='sign_up') Регистрация
 </template>
 <script>
 import Vue from '@/vue-instance';
@@ -20,13 +29,14 @@ import Naming from '@/store/naming'
 const LoginConstructor = Vue.component('login', LoginComponent);
 const Login = new LoginConstructor();
 Login.$mount();
+import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 export default {
   data: () => ({
     menuOpened: false
   }),
   computed: {
     username(){
-      return this.$store.getters.currentUser.username;
+      return this.$store.getters.currentUser.profile.name;
     },
     isSigned () {
       return this.$store.getters.isSigned;
@@ -36,6 +46,9 @@ export default {
     },
     linkToPortfolio() {
       return `/users/${this.$store.getters.currentUser.id}/portfolio`;
+    },
+    avatar() {
+      return this.$store.getters.currentUser.profile.avatar || defaultAvatar;
     }
   },
   methods: {
@@ -50,67 +63,29 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 @import '~assets/css/consts'
-#profile-block-menu-button
-  display inline-block
-  width 40px
-  height 40px
-  background url('~assets/images/arrow-down.png') no-repeat
-  background-size cover
-
-  &:hover
-    cursor pointer
-
 .personal-cabinet
   float right
+  display flex
+  justify-content flex-end
   height 100%
   width 20%
-
-  .personal-cabinet-wrapper
-    display flex
-    justify-content space-around
-    align-content center
-    align-items center
-    height 100%
-    width 100%
-
   a
     display inline-flex
     height 100%
-    min-height 80px
     align-items center
   @media screen and (max-width: $header-critical-size)
     width 40%
     min-width 200px
 
-.header-avatar
-  height 100%
-  width auto
-  max-width $header-mini-height
-  max-height $header-mini-height
-#profile-block-menu
-  display flex
-  position absolute
-  width 20%
-  right: 0
-  flex-direction column
-  height 150px
-  background rgba(100,100,100,0.98)
-  transition 0.2s
-  z-index 150
-  top $header-mini-height
+  .dropped-button
+    border none
+    &:hover
+      span
+        transition 0.2s
+        transform scale(1.1)   
 
-  @media screen and (max-width: $header-critical-size)
-    width 40%
-  a
-    display flex
-    align-content center
-    box-sizing border-box
-    padding-left 10px
-    height 100%
-    min-height 50px
-    align-items center
-    border-bottom 1px darkgray solid
-    color whitesmoke
+  .dropdown-content
+    background white      
 </style>

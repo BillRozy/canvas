@@ -17,6 +17,7 @@ const naming = {
   Actions: {
     USER_INFO: 'user info',
     SIGN_IN: 'sign in',
+    SIGN_UP: 'sign up',
     GET_PROFILE: 'get profile',
     POST_PROFILE: 'post profile',
     GET_PORTFOLIO: 'get portfolio',

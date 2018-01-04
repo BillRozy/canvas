@@ -1,7 +1,7 @@
 <template lang="pug">
 main#App
   canvas-header
-  transition
+  transition(name="fade", mode="out-in")
     keep-alive
       router-view
   popup(v-show='visible', @close='closeModal', ref="modalWindow")

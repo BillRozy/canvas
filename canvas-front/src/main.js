@@ -3,6 +3,7 @@
 import Vue from '@/vue-instance'
 import App from './App'
 /* eslint-disable no-undef */
+require('@/assets/css/mystyles.scss')
 require('@/assets/css/basics.styl')
 require('@/assets/css/buttons.styl')
 require('@/assets/css/custom.styl')
@@ -13,6 +14,8 @@ require('@/assets/css/dropzone.min.css')
 require('@/assets/css/swiper.min.css')
 require('@/assets/css/decoration.styl')
 require('@/assets/css/medias.styl')
+require('@/assets/css/transitions.styl')
+
 
 
 Vue.config.productionTip = false

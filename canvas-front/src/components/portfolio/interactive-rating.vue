@@ -1,9 +1,10 @@
 <template lang="pug">
-.interactive-rating-widget
-  heart-rating(:read-only="prop_state !== 'interactive' || waitingAnswer", v-model="userValue", @rating-selected="applyRating")
-  ul
-    li Средняя оценка: {{avg}}
-    li Проголосало: {{votes}}
+.interactive-rating-widget.card
+  .card-content
+    heart-rating(:read-only="prop_state !== 'interactive' || waitingAnswer", v-model="userValue", @rating-selected="applyRating")
+  .card-footer
+    .card-footer-item Средняя оценка: {{avg}}
+    .card-footer-item Проголосало: {{votes}}
 </template>
 
 <script>
@@ -62,5 +63,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.card
+.card *
+  box-shadow none
+  background none 
+  border none
 
 </style>

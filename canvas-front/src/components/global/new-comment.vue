@@ -1,11 +1,16 @@
 <template lang="pug">
-.new-comment-block
-      div {{user}} говорит:
-      #new_comment
-          .comment-user
-              img.comment-avatar(:src="avatarsrc")
-          textarea(name="body", id="new-comment-text", v-model="commentText", placeholder="Введите свой отзыв...")
-          input.btn.btn-primary(type="button", value="OK", @click="sendComment")
+article.media(style="width: 80%")
+  figure.media-left
+    p.image.is-64x64
+      img(:src="avatarsrc")
+  .media-content
+    b-field
+      p.control
+        textarea.textarea(placeholder="Ввести коммент...", v-model="commentText")
+    nav.level
+      .level-left
+        .level-item
+          button.button.is-primary(@click="sendComment") Отправить    
 </template>
 
 <script>

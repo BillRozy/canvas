@@ -1,65 +1,94 @@
 <template lang="pug">
-.page-wrapper
-  .portfolio-main-section
-    #switch-buttons-block
-      #photocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='photo'}", @click="setTab('photo')")
-      #videocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='video'}", @click="setTab('video')")
-      .simple_button(v-if='isOwner && inEditMode', id='done_edit_portfolio_button', @click="inEditMode=false")
-      .simple_button(v-if='isOwner && !inEditMode',id='edit_portfolio_button', @click="inEditMode=true")
-    #categories_container.tabs_container_fade
-      #photo-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='photo'}")
-        .horizontal_flex(v-for="(offer, index) in appliedPhotoCategories", :key="index")
-          .photo-category.link-to-category {{offer}}
-          .delete_button(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
-        .horizontal_flex(v-if="isOwner")
-          .link-to-category(v-if="isOwner && inEditMode", @click="addPhotoOffer") Добавить
-      #video-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='video'}")
-        .horizontal_flex(v-for="offer in appliedVideoCategories")
-          .photo-category.link-to-category {{offer}}
-          .delete_button(v-if="isOwner && inEditMode")
-        .horizontal_flex(v-if="isOwner")
-          .link-to-category(v-if="isOwner && inEditMode", @click="addVideoOffer") Добавить
-    .info_and_avatar_block
-      a(href='')
-        img.avatar-photo(src='avatar')
-      .name-surname-block
-        span.name-of-author {{name}}
-        span.name-of-author {{surname}}
-    #rating-regards-block
-      #rating-wrapper(v-if="!!portfolio.rating")
-        interactive-rating(:prop_portfolio_id="portfolio.id", :prop_rating="portfolio.rating", :prop_state="ratingState")
-  #contact-and-info-buttons-block
-    #contact-author-button(clicked='false')  Contact
-    #show-info-author-button(clicked='false') Personal info
-  #onButton-clicked-author-block.moving-block-with-information(style='display: none;')
-  .tabs_container
-    .tab_item(v-if="pageSelector==='photo'")
-      .container
-        spoiler(title="Фотосъемка")
-          .shooting-block(v-for="offer in photoOffers")
-            .shooting-description-block
-              div {{offer.category}}
-              div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem(offer.category)")
-            .swiper-container(:data-category="offer.category")
-              .swiper-wrapper
-                .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
-                  img(:src="'/api/uploads/' + photo.path", @click="openImageInModal")
-              .swiper-button-prev
-              .swiper-button-next
-    .tab_item(v-if="pageSelector==='video'")
-      .container
-        spoiler(title="Видеосъемка")
-          .videography-block(v-for="offer in videoOffers")
-            .videography-description-block
-              div {{offer.category}}
-              div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
-            .slider-container
-  #comments.container
-    spoiler(title="Комментарии")
-      comment(v-for="comment in comments", :comment_data="comment", key="comment.id")
-      new-comment(:portfolio_id="portfolio.id", :user="$store.getters.currentUser.username", :avatarsrc="$store.getters.currentUser.profile.avatar")
+.container.is-fullhd.noisy
+  .section 
+    .box.is-paddingless(style="background-color: rgba(255, 255, 255, 0.7)")
+      .columns.is-gapless(style="height: 250px")
+        #switch-buttons-block.column.is-one-quarter
+          #photocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='photo'}", @click="setTab('photo')")
+          #videocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='video'}", @click="setTab('video')")
+          .simple_button(v-if='isOwner && inEditMode', id='done_edit_portfolio_button', @click="inEditMode=false")
+          .simple_button(v-if='isOwner && !inEditMode',id='edit_portfolio_button', @click="inEditMode=true")
+        #categories_container.tabs_container_fade.column.is-one-third
+          .columns.is-gapless(style="height:100%;")
+            #photo-categories-block.tab_item_fade.column.is-half(:class="{active_tab_fade: pageSelector==='photo'}")
+              .media(v-for="(offer, index) in appliedPhotoCategories", :key="index")
+                .media-content
+                  .content {{offer}}
+                .media-right
+                  button.button.delete(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
+              .horizontal_flex(v-if="isOwner")
+                .link-to-category(v-if="isOwner && inEditMode", @click="addPhotoOffer") Добавить
+            #video-categories-block.tab_item_fade.column.is-half(:class="{active_tab_fade: pageSelector==='video'}")
+              .horizontal_flex(v-for="offer in appliedVideoCategories")
+                .photo-category.link-to-category {{offer}}
+                .delete_button(v-if="isOwner && inEditMode")
+              .horizontal_flex(v-if="isOwner")
+                .link-to-category(v-if="isOwner && inEditMode", @click="addVideoOffer") Добавить
+        .info_and_avatar_block.column.is-one-quarter
+          .card
+            .card-image
+              router-link(:to='$store.getters.linkToProfile')
+                img.avatar-photo(:src='avatar')
+            .card-footer
+              .card-footer-item {{`${name} ${surname}`}}
+        #rating-regards-block.column.is-one-third(style="height: 100%")
+          interactive-rating(v-if="!!portfolio.rating", :prop_portfolio_id="portfolio.id", :prop_rating="portfolio.rating", :prop_state="ratingState")  
+  .container#contact-and-info-buttons-block
+    b-tabs(type="is-toggle", position="is-centered", :animated="false")
+      b-tab-item(label="Контакты")
+        .box(style="max-width: 400px; margin: 0 auto")
+          b-field(label="Телефон", v-if="!!profile.phone_number")
+            div {{profile.phone_number}}
+          b-field(label="E-Mail", v-if="!!profile.social_email")
+            div {{profile.social_email}}  
+      b-tab-item(label="Об авторе", disabled)
+        .box(style="max-width: 400px; margin: 0 auto")
+  .section
+    .tabs_container
+      .tab_item(v-if="pageSelector==='photo'")
+        b-collapse.card.is-primary(:open.sync="openedPhotos")
+          .card-header(slot="trigger")
+            p.card-header-title.is-centered Фотосъемка
+            a.card-header-icon
+              b-icon(:icon="openedPhotos ? 'menu-down' : 'menu-up'")
+          .card-content
+            .content
+              .shooting-block.columns.is-gapless(v-for="offer in photoOffers")
+                .shooting-description-block.column.is-2
+                  div {{offer.category}}
+                  div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
+                  .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem(offer.category)")
+                .swiper-container.column(:data-category="offer.category")
+                  .swiper-wrapper
+                    .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
+                      img(:src="'/api/uploads/' + photo.path", @click="openImageInModal")
+                  .swiper-button-prev
+                  .swiper-button-next
+
+      .tab_item(v-if="pageSelector==='video'")
+        b-collapse.card.is-primary(:open.sync="openedVideos")
+          .card-header(slot="trigger")
+            p.card-header-title.is-centered Видеосъемка
+            a.card-header-icon
+              b-icon(:icon="openedVideos ? 'menu-down' : 'menu-up'")
+          .card-content
+            .content
+              .videography-block(v-for="offer in videoOffers")
+                .videography-description-block
+                  div {{offer.category}}
+                  div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
+                  .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
+                .slider-container       
+  .section
+    b-collapse.card.is-primary(:open.sync="openedComments")
+      .card-header(slot="trigger")
+        p.card-header-title.is-centered Комментарии
+        a.card-header-icon
+          b-icon(:icon="openedComments ? 'menu-down' : 'menu-up'")
+      .card-content
+        .content
+          comment(v-for="comment in comments", :comment_data="comment", key="comment.id")
+          new-comment(:portfolio_id="portfolio.id", :user="$store.getters.currentUser.username", :avatarsrc="avatar")
 </template>
 <script>
 /* eslint-disable no-unused-vars */
@@ -76,6 +105,7 @@ import NewOffer from '@/components/portfolio/add-new-offer'
 const NewOfferConstructor = Vue.component('add-new-offer', NewOffer)
 import Swiper from 'swiper';
 import Consts from '@/consts';
+import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 const TAG = "Portfolio";
 const photoCategories = Consts.PHOTO_CATEGORIES;
 const videoCategories = Consts.VIDEO_CATEGORIES;
@@ -89,7 +119,10 @@ export default {
     portfolio: {},
     inEditMode: false,
     pageSelector: PHOTO_PAGE,
-    swipers: {}
+    swipers: {},
+    openedComments: false,
+    openedPhotos: true,
+    openedVideos: true,
   }),
   components: {
     Comment, Spoiler, NewComment, InteractiveRating
@@ -121,6 +154,9 @@ export default {
     },
     user() {
       return this.portfolio.user || {};
+    },
+    avatar(){
+      return this.profile.avatar || defaultAvatar;
     },
     profile() {
       return this.user.profile || {};
@@ -363,6 +399,8 @@ export default {
   width 20%
   height 100%
   min-width 100px
+  border-left 1px solid lightgray
+  border-right 1px solid lightgray
   order 3
   @media only screen and (max-width: $header-critical-size)
     background lightgrey
@@ -405,11 +443,6 @@ export default {
   text-align center
   font-size 0.9em
 
-#contact-and-info-buttons-block
-  width 100%
-  background #ffffff
-  height 120px
-
 #contact-author-button, #show-info-author-button
   margin 10px auto
   width 200px
@@ -441,11 +474,6 @@ export default {
   text-align center
   margin 5px auto
 
-.container
-  width 100%
-  background url('~assets/images/noisy_grid.png') repeat
-  margin 10px auto
-
 .container-for-adding-shootings
   display flex
   align-items center
@@ -462,12 +490,10 @@ export default {
   display flex
   min-width 280px
   height 120px
-  width 80%
   justify-content space-between
   align-content center
   align-items center
-  margin-bottom 5px
-  margin-top 15px
+  margin 10px auto
   background rgba(255, 255, 255, 0.7)
   border-radius 20px;
   overflow hidden
@@ -682,4 +708,36 @@ export default {
 .active_tab_button
   opacity 1 !important
 
+.info_and_avatar_block
+  .card
+  .card-footer
+  .card-footer-item
+    box-shadow none
+    background none 
+    border none
+  .card
+    max-width 200px
+    height 100%
+    margin auto
+    img.avatar-photo
+      min-width 120px
+      min-height 120px
+#categories_container
+  .media
+    padding 10px
+  .media + .media
+    border none
+    margin 0
+    padding 10px      
+#contact-and-info-buttons-block
+  section.tab-content
+    min-height 0    
+.noisy
+  background url('~assets/images/noisy_grid.png') repeat    
+.collapse
+  &.card
+    .card-header
+      background: black
+      .card-header-title
+        color white  
 </style>

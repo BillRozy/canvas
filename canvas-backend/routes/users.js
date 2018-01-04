@@ -52,17 +52,21 @@ router.post('/signin', (req, res) => {
 });
 
 router.post('/signup', (req, res) => {
-  const {username, password} = req.body;
-  User.sync()
-    .then(() => {
-      return User.create({username, password});
-    })
-    .then(user => {
-      res.json(omit(user, [ 'password' ]));
-    })
-    .catch(err => {
-      Log.error(err);
-    });
+  const {username, password, operator} = req.body;
+  Promise.coroutine(function* () {
+    const user = yield User.create({username, password});
+    if (user && operator) {
+      const opRole = yield models.Role.findOne({
+        where: {
+          title: 'ROLE_OPERATOR',
+        },
+      });
+      yield user.setRoles([ opRole ]);
+      yield user.createPortfolio();
+      yield user.reload();
+    }
+    res.json(omit(user, [ 'password' ]));
+  })().catch(err => Log.error(err));
 });
 
 /* GET home page. */

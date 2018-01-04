@@ -1,17 +1,17 @@
 <template lang="pug">
-header
+header.navbar.is-fixed-top
   .menu-button(:class="{open: menuIsOpened}", @click="menuIsOpened = !menuIsOpened")
     span
     span
     span
     span
-  .menu(:class="{activated: menuIsOpened}")
-    router-link(to='about') О нас
-    router-link(to='catalog') Каталог
-    router-link#hidden-main-link(to='/') На Главную
-    router-link#logo(to='/')
+  nav.menu.level(:class="{activated: menuIsOpened}")
+    router-link.level-item(to='about') О нас
+    router-link.level-item(to='catalog') Каталог
+    router-link.level-item#hidden-main-link(to='/') На Главную
+    router-link.level-item#logo(to='/')
       .header_decor_triangle
-    router-link(to='events') Новости
+    router-link.level-item(to='events') Новости
   personal-cabinet(v-if="$store.state.session.ready")
 </template>
 <script>
@@ -53,8 +53,8 @@ header
       height 100%
       width auto
       min-width 120px
-      background url('~assets/images/canvaslogo.png') no-repeat 50% 70%
-      background-size 100%
+      background url('~assets/images/canvaslogo.png') no-repeat 50% 50%
+      background-size 30%
 
       @media screen and (max-width: $header-critical-size)
         display none

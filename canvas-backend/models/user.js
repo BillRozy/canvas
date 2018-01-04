@@ -48,7 +48,6 @@ module.exports = (sequelize, DataTypes) => {
       include: [ {
         model: models.Profile,
         as: 'profile',
-        attributes: [ 'avatar', 'name', 'surname' ],
       } ],
       attributes: {
         exclude: [ 'password' ],
