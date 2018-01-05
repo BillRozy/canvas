@@ -57,26 +57,4 @@ router.beforeEach((to, from, next) => {
     proceed()
 });
 
-// const waitForCurrentUser = (to, from, next) => {
-//   function proceed() {
-//     if (store.getters.currentUser)
-//       next()
-//     else
-//       next('/')
-//   }
-//
-//   // we must wait for the store to be initialized
-//   if (!store.state.session.ready) {
-//     store.watch(
-//       (state) => state.session.ready,
-//       (value) => {
-//         if (value == true)
-//           proceed()
-//       }
-//     )
-//   }
-//   else
-//     proceed()
-// }
-
 export default router

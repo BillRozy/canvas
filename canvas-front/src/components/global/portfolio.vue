@@ -88,7 +88,8 @@
       .card-content
         .content
           comment(v-for="comment in comments", :comment_data="comment", key="comment.id")
-          new-comment(:portfolio_id="portfolio.id", :user="$store.getters.currentUser.username", :avatarsrc="avatar")
+          new-comment(:portfolio_id="portfolio.id", :portfolio_user_id="portfolio.userId", :user="$store.getters.currentUser.username", :avatarsrc="avatar")
+  b-loading(:active="!loaded")     
 </template>
 <script>
 /* eslint-disable no-unused-vars */
@@ -116,13 +117,13 @@ export default {
   name: "",
   data: () => ({
     loaded: false,
-    portfolio: {},
     inEditMode: false,
     pageSelector: PHOTO_PAGE,
     swipers: {},
     openedComments: false,
     openedPhotos: true,
     openedVideos: true,
+    userId: null,
   }),
   components: {
     Comment, Spoiler, NewComment, InteractiveRating
@@ -130,13 +131,12 @@ export default {
   beforeRouteEnter (to, from, next) {
 
     next(vm => {
-      if(to.params.id === vm.$store.getters.currentUser.id + ""){
-        vm.portfolio = vm.$store.getters.currentUser.portfolio;
+      vm.userId = to.params.id
+      if(vm.$store.getters.portfolioByUserId(to.params.id)){
         vm.loaded = true;
       } else {
-        vm.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userid: to.params.id})
-        .then(portfolio => {
-          vm.portfolio = portfolio;
+        vm.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userId: to.params.id})
+        .then(() => {
           vm.loaded = true;
         })
         .catch(err => {
@@ -145,12 +145,27 @@ export default {
       }
     })
   },
+  beforeRouteUpdate (to, from, next) {
+    this.loaded = false;
+    this.userId = to.params.id
+    if(this.$store.getters.portfolioByUserId(to.params.id)){
+      this.loaded = true;
+    } else {
+      this.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userId: to.params.id})
+      .then(() => {
+        this.loaded = true;
+      })
+      .catch(err => {
+        this.$log.error(TAG, err);
+      })
+    }
+  },
   computed: {
     isOwner() {
       return this.$store.getters.currentUser && this.portfolio.userId === this.$store.getters.currentUser.id;
     },
-    selfPortfolio(){
-      return this.$store.state.session.user.portfolio;
+    portfolio(){
+      return this.$store.getters.portfolioByUserId(this.userId) || {}
     },
     user() {
       return this.portfolio.user || {};
@@ -223,8 +238,9 @@ export default {
     },
     deletePhotoOffer(category){
       const offer = this.photoOffers.find(offer => offer.category === category);
-      this.$store.dispatch(Naming.Actions.DELETE_OFFER, {
+      this.$store.dispatch(Naming.Actions.DELETE_PHOTO_OFFER, {
         id: offer.id,
+        userId: this.portfolio.userId,
       })
     },
     addPhotoOffer(){
@@ -233,6 +249,7 @@ export default {
           mode: 'photo',
           categories: this.availablePhotoCategories,
           portfolio_id: this.portfolio.id,
+          portfolio_user_id: this.portfolio.userId,
         }
       })
       form.$store = this.$store

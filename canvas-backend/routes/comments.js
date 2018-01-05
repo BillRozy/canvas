@@ -26,9 +26,22 @@ router.post('/', passport.authenticate('jwt', { session: false }),(req, res) => 
   }
   const toAdd = JSON.parse(JSON.stringify(req.body));
   toAdd.userId = req.user.id;
-  Comment.create(toAdd)
+  User.findById(req.user.id)
+    .then(user => {
+      return user.createComment(toAdd)
+        .then(c => {
+          const result = c.toJSON();
+          result.user = user.toJSON();
+          res.json(result);
+        })
+        .catch(err => {
+          res.status(500).json(err);
+        });
+    })
     .then(c => {
-      res.json(c);
+      const result = c.toJSON();
+      result.user = req.user.toJSON();
+      res.json(result);
     })
     .catch(err => {
       res.status(500).json(err);

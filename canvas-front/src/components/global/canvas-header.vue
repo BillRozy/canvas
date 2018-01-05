@@ -1,18 +1,19 @@
 <template lang="pug">
 header.navbar.is-fixed-top
-  .menu-button(:class="{open: menuIsOpened}", @click="menuIsOpened = !menuIsOpened")
-    span
-    span
-    span
-    span
-  nav.menu.level(:class="{activated: menuIsOpened}")
-    router-link.level-item(to='about') О нас
-    router-link.level-item(to='catalog') Каталог
-    router-link.level-item#hidden-main-link(to='/') На Главную
-    router-link.level-item#logo(to='/')
-      .header_decor_triangle
-    router-link.level-item(to='events') Новости
-  personal-cabinet(v-if="$store.state.session.ready")
+  .container.is-fluid
+    .menu-button(:class="{open: menuIsOpened}", @click="menuIsOpened = !menuIsOpened")
+      span
+      span
+      span
+      span
+    nav.menu.level.is-marginless(:class="{activated: menuIsOpened}")
+      router-link.level-item(to='about') О нас
+      router-link.level-item(to='catalog') Каталог
+      router-link.level-item#hidden-main-link(to='/') На Главную
+      router-link.level-item#logo(to='/')
+        .header_decor_triangle
+      router-link.level-item(to='events') Новости
+    personal-cabinet(v-if="$store.state.session.ready")
 </template>
 <script>
 import PersonalCabinet from '@/components/global/personal-cabinet.vue'
@@ -29,21 +30,7 @@ export default {
 <style lang="stylus" scoped>
 @import '~assets/css/consts'
 header
-  // position fixed
-  background white
-  width 100vw
-  z-index 100
-  font-size 1.2em
-  min-width $min_width
-  border-bottom 1px lightgrey solid
-  height $header-mini-height
-
-  &.onmain
-    width 100vw
-  a
-    color black
-    text-decoration none
-
+  border-bottom 1px solid lightgray
   #hidden-main-link
     display none
     @media screen and (max-width: $header-critical-size)
@@ -174,7 +161,4 @@ header
 
     @media screen and (max-width: $header-critical-size)
       display inline-block
-
-.zaglushka
-  height $header-mini-height
 </style>

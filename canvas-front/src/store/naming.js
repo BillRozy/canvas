@@ -11,7 +11,14 @@ const naming = {
     SET_VIDEO_PRICE_EXTENT: 'set video price extent',
     SET_PHOTO_PRICE_EXTENT: 'set photo price extent',
     REMOVE_OFFER: 'remove offer',
+    ADD_PORTFOLIO: 'add portfolio',
     ADD_PHOTO_OFFER: 'add photo offer',
+    ADD_COMMENT_TO_PORTFOLIO: 'add comment to portfolio',
+    ADD_PHOTO_TO_PORTFOLIO: 'add photo to portfolio',
+    ADD_VIDEO_TO_PORTFOLIO: 'add video to portfolio',
+    ADD_PHOTO_OFFER_TO_PORTFOLIO: 'add photo offer to portfolio',
+    ADD_VIDEO_OFFER_TO_PORTFOLIO: 'add video offer to portfolio',
+    REMOVE_PHOTO_OFFER_FROM_PORTFOLIO: 'remove photo offer from portfolio',
   },
 
   Actions: {
@@ -25,7 +32,7 @@ const naming = {
     POST_VIDEO_OFFER: 'post video offer',
     POST_PHOTO_OFFER: 'post photo offer',
     GET_PRICE_EXTENT: 'get price extent',
-    DELETE_OFFER: 'delete offer',
+    DELETE_PHOTO_OFFER: 'delete photo offer',
   }
 }
 

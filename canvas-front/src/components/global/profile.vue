@@ -12,7 +12,7 @@
                   b-input(type="text", v-model="profile.surname")
                 b-field(v-else) {{`${profile.name} ${profile.surname}`}}  
             .card-image
-              figure.image.is-128x128
+              figure.image.is-258x258
                 img(:src='avatar')      
         .tile.is-8
           .card(style="width:100%;")

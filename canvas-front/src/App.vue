@@ -1,5 +1,5 @@
 <template lang="pug">
-main#App
+main.is-screen-height-maxed#App
   canvas-header
   transition(name="fade", mode="out-in")
     keep-alive
@@ -78,6 +78,7 @@ p
 
   text-align center
 main
+  min-height: calc(100vh - 4rem)
   height 100%
   width 100%
 .wrap

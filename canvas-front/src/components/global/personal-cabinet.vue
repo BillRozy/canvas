@@ -1,14 +1,14 @@
 <template lang='pug'>
 .personal-cabinet
-  .columns.is-gapless.is-marginless.is-pulled-left(v-if='isSigned', style="height: 100%; max-width: 250px; width: 100%")
+  .columns.is-gapless.is-marginless(v-if='isSigned', style="min-width: 200px; max-height: 100%")
+    .column(style="justify-content:  center")
+      figure.is-clipped.image.is-64x64
+        img(:src="avatar")
     .column
-      figure(style="height: 100%")
-        img.is-64x64(:src="avatar", style="height: 60px; width: 60px")
-    .column
-      router-link(:to="linkToProfile", style="padding-left: 10px;") {{username}}
+      router-link(:to="linkToProfile", style="justify-content: center") {{username}}
     .column.is-flex(style="align-items: center; justify-content: center")
       b-dropdown(position="is-bottom-left", style="height: 100%")
-        button.button.dropped-button.is-shadowless(slot="trigger", style="height: 59px; width: 59px")
+        button.button.dropped-button.is-shadowless.is-paddingless(slot="trigger", style="height: 100%; width: 59px")
           b-icon(icon="arrow-down-drop-circle")
         b-dropdown-item(has-link)
           router-link(:to='linkToProfile') Профиль
@@ -70,6 +70,7 @@ export default {
   display flex
   justify-content flex-end
   height 100%
+  max-height 100%
   width 20%
   a
     display inline-flex

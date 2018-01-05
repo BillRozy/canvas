@@ -1,130 +1,110 @@
 <template lang="pug">
-.scrollable-section
-  .transparent-block300
-  #photoslide.whitestripe(v-show='onPriceTab')
-    h1 - ФОТОСЪЕМКА -
-    h2 Средняя цена за час
-    .slider-section
-      input.slider-left-value(type='text')
-      .slider
-      input.slider-right-value(type='text')
-    .two-buttons-adaptive-pane
-      input.btn-search(type='submit', value='ИСКАТЬ', @click='onPriceTab = false;')
-      .swap-section(@click='showVideo')
-        .swap-section-button
-        div К ВИДЕО
-  #photoslide-filters.whitestripe(v-show='!onPriceTab')
-    .filter-and-controls-section
-      .filter-section-back-step К ЦЕНЕ
-        .filter-section-back-step-button(@click='onPriceTab = true;')
-      .filter-section
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'TFP')")
-          .filter-section-item-flipper
-            #filter-item-front-1.filter-section-item-flipper-front
-            .filter-section-item-flipper-back TFP
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Fashion')")
-          .filter-section-item-flipper
-            #filter-item-front-2.filter-section-item-flipper-front
-            .filter-section-item-flipper-back FASHION
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Wedding')")
-          .filter-section-item-flipper
-            #filter-item-front-3.filter-section-item-flipper-front
-            .filter-section-item-flipper-back WEDDING
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Children and Family')")
-          .filter-section-item-flipper
-            #filter-item-front-4.filter-section-item-flipper-front
-            .filter-section-item-flipper-back CHILDREN AND FAMILY
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Holidays')")
-          .filter-section-item-flipper
-            #filter-item-front-5.filter-section-item-flipper-front
-            .filter-section-item-flipper-back HOLIDAYS
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Party')")
-          .filter-section-item-flipper
-            #filter-item-front-6.filter-section-item-flipper-front
-            .filter-section-item-flipper-back PARTY
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Personal')")
-          .filter-section-item-flipper
-            #filter-item-front-7.filter-section-item-flipper-front
-            .filter-section-item-flipper-back PERSONAL
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Love Story')")
-          .filter-section-item-flipper
-            #filter-item-front-8.filter-section-item-flipper-front
-            .filter-section-item-flipper-back LOVE STORY
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Commerce')")
-          .filter-section-item-flipper
-            #filter-item-front-9.filter-section-item-flipper-front
-            .filter-section-item-flipper-back COMMERCE
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Interior')")
-          .filter-section-item-flipper
-            #filter-item-front-10.filter-section-item-flipper-front
-            .filter-section-item-flipper-back INTERIOR
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Objective')")
-          .filter-section-item-flipper
-            #filter-item-front-11.filter-section-item-flipper-front
-            .filter-section-item-flipper-back OBJECTIVE
-        a.filter-section-item(ontouchstart="$(this).toggleClass('hover');", onclick="setAndSubmit('#photo_filter_form', '#photo_category_field', 'Others')")
-          .filter-section-item-flipper
-            #filter-item-front-12.filter-section-item-flipper-front
-            .filter-section-item-flipper-back OTHERS
-      .filter-section-next-step
+.scrollable-section.level(style="min-height: calc(100vh - 4rem)")
+  .level-item
+    .hero.is-medium.is-dark(style="width: 100%")
+      .hero-head
+      transition(name="fade", mode="out-in") 
+        .hero-body(v-if="onPriceTab", key="price")
+          h1 - ФОТОСЪЕМКА - 
+          h2 Средняя цена за час
+          .container.is-desktop
+            .level
+              .level-item
+                vue-slider(v-model="modelPrices", :min="prices[0]", :max="prices[1]", width="100%", height="8", 
+                :dotSize="32", tooltip="always",formatter="RUB {value}", :tooltipStyle="{backgroundColor: '#8c67ef', borderColor: '#666'}",
+                :processStyle="{backgroundColor: '#999'}")
+            .level
+              .level-item
+                .field.has-addons
+                  .control
+                    button.button.is-light.is-medium(@click='onPriceTab = false;') ИСКАТЬ
+                  .control  
+                    button.button.is-primary.is-medium(@click='showVideo') К ВИДЕО
+        .hero-body(v-else, key="filter")
+          .container.is-desktop
+            .level
+              .level-item
+                .columns.is-gapless
+                  .column.is-one-third
+                    .columns.is-gapless
+                      .column.is-half
+                        flip-button(:description="flippers.tfp.description", size="150px")
+                          img(:src="flippers.tfp.icon")
+                        flip-button(:description="flippers.fashion.description", size="150px")
+                          img(:src="flippers.fashion.icon")  
+                      .column.is-half
+                        flip-button(:description="flippers.wedding.description", size="150px")
+                          img(:src="flippers.wedding.icon")
+                        flip-button(:description="flippers.family.description", size="150px")
+                          img(:src="flippers.family.icon")
+                  .column.is-one-third
+                    .columns.is-gapless
+                      .column.is-half
+                        flip-button(:description="flippers.holidays.description", size="150px")
+                          img(:src="flippers.holidays.icon")
+                        flip-button(:description="flippers.party.description", size="150px")
+                          img(:src="flippers.party.icon")
+                      .column.is-half
+                        flip-button(:description="flippers.personal.description", size="150px")
+                          img(:src="flippers.personal.icon")
+                        flip-button(:description="flippers.lovestory.description", size="150px")
+                          img(:src="flippers.lovestory.icon")
+                  .column.is-one-third
+                    .columns.is-gapless
+                      .column.is-half
+                        flip-button(:description="flippers.commerce.description", size="150px")
+                          img(:src="flippers.tfp.icon")
+                        flip-button(:description="flippers.interrior.description", size="150px")
+                          img(:src="flippers.interrior.icon")
+                      .column.is-half
+                        flip-button(:description="flippers.objective.description", size="150px")
+                          img(:src="flippers.objective.icon")
+                        flip-button(:description="flippers.other.description", size="150px")
+                          img(:src="flippers.other.icon")       
+            .level
+              .level-item
+                  .control
+                    button.button.is-primary.is-medium(@click='onPriceTab = true;') НАЗАД К ЦЕНЕ
+
+      .hero-foot
 </template>
 <script>
-import noUiSlider from 'nouislider'
+import VueSlider from 'vue-slider-component'
+import FlipButton from '@/components/global/flip-button';
+import Consts from '@/consts'
 export default {
+  components: {
+    VueSlider, FlipButton
+  },
   data: () => ({
     onPriceTab: true,
-    slider: null,
+    modelPrices: [0, 100],
   }),
   computed: {
+    pricesExtent() {
+      return this.$store.state.catalog.photo.priceExtent || {min: 0, max: 100};
+    },
     prices(){
-      return this.$store.state.catalog.photo.priceExtent;
+      return [this.pricesExtent.min, this.pricesExtent.max];
+    },
+    flippers() {
+      return Consts.PHOTO_FILTERS;
     }
   },
   methods: {
     showVideo () {
       this.$parent.swapPage()
     },
-    createSlider(){
-      noUiSlider.create(this.slider, {
-        start: [ this.prices.min, this.prices.max ],
-        step: 1,
-        connect: true,
-        range: {
-          'min': this.prices.min,
-          'max': this.prices.max
-        }
-      })
-      const snapValues = [
-        this.$el.querySelector('.slider-left-value'),
-        this.$el.querySelector('.slider-right-value')
-      ]
-
-      this.slider.noUiSlider.on('update', function (values, handle) {
-        snapValues[handle].value = Math.round(values[handle])
-      })
-    },
-    updateSliderExtent(){
-      this.slider.noUiSlider.updateOptions({
-        range: {
-          min: this.prices.min,
-          max: this.prices.max
-        }
-      });
-      this.slider.noUiSlider.set([this.prices.min, this.prices.max]);
-    }
   },
   watch: {
     prices: {
       handler: function () {
-        this.updateSliderExtent();
+        this.modelPrices = this.prices;
       },
       deep: true
     }
   },
   mounted () {
-    this.slider = this.$el.querySelector('.slider')
-    this.createSlider();
-
   }
 }
 </script>

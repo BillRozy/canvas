@@ -43,24 +43,6 @@
   .whitestripe
     height 100%
 
-  header
-    height $header-mini-height
-
-    .menu-button
-      margin "calc(%s - 35px/2) 20px" % ($header-mini-height)
-
-    .header-avatar
-      max-width $header-mini-height
-      max-height $header-mini-height
-
-    #profile-block-menu
-      top $header-mini-height
-    @media screen and (max-width: $header-critical-size)
-      .menu
-        top $header-mini-height
-
-  .zaglushka
-    height $header-mini-height
 
 @media screen and (min-height: 600px)
   .transparent-block300
@@ -69,22 +51,3 @@
   .whitestripe
     height 70%
 
-  header
-    height $header-height
-
-    .menu-button
-      margin "calc(%s - 35px/2) 20px" % ($header-height)
-
-    .header-avatar
-      max-width $header-height
-      max-height $header-height
-
-    #profile-block-menu
-      top $header-height
-
-    @media screen and (max-width: $header-critical-size)
-      .menu
-        top $header-height
-
-  .zaglushka
-    height $header-height
