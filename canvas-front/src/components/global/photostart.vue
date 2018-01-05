@@ -7,7 +7,7 @@
         .hero-body(v-if="onPriceTab", key="price")
           h1 - ФОТОСЪЕМКА - 
           h2 Средняя цена за час
-          .container.is-desktop
+          .container.is-desktop.flippers-holder
             .level
               .level-item
                 vue-slider(v-model="modelPrices", :min="prices[0]", :max="prices[1]", width="100%", height="8", 
@@ -21,46 +21,11 @@
                   .control  
                     button.button.is-primary.is-medium(@click='showVideo') К ВИДЕО
         .hero-body(v-else, key="filter")
-          .container.is-desktop
+          .container.is-desktop.flippers-holder(style="max-width: 100vw")
             .level
-              .level-item
-                .columns.is-gapless
-                  .column.is-one-third
-                    .columns.is-gapless
-                      .column.is-half
-                        flip-button(:description="flippers.tfp.description", size="150px")
-                          img(:src="flippers.tfp.icon")
-                        flip-button(:description="flippers.fashion.description", size="150px")
-                          img(:src="flippers.fashion.icon")  
-                      .column.is-half
-                        flip-button(:description="flippers.wedding.description", size="150px")
-                          img(:src="flippers.wedding.icon")
-                        flip-button(:description="flippers.family.description", size="150px")
-                          img(:src="flippers.family.icon")
-                  .column.is-one-third
-                    .columns.is-gapless
-                      .column.is-half
-                        flip-button(:description="flippers.holidays.description", size="150px")
-                          img(:src="flippers.holidays.icon")
-                        flip-button(:description="flippers.party.description", size="150px")
-                          img(:src="flippers.party.icon")
-                      .column.is-half
-                        flip-button(:description="flippers.personal.description", size="150px")
-                          img(:src="flippers.personal.icon")
-                        flip-button(:description="flippers.lovestory.description", size="150px")
-                          img(:src="flippers.lovestory.icon")
-                  .column.is-one-third
-                    .columns.is-gapless
-                      .column.is-half
-                        flip-button(:description="flippers.commerce.description", size="150px")
-                          img(:src="flippers.tfp.icon")
-                        flip-button(:description="flippers.interrior.description", size="150px")
-                          img(:src="flippers.interrior.icon")
-                      .column.is-half
-                        flip-button(:description="flippers.objective.description", size="150px")
-                          img(:src="flippers.objective.icon")
-                        flip-button(:description="flippers.other.description", size="150px")
-                          img(:src="flippers.other.icon")       
+              .level-item(style="max-width: 80%; flex-wrap: wrap; margin: 0 auto")
+                flip-button(v-for="(flipper, index) in flippers", :key="index", :description="flipper.description", :size="flipperSize")
+                  img(:src="flipper.icon")      
             .level
               .level-item
                   .control
@@ -79,6 +44,8 @@ export default {
   data: () => ({
     onPriceTab: true,
     modelPrices: [0, 100],
+    flipperSize: 150,
+    onMobile: false,
   }),
   computed: {
     pricesExtent() {
@@ -95,6 +62,12 @@ export default {
     showVideo () {
       this.$parent.swapPage()
     },
+    checkMobile(){
+      this.isMobile = window.innerWidth <= 768
+    },
+    flipperCalc(){
+      return this.$el.querySelector('.flippers-holder').clientWidth * 0.8/7
+    }
   },
   watch: {
     prices: {
@@ -105,6 +78,16 @@ export default {
     }
   },
   mounted () {
+    this.checkMobile();
+    this.flipperSize = this.flipperCalc();
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.checkMobile();
+        this.flipperSize = this.flipperCalc();
+      } , 250);
+    });
   }
 }
 </script>

@@ -19,10 +19,13 @@ export default {
     }
   },
   computed: {
+    formattedSize() {
+      return this.size + 'px';
+    },
     style() {
       return {
-        width: this.size || '140px',
-        height: this.size || '140px'
+        width: this.formattedSize|| '140px',
+        height: this.formattedSize || '140px'
       }
     }
   },
@@ -42,7 +45,9 @@ export default {
 .flipper-wrapper
   display block
   margin 5px
-  //transition 0.5s
+  transition 0.5s
+  max-width 200px
+  max-height 200px
   perspective 1000px
   &:hover
     cursor pointer

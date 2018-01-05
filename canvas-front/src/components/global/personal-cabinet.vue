@@ -1,12 +1,12 @@
 <template lang='pug'>
-.personal-cabinet
-  .columns.is-gapless.is-marginless(v-if='isSigned', style="min-width: 200px; max-height: 100%")
-    .column(style="justify-content:  center")
+.personal-cabinet(:class="{'is-plain': plain}")
+  .columns.is-gapless.is-marginless.is-mobile(v-if='isSigned', style="min-width: 180px;max-height: 100%")
+    .column(style="justify-content:  center;align-items: center")
       figure.is-clipped.image.is-64x64
         img(:src="avatar")
     .column
       router-link(:to="linkToProfile", style="justify-content: center") {{username}}
-    .column.is-flex(style="align-items: center; justify-content: center")
+    .column.is-flex(style="align-items: center; justify-content: center", v-if="!plain")
       b-dropdown(position="is-bottom-left", style="height: 100%")
         button.button.dropped-button.is-shadowless.is-paddingless(slot="trigger", style="height: 100%; width: 59px")
           b-icon(icon="arrow-down-drop-circle")
@@ -16,7 +16,14 @@
           router-link(:to='linkToPortfolio') Портфолио
         b-dropdown-item(has-link)
           a(@click="signOut") Выйти
-  .columns.is-gapless.is-marginless(v-else)
+  .container.is-marginless(v-if='isSigned && plain')
+    .navbar-item
+      router-link(:to='linkToProfile') Профиль
+    .navbar-item  
+      router-link(:to='linkToPortfolio') Портфолио
+    .navbar-item  
+      a(@click="signOut") Выйти
+  .columns.is-gapless.is-marginless(v-if='!isSigned')
     .column.is-6
       div(@click="openSignInPopup") Войти
     .column.is-6
@@ -31,6 +38,11 @@ const Login = new LoginConstructor();
 Login.$mount();
 import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 export default {
+  props: {
+    plain: {
+      default: false,
+    }
+  },
   data: () => ({
     menuOpened: false
   }),
@@ -68,17 +80,24 @@ export default {
 .personal-cabinet
   float right
   display flex
+  flex-direction column
   justify-content flex-end
   height 100%
   max-height 100%
-  width 20%
+  &.is-plain
+    width 100%
+    .columns:first-child
+      min-width 180px !important
+      max-width 180px !important
+      padding-bottom 0.5rem
+      border-bottom 1px solid lightgray
+    .navbar-item
+      width 100%
+      text-align center
   a
     display inline-flex
     height 100%
     align-items center
-  @media screen and (max-width: $header-critical-size)
-    width 40%
-    min-width 200px
 
   .dropped-button
     border none
