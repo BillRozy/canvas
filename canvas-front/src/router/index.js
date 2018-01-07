@@ -2,6 +2,8 @@ import VueRouter from 'vue-router'
 import About from '@/components/global/about.vue'
 import Doorman from '@/components/global/doorman.vue'
 import Catalog from '@/components/global/catalog.vue'
+import PhotoCatalog from '@/components/global/photo-catalog.vue'
+import VideoCatalog from '@/components/global/video-catalog.vue'
 import Events from '@/components/global/events.vue'
 import Login from '@/components/auth/login.vue'
 import Signup from '@/components/auth/signup.vue'
@@ -14,7 +16,20 @@ import store from '@/store'
 const routes = [
   { path: '/', component: Doorman },
   { path: '/about', component: About },
-  { path: '/catalog', component: Catalog },
+  {
+    path: '/catalog',
+    component: Catalog,
+    children: [
+      {
+        path: 'photo',
+        component: PhotoCatalog,
+      },
+      {
+        path: 'video',
+        component: VideoCatalog,
+      }
+    ]
+  },
   { path: '/events', component: Events },
   { path: '/sign_in', component: Login },
   { path: '/sign_up', component: Signup },

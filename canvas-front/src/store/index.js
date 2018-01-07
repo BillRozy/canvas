@@ -7,6 +7,11 @@ import context from '@/store/modules/context'
 import popup from '@/store/modules/modal'
 
 /* eslint-disable no-undef */
+const getters = {
+  isMobileMode(state){
+    return state.mobile;
+  }
+}
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
@@ -16,9 +21,11 @@ const store = new Vuex.Store({
     context,
   },
   state: {
+    mobile: false,
   },
   mutations,
   actions,
+  getters,
 })
 
 export default store

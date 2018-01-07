@@ -9,6 +9,7 @@ $twitter-invert: findColorInvert($twitter);
 $card-background-color: transparent;
 $dropdown-content-background-color: transparent;
 $navbar-height: 4rem;
+$dimensions: 16 24 32 48 64 96 128 256;
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (

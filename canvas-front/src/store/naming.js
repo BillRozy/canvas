@@ -19,6 +19,7 @@ const naming = {
     ADD_PHOTO_OFFER_TO_PORTFOLIO: 'add photo offer to portfolio',
     ADD_VIDEO_OFFER_TO_PORTFOLIO: 'add video offer to portfolio',
     REMOVE_PHOTO_OFFER_FROM_PORTFOLIO: 'remove photo offer from portfolio',
+    SET_MOBILE_MODE: 'set mobile mode',
   },
 
   Actions: {

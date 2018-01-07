@@ -1,7 +1,7 @@
 <template lang="pug">
 .page-wrapper
   .section 
-    .container(style="max-width: 700px")
+    .container(style="max-width: 745px")
       .tile.is-ancestor
         .tile.is-4
           .card(style="width:100%;")
@@ -12,8 +12,11 @@
                   b-input(type="text", v-model="profile.surname")
                 b-field(v-else) {{`${profile.name} ${profile.surname}`}}  
             .card-image
-              figure.image.is-258x258
-                img(:src='avatar')      
+              figure.image.is-256x256
+                img(:src='avatar')
+            .card-content(v-if="isEditing")
+              button.button.is-primary#pick-avatar Загрузить аватар
+              avatar-cropper(upload-form-name="avatar",@uploaded="updateUserAvatar", trigger="#pick-avatar",:upload-headers="{'Authorization': 'Bearer ' + $store.state.session.token}", upload-url="/api/profiles/avatar", :labels="{ submit: 'Применить', cancel: 'Отмена'}")     
         .tile.is-8
           .card(style="width:100%;")
             .card-content
@@ -38,8 +41,12 @@
 import Naming from '@/store/naming';
 const TAG = "Profile";
 import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
+import AvatarCropper from "vue-avatar-cropper"
 export default {
   name: "",
+  components: {
+    AvatarCropper
+  },
   props: ['profile_data'],
   data: () => ({
     profile: this.profile_data || {},
@@ -87,7 +94,10 @@ export default {
         this.$log.error(err);
         this.isEditing = !this.isEditing;
       })
-    }
+    },
+    updateUserAvatar(response) {
+      this.profile = response.profile
+    },
   },
   mounted() {
     this.$store.dispatch(Naming.Actions.GET_PROFILE, {userid: this.$route.params.id})

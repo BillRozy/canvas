@@ -1,6 +1,6 @@
 <template lang='pug'>
 .personal-cabinet(:class="{'is-plain': plain}")
-  .columns.is-gapless.is-marginless.is-mobile(v-if='isSigned', style="min-width: 180px;max-height: 100%")
+  .columns.is-gapless.is-marginless.is-mobile(v-if='isSigned', style="min-width: 200px;max-height: 100%")
     .column(style="justify-content:  center;align-items: center")
       figure.is-clipped.image.is-64x64
         img(:src="avatar")
@@ -23,9 +23,9 @@
       router-link(:to='linkToPortfolio') Портфолио
     .navbar-item  
       a(@click="signOut") Выйти
-  .columns.is-gapless.is-marginless(v-if='!isSigned')
+  .columns.is-gapless.is-marginless(v-if='!isSigned', style="height: 100%")
     .column.is-6
-      div(@click="openSignInPopup") Войти
+      a(@click="openSignInPopup") Войти
     .column.is-6
       router-link(to='sign_up') Регистрация
 </template>
@@ -84,11 +84,12 @@ export default {
   justify-content flex-end
   height 100%
   max-height 100%
+  min-width 200px
   &.is-plain
     width 100%
     .columns:first-child
-      min-width 180px !important
-      max-width 180px !important
+      min-width 200px !important
+      max-width 200px !important
       padding-bottom 0.5rem
       border-bottom 1px solid lightgray
     .navbar-item
@@ -96,6 +97,7 @@ export default {
       text-align center
   a
     display inline-flex
+    justify-content: center;
     height 100%
     align-items center
 
@@ -103,8 +105,8 @@ export default {
     border none
     &:hover
       span
-        transition 0.2s
-        transform scale(1.1)   
+        color pink
+        transition 0.2s 
 
   .dropdown-content
     background white      

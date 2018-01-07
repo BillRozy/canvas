@@ -1,16 +1,15 @@
 <template lang="pug">
-.content-wrapper
-  .card
-    .card-header 
-      .card-header-title Войти
-    .card-content  
-      form.body
-        b-field(label="E-Mail")
-          b-input(type="text", v-model="username")
-        b-field(label="Пароль")
-          b-input(type="password", v-model="password")
-        b-field
-          button.button.is-primary(type="button", @click="login") Войти
+.card(style="background: white;")
+  .card-header 
+    .card-header-title Войти
+  .card-content  
+    form.body
+      b-field(label="E-Mail")
+        b-input(type="text", v-model="username")
+      b-field(label="Пароль")
+        b-input(type="password", v-model="password")
+      b-field
+        button.button.is-primary(type="button", @click="login") Войти
 </template>
 <script>
 import Naming from '@/store/naming'

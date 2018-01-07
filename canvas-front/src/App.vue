@@ -45,6 +45,11 @@ export default {
         visibility: false,
       });
     },
+    checkMobile(){
+      this.$store.commit(Naming.Mutations.SET_MOBILE_MODE, {
+        enabled: window.innerWidth < 769,
+      })
+    }
   },
   created() {
     const user = localStorage.getItem('current_user');
@@ -66,6 +71,13 @@ export default {
     const modal = this.$refs.modalWindow;
     this.$store.commit(Naming.Mutations.SET_MODAL_CONTAINER, {
       container: modal.getContainer(),
+    });
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.checkMobile();
+      } , 250);
     });
   }
 

@@ -4,6 +4,7 @@ const Promise = require('bluebird');
 const passport = require('../auth/passport.js');
 const Profile = require('../models').Profile;
 const authorizedRoles = require('../auth/roles-authorize');
+const uploadAvatar = require('../helpers/uploader').uploadAvatar;
 const Log = require('../logger');
 
 /* GET users listing. */
@@ -41,6 +42,19 @@ router.put('/:id',passport.authenticate('jwt', { session: false }),(req, res) =>
     } else {
       res.status(403).json({success: false, msg: 'Wrong profile!'});
     }
+  })().catch(err => Log.error(err));
+});
+
+router.post('/avatar', passport.authenticate('jwt', { session: false }),uploadAvatar,(req, res) => {
+  const path = '/api/' + req.file.path;
+  Promise.coroutine(function* () {
+    const profile = yield req.user.getProfile();
+    const updated = yield profile.update({
+      avatar: path,
+    });
+    res.json({
+      profile: updated,
+    });
   })().catch(err => Log.error(err));
 });
 

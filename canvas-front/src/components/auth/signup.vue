@@ -1,20 +1,25 @@
 <template lang="pug">
-.content-wrapper
-  .card
-    .card-header 
-      .card-header-title РЕГИСТРАЦИЯ
-    .card-content 
-      form.body
-        b-field(label="E-Mail")
-          b-input(type="email", v-model="username")
-        b-field(label="Password")
-          b-input(type="password", v-model="password", minlength="6")
-        b-field(label="Password confirmation")
-          b-input(type="password", v-model="passwordConfirmation", minlength="6")
-        b-field()
-          b-checkbox(v-model="operator") Создать портфолио и начать предлагать услуги
-        b-field
-          button.button.is-primary(@click="login") Продолжить
+section.hero.is-fullheight
+  .hero-head
+  .hero-body
+    .container.is-desktop
+      div(style="max-width: 560px; margin: 0 auto;")
+        .title Добро пожаловать на Canvas!
+        .card
+          .card-header 
+            .card-header-title РЕГИСТРАЦИЯ
+          .card-content 
+            form.body
+              b-field(label="E-Mail")
+                b-input(type="email", v-model="username")
+              b-field(label="Пароль")
+                b-input(type="password", v-model="password", minlength="6")
+              b-field(label="Подтверждение пароля")
+                b-input(type="password", v-model="passwordConfirmation", minlength="6")
+              b-field()
+                b-checkbox(v-model="operator") Создать портфолио и начать предлагать услуги
+              b-field
+                button.button.is-primary(@click="login") Продолжить
 </template>
 <script>
 import Naming from '@/store/naming'
@@ -38,6 +43,8 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+.hero.is-fullheight
+  min-height calc(100vh - 4rem)
 .header
   height 60px
   background black

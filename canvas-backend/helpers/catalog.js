@@ -2,6 +2,7 @@
 const models = require('../models');
 const Promise = require('bluebird').Promise;
 const Log = require('../logger');
+const Op = require('sequelize').Op;
 
 class Catalog {
   constructor(scope) {
@@ -19,7 +20,7 @@ class Catalog {
     });
   }
 
-  query(opts) {
+  query(opts, userIds) {
     const self = this;
     return Promise.coroutine(function* () {
       let result = [];
@@ -27,7 +28,7 @@ class Catalog {
         result = yield self.getAllOffers();
       } else {
         console.log('Created query: ' + JSON.stringify(self._createQuery(opts)));
-        const offers = yield self.model.findAll(self._createQuery(opts));
+        const offers = yield self.model.findAll(self._createQuery(opts, userIds));
         for (let i = 0; i < offers.length; i++) {
           const offerUser = yield offers[i].getUser();
           const photos = yield offerUser.getPhotos({
@@ -42,15 +43,15 @@ class Catalog {
     })();
   }
 
-  _createQuery(opts) {
+  _createQuery(opts, userIds) {
     const query = {
       where: {
 
       },
     };
-    if (opts.name) {
-      query.where.name = {
-        $like: `%${opts.name}%`,
+    if (userIds) {
+      query.where.userId = {
+        [Op.in]: userIds,
       };
     }
     if (opts.category) {

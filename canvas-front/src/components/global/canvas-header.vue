@@ -1,6 +1,6 @@
 <template lang="pug">
 header
-  .navbar.is-fixed-top(:class="{'is-transparent': menuIsOpened}")
+  .navbar.is-fixed-top(:class="[{'is-transparent': menuIsOpened},{ 'is-bordered': !menuIsOpened}]")
     .container.is-fullhd
       .navbar-brand(:class="[{'is-white': menuIsOpened},{ 'is-active': !menuIsOpened}]")
         .navbar-item
@@ -13,11 +13,11 @@ header
       .navbar-menu(:class="{'is-active': menuIsOpened}").is-transparent
         .navbar-start
           .navbar-item
-            router-link.level-item(to='about') О нас
+            router-link.level-item(to='/about') О нас
           .navbar-item  
-            router-link.level-item(to='catalog') Каталог
+            router-link.level-item(to='/catalog/photo') Каталог
           .navbar-item
-            router-link.level-item(to='events') Новости
+            router-link.level-item(to='/events') Новости
         .navbar-end
           personal-cabinet(v-if="$store.state.session.ready", :plain="menuIsOpened")
 </template>
@@ -48,7 +48,10 @@ export default {
   background transparent
 .is-white
   background white  
+.is-bordered  
+  border-bottom 1px solid lightgray
 .navbar
+  box-sizing border-box
   .navbar-brand
     border-bottom 1px solid lightgray
     &.is-active
@@ -56,13 +59,13 @@ export default {
   .navbar-menu.is-active
     display flex
     flex-direction column-reverse
-    max-width 180px
+    max-width 200px
     float right
     background white
     .navbar-item
       width 100%
 header
-  border-bottom 1px solid lightgray
+  box-sizing border-box
   #hidden-main-link
     display none
     @media screen and (max-width: $header-critical-size)
