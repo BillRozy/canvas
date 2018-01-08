@@ -19,7 +19,7 @@ section.hero.is-fullheight
               b-field()
                 b-checkbox(v-model="operator") Создать портфолио и начать предлагать услуги
               b-field
-                button.button.is-primary(@click="login") Продолжить
+                button.button.is-primary(@click="signup") Продолжить
 </template>
 <script>
 import Naming from '@/store/naming'
@@ -32,7 +32,7 @@ export default {
     operator: true
   }),
   methods: {
-    login () {
+    signup() {
       this.$store.dispatch(Naming.Actions.SIGN_UP, {
         username: this.username, 
         password: this.password,
