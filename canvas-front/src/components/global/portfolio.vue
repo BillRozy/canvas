@@ -55,9 +55,16 @@
             .content
               .shooting-block.columns.is-gapless(v-for="offer in photoOffers")
                 .shooting-description-block.column.is-2
-                  div {{offer.category}}
-                  div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-                  .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem(offer.category)")
+                  .card.is-shadowless
+                    .card-content
+                      p {{offer.category}}
+                    .card-footer
+                      .card-footer-item
+                        div.is-size-5 {{`${offer.price}  `}}
+                        div.is-size-7 РУБ
+                      .card-footer-item(v-if="isOwner && inEditMode")
+                        span.icon(@click="addNewItem(offer.category)")
+                          i.mdi.mdi-48px.mdi-dark.mdi-plus
                 .swiper-container.column(:data-category="offer.category")
                   .swiper-wrapper
                     .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
@@ -757,4 +764,9 @@ export default {
       background: black
       .card-header-title
         color white  
+span.icon
+  cursor pointer
+  transition 0.15s
+  &:hover
+    transform scale(1.1)        
 </style>

@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "migrate": "sequelize db:migrate",
+    "seed": "sequelize db:seed",
     "start": "node ./bin/www",
     "eslint-init": "eslint init"
   },

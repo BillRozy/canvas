@@ -1,9 +1,9 @@
 <template lang="pug">
-  .doorman
-    transition(name="component-fade")
-      keep-alive
-        photostart(v-if="onPhotoPage")
-        videostart(v-if="!onPhotoPage")
+.doorman
+  transition(name="component-fade")
+    keep-alive
+      photostart(v-if="onPhotoPage")
+      videostart(v-if="!onPhotoPage")
 
 </template>
 <script>

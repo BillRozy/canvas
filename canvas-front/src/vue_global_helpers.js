@@ -1,4 +1,5 @@
 import Naming from '@/store/naming';
+import moment from 'moment'
 export default {
   showPopup(content, closeCallback) {
     this.$store.commit(Naming.Mutations.SET_MODAL_CONTENT, {
@@ -14,4 +15,12 @@ export default {
       visibility: false,
     });
   },
+  formatSeqDateString(seqDate) {
+    moment.locale('ru');
+    return moment(seqDate).format("Do MMMM YYYY, HH:mm");
+  },
+  daysFromSeqToNow(seqDate) {
+    moment.locale('ru');
+    return moment(seqDate).fromNow();
+  }
 };

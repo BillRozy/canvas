@@ -5,6 +5,7 @@ import Catalog from '@/components/global/catalog.vue'
 import PhotoCatalog from '@/components/global/photo-catalog.vue'
 import VideoCatalog from '@/components/global/video-catalog.vue'
 import Events from '@/components/global/events.vue'
+import Event from '@/components/global/event.vue'
 import Login from '@/components/auth/login.vue'
 import Signup from '@/components/auth/signup.vue'
 import Profile from '@/components/global/profile.vue'
@@ -31,6 +32,7 @@ const routes = [
     ]
   },
   { path: '/events', component: Events },
+  { path: '/events/:id', component: Event },
   { path: '/sign_in', component: Login },
   { path: '/sign_up', component: Signup },
   { path: '/users/:id/profile', component: Profile },

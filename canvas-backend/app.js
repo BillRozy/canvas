@@ -20,10 +20,17 @@ let comments = require('./routes/comments');
 let photos = require('./routes/photos');
 let catalog = require('./routes/catalog');
 let ratings = require('./routes/ratings');
+let events = require('./routes/events');
 
 const passport = require('./auth/passport.js');
 
 let app = express();
+app.use(function(req, res, next) {
+  if (req.originalUrl.indexOf('/api') !== -1) {
+    req.url = req.originalUrl.replace('/api', '');
+  }
+  next();
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -45,6 +52,7 @@ app.use(history({
   index: '/',
 }));
 app.use('/uploads', express.static(path.join(__dirname + '/uploads')));
+app.use('/static', express.static(path.join(__dirname + '/dist/static')));
 
 app.use('/', index);
 app.use('/users', users);
@@ -56,6 +64,7 @@ app.use('/video-offers', video_offers);
 app.use('/photos', photos);
 app.use('/catalog', catalog);
 app.use('/ratings', ratings);
+app.use('/events', events);
 
 
 // catch 404 and forward to error handler

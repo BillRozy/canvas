@@ -24,7 +24,7 @@ export default {
     user() {return this.comment_data.user.profile.name},
     avatarsrc() { return this.comment_data.user.profile.avatar || ''},
     text() { return this.comment_data.body},
-    date() { return this.comment_data.createdAt},
+    date() { return this.daysFromSeqToNow(this.comment_data.createdAt)},
     avatar(){
       return this.comment_data.user.profile.avatar || defaultAvatar;
     },
