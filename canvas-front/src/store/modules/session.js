@@ -50,14 +50,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.post('/api/users/signin', user)
         .then(response => {
-          localStorage.setItem('current_user', JSON.stringify(response.data))
-          commit(Naming.Mutations.SET_CURRENT_USER, {
-            user: response.data.user
-          }),
-          commit(Naming.Mutations.SET_TOKEN, {
-            token: response.data.token,
-          })
-          axios.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
+          login(commit, response.data)
           resolve()
         })
         .catch(err => {
@@ -70,7 +63,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.post('/api/users/signup', user)
         .then(response => {
-          resolve(response.data)
+          login(commit, response.data)
+          resolve(response.data.user)
         })
         .catch(err => {
           $log.error(TAG, err)
@@ -138,6 +132,17 @@ const actions = {
   //       })
   //   })
   // },
+}
+
+function login(commit, sessionInfo){
+  localStorage.setItem('current_user', JSON.stringify(sessionInfo))
+  commit(Naming.Mutations.SET_CURRENT_USER, {
+    user: sessionInfo.user
+  }),
+  commit(Naming.Mutations.SET_TOKEN, {
+    token: sessionInfo.token,
+  })
+  axios.defaults.headers.common.Authorization = 'Bearer ' + sessionInfo.token;
 }
 
 const getters = {

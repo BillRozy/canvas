@@ -42,8 +42,7 @@ router.post('/signin', (req, res) => {
     }
     const isValidPassword = yield user.validPassword(password);
     if (isValidPassword) {
-      const token = jwt.encode(omit(user.dataValues, [ 'password' ]), SecureCfg.jwtSecret);
-      res.json({user, token});
+      res.json({user, token: token(user)});
     } else {
       res.json({success: false, msg: 'Authentication failed: password invalid'});
     }
@@ -65,7 +64,12 @@ router.post('/signup', (req, res) => {
       yield user.createPortfolio();
       yield user.reload();
     }
-    res.json(omit(user, [ 'password' ]));
+    const reloaded = yield User.unscoped().findOne(
+      {
+        where: {username},
+        include: [ 'roles' ],
+      });
+    res.json({user: reloaded, token: token(reloaded)});
   })().catch(err => Log.error(err));
 });
 
@@ -135,6 +139,10 @@ router.get('/:id/portfolio',passport.authenticate('jwt', { session: false }),(re
     res.json(portfolioJson);
   })().catch(err => Log.error(err));
 });
+
+function token(user) {
+  return jwt.encode(omit(user.dataValues, [ 'password', 'profile', 'portfolio' ]), SecureCfg.jwtSecret);
+}
 
 
 module.exports = router;

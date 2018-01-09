@@ -19,7 +19,7 @@ section.hero.is-fullheight
               b-field()
                 b-checkbox(v-model="operator") Создать портфолио и начать предлагать услуги
               b-field
-                button.button.is-primary(@click="signup") Продолжить
+                button.button.is-primary(@click.prevent="signup") Продолжить
 </template>
 <script>
 import Naming from '@/store/naming'
@@ -38,7 +38,20 @@ export default {
         password: this.password,
         operator: this.operator,
       })
+      .then(user => {
+        location.href = `/users/${user.id}/profile`;
+      })
+      .catch(err => {
+        this.$log.error(err);
+      })
     }
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      if(vm.$store.getters.isSigned){
+        vm.$router.replace({path: '/'})
+      }
+    })
   }
 }
 </script>
