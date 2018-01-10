@@ -36,6 +36,7 @@
 <script>
 import VueSlider from 'vue-slider-component'
 import FlipButton from '@/components/global/flip-button';
+import queryString from 'query-string';
 import Consts from '@/consts'
 export default {
   components: {
@@ -73,12 +74,9 @@ export default {
       this.chosenCategory = category;
       const obj = {
         category: this.chosenCategory,
-        price: {
-          min: this.modelPrices[0],
-          max: this.modelPrices[1],
-        }
+        price: this.modelPrices,
       }
-      this.$router.push(`/catalog/photo?${this.objToQueryString(obj)}`)
+      this.$router.push(`/catalog/photo?${queryString.stringify(obj, {arrayFormat: 'index'})}`)
     }
   },
   watch: {

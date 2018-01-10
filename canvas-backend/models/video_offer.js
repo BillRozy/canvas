@@ -1,5 +1,5 @@
 'use strict';
-const videoCategories = [ 'Клипы', 'Творческие', 'Свадьбы', 'Праздники', 'Вечеринки', 'Love story', 'Коммерческие', 'Другие', 'Motion Design' ];
+const videoCategories = [ 'clips', 'art', 'wedding', 'holidays', 'party', 'lovestory', 'commerce', 'other', 'motiondesign' ];
 module.exports = (sequelize, DataTypes) => {
   let VideoOffer = sequelize.define('VideoOffer', {
     category: {

@@ -1,6 +1,5 @@
 'use strict';
-const photoCategories = [ 'TFP','Fashion','Свадебная','Детская и семейная', 'Праздники', 'Концерты и вечеринки',
-  'Персональная', 'Love Story', 'Коммерческая','Интерьерная','Предметная','Другие' ];
+const photoCategories = [ 'tfp', 'fashion', 'wedding', 'family', 'holidays', 'party', 'personal', 'lovestory', 'commerce', 'interrior', 'objective', 'other' ];
 module.exports = (sequelize, DataTypes) => {
   let PhotoOffer = sequelize.define('PhotoOffer', {
     category: {

@@ -57,15 +57,14 @@ class Catalog {
     if (opts.category) {
       query.where.category = opts.category;
     }
-    const priceQuery = {};
-    if (opts.price && opts.price.min) {
-      priceQuery.$gte = opts.price.min;
-    }
-    if (opts.price && opts.price.max) {
-      priceQuery.$lte = opts.price.max;
-    }
-    if (Object.keys(priceQuery) > 0) {
-      query.where.price = priceQuery;
+    if (opts.price) {
+      query.where.price = {};
+      if (opts.price[0]) {
+        query.where.price[Op.gte] = parseInt(opts.price[0]);
+      }
+      if (opts.price[1]) {
+        query.where.price[Op.lte] = parseInt(opts.price[1]);
+      }
     }
     return query;
   }

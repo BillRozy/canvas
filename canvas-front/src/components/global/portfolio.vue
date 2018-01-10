@@ -115,8 +115,8 @@ import Swiper from 'swiper';
 import Consts from '@/consts';
 import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 const TAG = "Portfolio";
-const photoCategories = Consts.PHOTO_CATEGORIES;
-const videoCategories = Consts.VIDEO_CATEGORIES;
+const photoCategories = Consts.PHOTO_FILTERS;
+const videoCategories = Consts.VIDEO_FILTERS;
 const PHOTO_PAGE = 'photo';
 const VIDEO_PAGE = 'video';
 
@@ -225,10 +225,10 @@ export default {
       return categories;
     },
     availablePhotoCategories(){
-      return photoCategories.filter(cat => !this.appliedPhotoCategories.includes(cat));
+      return Object.values(photoCategories).filter((cat, index) => !this.appliedPhotoCategories.includes(index));
     },
     availableVideoCategories(){
-      return videoCategories.filter(cat => !this.appliedVideoCategories.includes(cat));
+      return Object.values(videoCategories).filter((cat, index) => !this.appliedVideoCategories.includes(index));
     },
     ratingState() {
       return this.isOwner ? 'static' : 'interactive';

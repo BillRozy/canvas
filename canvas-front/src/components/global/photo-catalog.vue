@@ -18,7 +18,7 @@
                   option Категория
               b-field(label="Категория", expanded)
                 b-select(v-model="category", expanded)
-                  option(v-for="category in categories") {{category}} 
+                  option(v-for="(category, index) in categories", :value="index") {{category.description}} 
             b-field(label="Поиск по автору")
               b-field
                 b-input(v-model="name", type="search", icon="magnify", placeholder="Имя или фамилия...", expanded)
@@ -49,8 +49,8 @@ export default {
     name: '',
     sort: 'Цена',
     offers: [],
-    category: Consts.PHOTO_CATEGORIES[0],
-    categories: Consts.PHOTO_CATEGORIES,
+    category: Object.keys(Consts.PHOTO_FILTERS)[0],
+    categories: Consts.PHOTO_FILTERS,
     formOpened: true,
   }),
   mounted(){

@@ -15,9 +15,6 @@ import personal from '@/assets/images/sections/personal.jpg'
 import wedding from '@/assets/images/sections/wedding.jpg'
 
 export default {
-  PHOTO_CATEGORIES: [ 'TFP','Fashion','Свадебная','Детская и семейная', 'Праздники', 'Концерты и вечеринки',
-  'Персональная', 'Love Story', 'Коммерческая','Интерьерная','Предметная','Другие' ],
-  VIDEO_CATEGORIES: [ 'Клипы', 'Творческие', 'Свадьбы', 'Праздники', 'Вечеринки', 'Love story', 'Коммерческие', 'Другие', 'Motion Design' ],
   PHOTO_FILTERS: {
     'tfp': {
       icon: tfp,
