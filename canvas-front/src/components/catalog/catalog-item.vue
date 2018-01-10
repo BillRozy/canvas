@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     goToPortfolio(){
-      this.$router.push(`/users/${this.offer.userId}/portfolio`)
+      this.$router.push(this.$store.getters.linkToPortfolio(this.offer.user.id))
     }
   },
   mounted(){

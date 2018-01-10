@@ -77,16 +77,6 @@ export default {
       this.queryServer(this.objToQueryString(obj))
       this.$router.push(`/catalog/photo?${this.objToQueryString(obj)}`)
     },
-    objToQueryString(obj){
-      let res = '';
-      if(!obj){
-        return res;
-      }
-      Object.keys(obj).forEach(key => {
-        res += `${key}=${obj[key]}&`
-      })
-      return res;
-    }
   }
 }
 </script>

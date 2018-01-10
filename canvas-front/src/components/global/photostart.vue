@@ -24,7 +24,7 @@
           .container.is-desktop.flippers-holder(style="max-width: 100vw")
             .level
               .level-item(style="max-width: 80%; flex-wrap: wrap; margin: 0 auto")
-                flip-button(v-for="(flipper, index) in flippers", :key="index", :description="flipper.description", :size="flipperSize")
+                flip-button(v-for="(flipper, index) in flippers", :key="index", :description="flipper.description", :size="flipperSize", :value="index", :action="applyCategoryAndSend")
                   img(:src="flipper.icon")      
             .level
               .level-item
@@ -46,6 +46,7 @@ export default {
     modelPrices: [0, 100],
     flipperSize: 150,
     onMobile: false,
+    chosenCategory: null,
   }),
   computed: {
     pricesExtent() {
@@ -67,6 +68,17 @@ export default {
     },
     flipperCalc(){
       return this.$el.querySelector('.flippers-holder').clientWidth * 0.8/7
+    },
+    applyCategoryAndSend(category) {
+      this.chosenCategory = category;
+      const obj = {
+        category: this.chosenCategory,
+        price: {
+          min: this.modelPrices[0],
+          max: this.modelPrices[1],
+        }
+      }
+      this.$router.push(`/catalog/photo?${this.objToQueryString(obj)}`)
     }
   },
   watch: {

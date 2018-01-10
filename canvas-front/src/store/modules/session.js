@@ -155,11 +155,11 @@ const getters = {
   currentUser(state){
     return state.user || {};
   },
-  linkToProfile(state, getters) {
-    return `/users/${getters.currentUser.id}/profile`;
+  linkToProfile: (state, getters) => id => {
+    return `/users/${id || getters.currentUser.id}/profile`;
   },
-  linkToPortfolio(state, getters) {
-    return `/users/${getters.currentUser.id}/portfolio`;
+  linkToPortfolio: (state, getters) => id => {
+    return `/users/${id || getters.currentUser.id}/portfolio`;
   }
 }
 

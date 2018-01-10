@@ -22,5 +22,15 @@ export default {
   daysFromSeqToNow(seqDate) {
     moment.locale('ru');
     return moment(seqDate).fromNow();
+  },
+  objToQueryString(obj) {
+    let res = '';
+    if(!obj){
+      return res;
+    }
+    Object.keys(obj).forEach(key => {
+      res += `${key}=${obj[key]}&`
+    })
+    return res;
   }
 };

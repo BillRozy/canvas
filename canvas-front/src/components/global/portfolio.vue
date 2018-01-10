@@ -27,7 +27,7 @@
         .info_and_avatar_block.column.is-one-quarter
           .card
             .card-image
-              router-link(:to='$store.getters.linkToProfile')
+              router-link(:to='$store.getters.linkToProfile(portfolio.userId)')
                 img.avatar-photo(:src='avatar')
             .card-footer
               .card-footer-item {{`${name} ${surname}`}}

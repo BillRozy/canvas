@@ -1,5 +1,5 @@
 <template lang="pug">
-a.flipper-wrapper(@touchstart="toggle", :class="{hover: hovered}", :style="style")
+a.flipper-wrapper(@touchstart="toggle", :class="{hover: hovered}", :style="style", @click="act")
   .flipper
     .flipper-front
       slot
@@ -11,7 +11,9 @@ export default {
   name: 'flip-button',
   props: {
     description: {default: 'description here'},
-    size: {required: true}
+    size: {required: true},
+    value: {default: null},
+    action: {default: null}
   },
   data() {
     return {
@@ -32,6 +34,11 @@ export default {
   methods: {
     toggle(){
       this.hovered = !this.hovered;
+    },
+    act(){
+      if(this.action){
+        this.action(this.value)
+      }
     }
   }
   
