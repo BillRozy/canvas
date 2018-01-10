@@ -1,8 +1,10 @@
-{
+const Log =  require('../logger');
+
+const cfg = {
   "development": {
     "dialect": "sqlite",
     "database": "development",
-    "logging": true,
+    "logging": (msg) => Log.info(msg),
     "storage": "./db/development.db"
   },
   "test": {
@@ -19,4 +21,6 @@
     "host": "127.0.0.1",
     "dialect": "pg"
   }
-}
+};
+
+module.exports = cfg;
