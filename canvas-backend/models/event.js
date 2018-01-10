@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  let event = sequelize.define('event', {
+  let Event = sequelize.define('Event', {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  event.associate = function(models) {
-    event.belongsTo(models.user);
+  Event.associate = function(models) {
+    Event.belongsTo(models.User, {foreignKey: 'userId', as: 'user'});
   };
-  return event;
+  return Event;
 };

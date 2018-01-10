@@ -2,7 +2,7 @@
 const videoCategories = [ 'Клипы', 'Творческие', 'Свадьбы', 'Праздники', 'Вечеринки', 'Love story', 'Коммерческие', 'Другие', 'Motion Design' ];
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('videoOffers', {
+    return queryInterface.createTable('VideoOffers', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'users',
+          model: 'Users',
           key: 'id',
         },
       },
@@ -33,7 +33,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'portfolios',
+          model: 'Portfolios',
           key: 'id',
         },
       },

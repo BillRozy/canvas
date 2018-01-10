@@ -16,59 +16,59 @@ module.exports = {
       }], {});
     */
     return Promise.coroutine(function* () {
-      const roleAdmin = yield models.role.create(
+      const roleAdmin = yield models.Role.create(
         {
           title: 'ROLE_ADMIN',
         },
         {
-          include: [ 'user' ],
+          include: [ 'users' ],
         });
-      const roleOperator = yield models.role.create(
+      const roleOperator = yield models.Role.create(
         {
           title: 'ROLE_OPERATOR',
         },
         {
-          include: [ 'user' ],
+          include: [ 'users' ],
         });
-      const roleUser = yield models.role.create(
+      const roleUser = yield models.Role.create(
         {
           title: 'ROLE_USER',
         },
         {
-          include: [ 'user' ],
+          include: [ 'users' ],
         });
-      const user1 = yield models.user.create(
+      const user1 = yield models.User.create(
         {
           username: 'BillRozy',
           password: '4607020a',
         },
         {
-          include: [ 'role' ],
+          include: [ 'roles' ],
         }
       );
 
-      const user2 = yield models.user.create(
+      const user2 = yield models.User.create(
         {
           username: 'operator',
           password: '4607020a',
         },
         {
-          include: [ 'role' ],
+          include: [ 'roles' ],
         }
       );
 
-      const user3 = yield models.user.create(
+      const user3 = yield models.User.create(
         {
           username: 'simpleuser',
           password: '4607020a',
         },
         {
-          include: [ 'role' ],
+          include: [ 'roles' ],
         }
       );
-      const y1 = yield user1.setRole([ roleAdmin, roleOperator, roleUser ]);
-      const y2 = yield user2.setRole([ roleOperator, roleUser ]);
-      const y3 = yield user3.setRole([ roleUser ]);
+      yield user1.setRoles([ roleAdmin, roleOperator, roleUser ]);
+      yield user2.setRoles([ roleOperator, roleUser ]);
+      yield user3.setRoles([ roleUser ]);
       // user.addRole(role, { through: { userId: user.id, 'roleId': role.id }});
     })().catch(err => Log.error(err));
 
@@ -89,6 +89,6 @@ module.exports = {
       Example:
       return queryInterface.bulkDelete('Person', null, {});
     */
-    return queryInterface.bulkDelete('users', null, {});
+    return queryInterface.bulkDelete('Users', null, {});
   },
 };

@@ -1,16 +1,15 @@
 <template lang="pug">
-.content-wrapper
-  .login-form.box-400-200.column.flex-sb-c-c
-    .header Log In
-    .body.flex-sa-c-c.column
-      .field-with-title.column.flex-c-c-c
-        label Username
-        input(type="text", v-model="username")
-      .field-with-title.column.flex-c-c-c
-        label Password
-        input(type="password", v-model="password")
-      .field-with-title.column.flex-c-c-c
-        input(type="button", @click="login", value="Войти")
+.card(style="background: white;")
+  .card-header 
+    .card-header-title Войти
+  .card-content  
+    form.body
+      b-field(label="E-Mail")
+        b-input(type="text", v-model="username")
+      b-field(label="Пароль")
+        b-input(type="password", v-model="password")
+      b-field
+        button.button.is-primary(type="button", @click="login") Войти
 </template>
 <script>
 import Naming from '@/store/naming'

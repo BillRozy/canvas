@@ -8,15 +8,15 @@ const Promise = require('bluebird');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
 router.get('/price-extent', function(req, res, next) {
   Promise.coroutine(function* () {
-    const minVideo = yield models.videoOffer.min('price');
-    const maxVideo = yield models.videoOffer.max('price');
-    const minPhoto = yield models.photoOffer.min('price');
-    const maxPhoto = yield models.photoOffer.max('price');
+    const minVideo = yield models.VideoOffer.min('price');
+    const maxVideo = yield models.VideoOffer.max('price');
+    const minPhoto = yield models.PhotoOffer.min('price');
+    const maxPhoto = yield models.PhotoOffer.max('price');
     const result = {
       video: {
         min: minVideo || 0,

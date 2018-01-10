@@ -1,45 +1,72 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  let portfolio = sequelize.define('portfolio', {
+  let Portfolio = sequelize.define('Portfolio', {
     description: DataTypes.STRING,
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
   });
-  portfolio.associate = function(models) {
-    portfolio.belongsTo(models.user);
-    portfolio.hasMany(models.rating);
-    portfolio.hasMany(models.comment);
-    portfolio.hasMany(models.photoOffer);
-    portfolio.hasMany(models.videoOffer);
-    portfolio.addScope('defaultScope', {
+  Portfolio.associate = function(models) {
+    Portfolio.belongsTo(models.User, {foreignKey: 'userId', as: 'user'});
+    Portfolio.hasMany(models.Rating, {as: 'ratings' ,foreignKey: 'portfolioId'});
+    Portfolio.hasMany(models.Comment, {as: 'comments' ,foreignKey: 'portfolioId'});
+    Portfolio.hasMany(models.PhotoOffer, {as: 'photoOffers' ,foreignKey: 'portfolioId'});
+    Portfolio.hasMany(models.VideoOffer, {as: 'videoOffers' ,foreignKey: 'portfolioId'});
+    Portfolio.addScope('defaultScope', {
       include: [
         {
-          model: models.rating,
+          model: models.Rating,
+          as: 'ratings',
         },
         {
-          model: models.photoOffer,
+          model: models.PhotoOffer,
+          as: 'photoOffers',
         },
         {
-          model: models.videoOffer,
+          model: models.VideoOffer,
+          as: 'videoOffers',
         },
         {
-          model: models.user,
+          model: models.User,
+          as: 'user',
           include: [
             {
-              model: models.photo,
+              model: models.Photo,
+              as: 'photos',
               order: [
-                [ models.photo, 'createdAt', 'DESC' ],
+                [ models.Photo, 'createdAt', 'DESC' ],
               ],
             },
           ],
         },
         {
-          model: models.comment,
+          model: models.Comment,
+          as: 'comments',
         },
       ],
     },{override: true});
   };
-  return portfolio;
+  Portfolio.prototype.toJSON = function() {
+    let repr = this.dataValues;
+    repr.rating = this.calcRating();
+    delete repr.ratings;
+    return repr;
+  };
+  Portfolio.prototype.calcRating = function() {
+    let repr = this.dataValues;
+    let rating = {};
+    if (repr.ratings) {
+      let rateSum = 0;
+      let votes = 0;
+      repr.ratings.forEach(rating => {
+        votes++;
+        rateSum += rating.value;
+      });
+      rating.avg =  votes > 0 ? rateSum / votes : 0;
+      rating.votes = votes;
+    }
+    return rating;
+  };
+  return Portfolio;
 };

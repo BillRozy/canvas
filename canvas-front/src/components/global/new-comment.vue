@@ -1,11 +1,16 @@
 <template lang="pug">
-.new-comment-block
-      div {{user}} говорит:
-      #new_comment
-          .comment-user
-              img.comment-avatar(:src="avatarsrc")
-          textarea(name="body", id="new-comment-text", v-model="commentText", placeholder="Введите свой отзыв...")
-          input.btn.btn-primary(type="button", value="OK", @click="sendComment")
+article.media(style="width: 80%")
+  figure.media-left
+    p.image.is-64x64
+      img(:src="avatarsrc")
+  .media-content
+    b-field
+      p.control
+        textarea.textarea(placeholder="Ввести коммент...", v-model="commentText")
+    nav.level
+      .level-left
+        .level-item
+          button.button.is-primary(@click="sendComment") Отправить    
 </template>
 
 <script>
@@ -13,27 +18,31 @@ import Naming from '@/store/naming'
 export default {
   name: 'new-comment',
   data() {
-      return {
-          commentText: ''
-      }
+    return {
+      commentText: ''
+    }
   },
   props: {
-      user: {default: "Guest"},
-      avatarsrc: {default: "some src"},
-      portfolio_id: {required: true}
+    user: {default: "Guest"},
+    portfolio_user_id: {required: true},
+    avatarsrc: {default: "some src"},
+    portfolio_id: {required: true}
   },
   methods: {
-      sendComment(){
+      sendComment() {
         this.$store.dispatch(Naming.Actions.POST_COMMENT, {
-          body: this.commentText,
-          portfolioId: this.portfolio_id
+          comment: {
+            body: this.commentText,
+            portfolioId: this.portfolio_id
+          },
+          portfolioUserId: this.portfolio_user_id 
+          
         })
-        .then(res => {
+        .then(() => {
           this.commentText = "";
-          this.$log.debug(res);
         })
         .catch(error => {
-            this.$log.error(error);
+          this.$log.error(error);
         });
     }
   }

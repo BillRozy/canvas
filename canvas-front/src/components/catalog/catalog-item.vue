@@ -1,31 +1,39 @@
 <template lang="pug">
-.catalog-item-card
-  .catalog-item-card-front-side(v-show="fronted")
-    a.catalog-item-card-avatar(href="")
-      img.card-item-avatar-img
-    .catalog-item-card-name.catalog-item-card-field
-      a.name-of-author {{offer.user.profile.name + " " + offer.user.profile.surname}}
-    .catalog-item-card-price.catalog-item-card-field {{offer.price + " РУБ/ЧАС"}}
-    .catalog-item-card-rating.catalog-item-card-field
-    .catalog-item-card-skills.catalog-item-card-field {{periodOnCanvas}}
-    .catalog-item-card-more.catalog-item-card-field
-      a(@click="goToPortfolio") Подробнее...
-  .catalog-item-card-back-side(v-show="fronted")
-    .catalog-item-card-examples
+.catalog-item-card.box
+  .card(v-show="fronted",style="height: 100%; min-width: 220px")
+    .card-header
+      .card-header-title(style="justify-content: center") {{offer.user.profile.name + " " + offer.user.profile.surname}}
+    .card-image
+      figure.image.is-128x128(style="margin: 0 auto;")
+        img(:src="avatar")
+    .card-content
+      b-field
+        .option {{periodOnCanvas}}
+      b-field
+        .option Рейтинг   
+    .card-footer
+      .card-footer-item
+        div.is-size-5 {{`${offer.price}  `}}
+        div.is-size-7 РУБ
+      .card-footer-item
+          button.button.is-small.is-primary.is-outlined(@click="goToPortfolio") Подробнее...
+  .catalog-item-card-back-side.card(v-show="!fronted || !isMobile")
+    .catalog-item-card-examples.hero
       .swiper-container.gallery-top(:data-category="offer.category")
         .swiper-wrapper
           .swiper-slide(v-for="photo in photos", key="photo.id")
-            img(:src="`api/uploads/${photo.path}`")
+            img(:src="`/api/uploads/${photo.path}`")
         .swiper-button-prev
         .swiper-button-next
       .swiper-container.gallery-thumbs(:data-category="offer.category")
         .swiper-wrapper
           .swiper-slide(v-for="photo in photos")
-            img(:src="`api/uploads/${photo.path}`")
-  .switch-control.switch-control-back(@click="fronted = !fronted")
+            img(:src="`/api/uploads/${photo.path}`")
+  .switch-control.switch-control-back(v-if="isMobile", @click="fronted = !fronted")
 </div>
 </template>
 <script>
+import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 import Swiper from 'swiper/dist/js/swiper.js'
 export default {
   name: "",
@@ -36,11 +44,17 @@ export default {
     fronted: true,
   }),
   computed: {
+    avatar() {
+      return this.offer.user.profile.avatar || defaultAvatar;
+    },
     photos(){
       return this.offer.photos;
     },
     periodOnCanvas(){
       return ((Date.now() - (new Date(this.offer.user.createdAt)).getTime()) / 1000 / 60 / 60).toFixed() + ' часов на сайте'
+    },
+    isMobile(){
+      return this.$store.getters.isMobileMode;
     }
   },
   methods: {
@@ -75,14 +89,68 @@ export default {
 </script>
 <style lang="stylus" scoped>
 @import "~assets/css/consts"
+.catalog-item-card-examples
+  display flex
+  align-items center
+  justify-content center
+  box-sizing border-box
+  border 1px solid white
+  width 100%
+  height 40%
 
 .catalog-item-card
+  position relative
+  width 300px
+  height 440px
+  box-sizing border-box
+  overflow hidden
   font-weight 700
+  margin 10px
   a
     text-decoration none
     color hotpink
     &:hover
       text-decoration underline
+  .catalog-item-card-front-side, .catalog-item-card-back-side
+    display flex
+    flex-direction column
+    align-items center
+    width 260px
+    height 400px
+    box-sizing border-box
+    padding 20px
+    transition 0.1s
+    font-weight 700
+
+  .catalog-item-card-front-side
+    justify-content space-around
+
+  .catalog-item-card-back-side
+    justify-content center
+
+  .switch-control
+    position absolute
+    display none
+    width 25px
+    height 40px
+    top calc(50% - 25px)
+    z-index 10
+    background white
+    &:hover
+      cursor pointer
+      filter drop-shadow(1px 1px 2px darkgray)
+
+    &.switch-control-front
+      background url('~assets/images/icons/back.png') no-repeat 50% 50%
+      background-size cover
+      left 5px
+      display none
+
+    &.switch-control-back
+      background url('~assets/images/icons/next.png') no-repeat 50% 50%
+      background-size cover
+      right 5px
+      display block      
 
   .catalog-item-card-front-side
     .name-of-author
@@ -93,121 +161,38 @@ export default {
   .catalog-item-card-avatar:hover img
     filter drop-shadow(1px 1px 2px gray)
 
-@media  screen and (max-width: $screen-md-min)
-  .catalog-item-card
-    position relative
-    width 300px
-    height 440px
-    box-sizing border-box
-    overflow hidden
-
-    .catalog-item-card-front-side, .catalog-item-card-back-side
-      display flex
-      flex-direction column
-      align-items center
-      width 260px
-      height 400px
-      border 1px solid black
-      box-sizing border-box
-      padding 20px
-      margin 20px
-      transition 0.1s
-      font-weight 700
-
-    .catalog-item-card-front-side
-      justify-content space-around
-
-    .catalog-item-card-back-side
-      justify-content center
-
-    .switch-control
-      position absolute
-      display none
-      width 25px
-      height 40px
-      top calc(50% - 25px)
-      z-index 10
-      background white
-      &:hover
-        cursor pointer
-        filter drop-shadow(1px 1px 2px darkgray)
-
-      &.switch-control-front
-        background url('~assets/images/icons/back.png') no-repeat 50% 50%
-        background-size cover
-        left 5px
-        display none
-
-      &.switch-control-back
-        background url('~assets/images/icons/next.png') no-repeat 50% 50%
-        background-size cover
-        right 5px
-        display block
-
-  .freewall-container
-    width 100%
-    height 100%
-
-  .img-in-freewall
-    display block
-    height 100%
-    width auto
-
-    min-height 120px
-    max-width 220px
-    max-height 250px
-    margin 0 auto
-    outline none
-
-  .mosaicflow__item
-    position relative
-    height 100%
-    max-width 220px
-    margin-right 5px
-
-  .catalog-item-card-examples
-    display flex
-    align-items center
-    justify-content center
-    box-sizing border-box
-    border 1px solid white
-    width 100%
-    height 40%
-
-@media  screen and (min-width: $screen-md-min)
+@media  screen and (min-width: $screen-mobile)
   .catalog-item-card
     display flex
     justify-content center
     align-items center
     position relative
     width 100%
-    max-width 810px
-    min-width 600px
-    height 440px
-    border 2px solid black
+    max-width 620px
+    min-width 620px
+    height 380px
     box-sizing border-box
     overflow hidden
-    margin-bottom 20px
+    margin 10px
 
     .catalog-item-card-front-side, .catalog-item-card-back-side
       display flex
       flex-direction column
       align-items center
-      height 400px
+      height 340px
       box-sizing border-box
-      padding 20px
       transition 0.1s
 
     .catalog-item-card-front-side
       position relative
-      width 300px
+      width 220px
       justify-content space-around
       border-right 1px black dashed
 
     .catalog-item-card-back-side
       padding 0
       position relative
-      width calc(100% - 340px)
+      min-width 360px
       overflow-y auto
 
     .switch-control
@@ -288,11 +273,11 @@ export default {
     max-width 100%
 
 .gallery-top
-  height 80%
+  height 75%
   width 100%
 
 .gallery-thumbs
-  height 20%
+  height 25%
   box-sizing border-box
   padding 10px 0
 

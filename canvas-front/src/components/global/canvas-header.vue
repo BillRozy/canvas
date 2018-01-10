@@ -1,18 +1,25 @@
 <template lang="pug">
 header
-  .menu-button(:class="{open: menuIsOpened}", @click="menuIsOpened = !menuIsOpened")
-    span
-    span
-    span
-    span
-  .menu(:class="{activated: menuIsOpened}")
-    router-link(to='about') О нас
-    router-link(to='catalog') Каталог
-    router-link#hidden-main-link(to='/') На Главную
-    router-link#logo(to='/')
-      .header_decor_triangle
-    router-link(to='events') Новости
-  personal-cabinet
+  .navbar.is-fixed-top(:class="[{'is-transparent': menuIsOpened},{ 'is-bordered': !menuIsOpened}]")
+    .container.is-fullhd
+      .navbar-brand(:class="[{'is-white': menuIsOpened},{ 'is-active': !menuIsOpened}]")
+        .navbar-item
+          router-link(to='/')
+            figure
+        a.navbar-burger(:class="{'is-active': menuIsOpened}", @click="menuIsOpened = !menuIsOpened", slot=)
+          span
+          span
+          span
+      .navbar-menu(:class="{'is-active': menuIsOpened}").is-transparent
+        .navbar-start
+          .navbar-item
+            router-link.level-item(to='/about') О нас
+          .navbar-item  
+            router-link.level-item(to='/catalog/photo') Каталог
+          .navbar-item
+            router-link.level-item(to='/events') Новости
+        .navbar-end
+          personal-cabinet(v-if="$store.state.session.ready", :plain="menuIsOpened")
 </template>
 <script>
 import PersonalCabinet from '@/components/global/personal-cabinet.vue'
@@ -23,27 +30,42 @@ export default {
   },
   data: () => ({
     menuIsOpened: false
-  })
+  }),
+  mounted() {
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.menuIsOpened = false
+      } , 250);
+    });
+  }
 }
 </script>
 <style lang="stylus" scoped>
 @import '~assets/css/consts'
+.is-transparent
+  background transparent
+.is-white
+  background white  
+.is-bordered  
+  border-bottom 1px solid lightgray
+.navbar
+  box-sizing border-box
+  .navbar-brand
+    border-bottom 1px solid lightgray
+    &.is-active
+      border none
+  .navbar-menu.is-active
+    display flex
+    flex-direction column-reverse
+    max-width 200px
+    float right
+    background white
+    .navbar-item
+      width 100%
 header
-  // position fixed
-  background white
-  width 100vw
-  z-index 100
-  font-size 1.2em
-  min-width $min_width
-  border-bottom 1px lightgrey solid
-  height $header-mini-height
-
-  &.onmain
-    width 100vw
-  a
-    color black
-    text-decoration none
-
+  box-sizing border-box
   #hidden-main-link
     display none
     @media screen and (max-width: $header-critical-size)
@@ -53,8 +75,8 @@ header
       height 100%
       width auto
       min-width 120px
-      background url('~assets/images/canvaslogo.png') no-repeat 50% 70%
-      background-size 100%
+      background url('~assets/images/canvaslogo.png') no-repeat 50% 50%
+      background-size 90%
 
       @media screen and (max-width: $header-critical-size)
         display none
@@ -174,7 +196,10 @@ header
 
     @media screen and (max-width: $header-critical-size)
       display inline-block
-
-.zaglushka
-  height $header-mini-height
+.navbar-brand
+  figure
+    min-width 120px
+    min-height 40px
+    background url('~assets/images/canvaslogo.png') no-repeat 50% 50%;     
+    background-size cover
 </style>

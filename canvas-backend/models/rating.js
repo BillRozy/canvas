@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  let rating = sequelize.define('rating', {
+  let Rating = sequelize.define('Rating', {
     value: {
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  rating.associate = function(models) {
-    rating.belongsTo(models.user);
-    rating.belongsTo(models.portfolio);
+  Rating.associate = function(models) {
+    Rating.belongsTo(models.User, {foreignKey: 'userId', as: 'user'});
+    Rating.belongsTo(models.Portfolio, {foreignKey: 'portfolioId', as: 'portfolio'});
   };
-  return rating;
+  return Rating;
 };

@@ -24,7 +24,7 @@ router.post('/', passport.authenticate('jwt', { session: false }),uploadPhotos, 
       category,
       path: `${parsed.name}${parsed.ext}`,
     };
-    files.push(models.photo.create(obj).then(ph => resJson.push(ph)));
+    files.push(models.Photo.create(obj).then(ph => resJson.push(ph)));
   }
   Promise.all(files).then(function() {
     res.json(resJson);

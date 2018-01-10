@@ -1,21 +1,28 @@
 <template lang="pug">
-.content-wrapper
-  .signup-form.box-400-400.column.flex-sb-c-c
-    .header РЕГИСТРАЦИЯ
-    .body.flex-sa-c-c.column
-      .field-with-title.column.flex-c-c-c
-        label Username
-        input(type="text", v-model="username")
-      .field-with-title.column.flex-c-c-c
-        label Password
-        input(type="password", v-model="password")
-      .field-with-title.column.flex-c-c-c
-        label Password
-        input(type="password", v-model="passwordConfirmation")
-      .field-with-title.column.flex-c-c-c
-        input(type="button", @click="login", value="Продолжить")
+section.hero.is-fullheight
+  .hero-head
+  .hero-body
+    .container.is-desktop
+      div(style="max-width: 560px; margin: 0 auto;")
+        .title Добро пожаловать на Canvas!
+        .card
+          .card-header 
+            .card-header-title РЕГИСТРАЦИЯ
+          .card-content 
+            form.body
+              b-field(label="E-Mail")
+                b-input(type="email", v-model="username")
+              b-field(label="Пароль")
+                b-input(type="password", v-model="password", minlength="6")
+              b-field(label="Подтверждение пароля")
+                b-input(type="password", v-model="passwordConfirmation", minlength="6")
+              b-field()
+                b-checkbox(v-model="operator") Создать портфолио и начать предлагать услуги
+              b-field
+                button.button.is-primary(@click.prevent="signup") Продолжить
 </template>
 <script>
+import Naming from '@/store/naming'
 export default {
   name: '',
   data: () => ({
@@ -25,18 +32,32 @@ export default {
     operator: true
   }),
   methods: {
-    login () {
-      this.$http({
-        method: 'post',
-        url: '/users',
-        data: {user: { email: this.username, password: this.password, password_confirmation: this.passwordConfirmation, remember_me: true, operator: this.operator }},
-        rememberMe: true
+    signup() {
+      this.$store.dispatch(Naming.Actions.SIGN_UP, {
+        username: this.username, 
+        password: this.password,
+        operator: this.operator,
+      })
+      .then(user => {
+        location.href = `/users/${user.id}/profile`;
+      })
+      .catch(err => {
+        this.$log.error(err);
       })
     }
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      if(vm.$store.getters.isSigned){
+        vm.$router.replace({path: '/'})
+      }
+    })
   }
 }
 </script>
 <style lang="stylus" scoped>
+.hero.is-fullheight
+  min-height calc(100vh - 4rem)
 .header
   height 60px
   background black
@@ -44,6 +65,7 @@ export default {
   width 100%
 .body
   height calc(100% - 60px)
+  padding 10px
 .signup-form
   border 1px solid black
   max-width 400px

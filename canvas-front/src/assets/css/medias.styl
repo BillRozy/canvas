@@ -7,34 +7,17 @@
   body
     font-size 0.75em
 
-  .filter-section-item
-    width 85px
-    height 85px
-
 @media screen and (min-width: $screen-sm-min)
   body
     font-size 0.8em
-
-  .filter-section-item
-    width 105px
-    height 105px
 
 @media screen and (min-width: $screen-md-min)
   body
     font-size 0.9em
 
-  .filter-section-item
-    width 110px
-    height 110px
-    height 110px
-
 @media screen and (min-width: $screen-lg-min)
   body
     font-size 0.9em
-
-  .filter-section-item
-    width 150px
-    height 150px
 
 @media screen and (max-height: $screen-xsm-min)
   .transparent-block300
@@ -43,24 +26,6 @@
   .whitestripe
     height 100%
 
-  header
-    height $header-mini-height
-
-    .menu-button
-      margin "calc(%s - 35px/2) 20px" % ($header-mini-height)
-
-    .header-avatar
-      max-width $header-mini-height
-      max-height $header-mini-height
-
-    #profile-block-menu
-      top $header-mini-height
-    @media screen and (max-width: $header-critical-size)
-      .menu
-        top $header-mini-height
-
-  .zaglushka
-    height $header-mini-height
 
 @media screen and (min-height: 600px)
   .transparent-block300
@@ -69,22 +34,3 @@
   .whitestripe
     height 70%
 
-  header
-    height $header-height
-
-    .menu-button
-      margin "calc(%s - 35px/2) 20px" % ($header-height)
-
-    .header-avatar
-      max-width $header-height
-      max-height $header-height
-
-    #profile-block-menu
-      top $header-height
-
-    @media screen and (max-width: $header-critical-size)
-      .menu
-        top $header-height
-
-  .zaglushka
-    height $header-height

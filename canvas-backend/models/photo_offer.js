@@ -2,7 +2,7 @@
 const photoCategories = [ 'TFP','Fashion','Свадебная','Детская и семейная', 'Праздники', 'Концерты и вечеринки',
   'Персональная', 'Love Story', 'Коммерческая','Интерьерная','Предметная','Другие' ];
 module.exports = (sequelize, DataTypes) => {
-  let photoOffer = sequelize.define('photoOffer', {
+  let PhotoOffer = sequelize.define('PhotoOffer', {
     category: {
       type: DataTypes.ENUM(photoCategories),
       allowNull: false,
@@ -21,16 +21,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  photoOffer.associate = function(models) {
-    photoOffer.belongsTo(models.user);
-    photoOffer.belongsTo(models.portfolio);
-    photoOffer.addScope('defaultScope',
+  PhotoOffer.associate = function(models) {
+    PhotoOffer.belongsTo(models.User, {foreignKey: 'userId', as: 'user'});
+    PhotoOffer.belongsTo(models.Portfolio, {foreignKey: 'portfolioId', as: 'portfolio'});
+    PhotoOffer.addScope('defaultScope',
       {
         include: [ {
-          model: models.user,
+          model: models.User,
+          as: 'user',
         } ],
       }
       ,{override: true});
   };
-  return photoOffer;
+  return PhotoOffer;
 };

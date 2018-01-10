@@ -1,7 +1,7 @@
 <template lang="pug">
-main#App
+main.is-screen-height-maxed#App
   canvas-header
-  transition
+  transition(name="fade", mode="out-in")
     keep-alive
       router-view
   popup(v-show='visible', @close='closeModal', ref="modalWindow")
@@ -45,31 +45,39 @@ export default {
         visibility: false,
       });
     },
+    checkMobile(){
+      this.$store.commit(Naming.Mutations.SET_MOBILE_MODE, {
+        enabled: window.innerWidth < 769,
+      })
+    }
   },
   created() {
     const user = localStorage.getItem('current_user');
     if(user) {
       const json = JSON.parse(user);
-      this.$store.commit(Naming.Mutations.SET_CURRENT_USER, {
-        user: json.user
-      })
       this.$store.commit(Naming.Mutations.SET_TOKEN, {
         token: json.token
       })
       axios.defaults.headers.common.Authorization = 'Bearer ' + json.token;
-      this.$store.dispatch(Naming.Actions.GET_PROFILE, {
-        userid: json.user.id,
-      }).then(profile => {
-        this.$store.commit(Naming.Mutations.SET_CURRENT_USER_PROFILE, {
-          profile
-        })
+      this.$store.dispatch(Naming.Actions.USER_INFO)
+      .then(() => {
+        this.$store.commit(Naming.Mutations.SET_READY);
       })
+    } else {
+      this.$store.commit(Naming.Mutations.SET_READY);
     }
   },
   mounted() {
     const modal = this.$refs.modalWindow;
     this.$store.commit(Naming.Mutations.SET_MODAL_CONTAINER, {
       container: modal.getContainer(),
+    });
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.checkMobile();
+      } , 250);
     });
   }
 
@@ -82,6 +90,7 @@ p
 
   text-align center
 main
+  min-height: calc(100vh - 4rem)
   height 100%
   width 100%
 .wrap

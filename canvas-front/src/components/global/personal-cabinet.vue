@@ -1,17 +1,33 @@
 <template lang='pug'>
-.personal-cabinet
-  .personal-cabinet-wrapper(v-if='isSigned')
-    img.header-avatar(onerror="this.style.display='none'")
-    a#name_header_link {{username}}
-    #profile-block-menu-button(clicked='false', @click='menuOpened = !menuOpened')
-  .personal-cabinet-wrapper(v-else)
-    div(@click="openSignInPopup") Войти
-    router-link(to='sign_up') Регистрация
-  #profile-block-menu(v-show='menuOpened')
-    div(v-if='isSigned')
+.personal-cabinet(:class="{'is-plain': plain}")
+  .columns.is-gapless.is-marginless.is-mobile(v-if='isSigned', style="min-width: 200px;max-height: 100%")
+    .column(style="justify-content:  center;align-items: center")
+      figure.is-clipped.image.is-64x64
+        img(:src="avatar")
+    .column
+      router-link(:to="linkToProfile", style="justify-content: center") {{username}}
+    .column.is-flex(style="align-items: center; justify-content: center", v-if="!plain")
+      b-dropdown(position="is-bottom-left", style="height: 100%")
+        button.button.dropped-button.is-shadowless.is-paddingless(slot="trigger", style="height: 100%; width: 59px")
+          b-icon(icon="arrow-down-drop-circle")
+        b-dropdown-item(has-link)
+          router-link(:to='linkToProfile') Профиль
+        b-dropdown-item(has-link)
+          router-link(:to='linkToPortfolio') Портфолио
+        b-dropdown-item(has-link)
+          a(@click="signOut") Выйти
+  .container.is-marginless(v-if='isSigned && plain')
+    .navbar-item
       router-link(:to='linkToProfile') Профиль
+    .navbar-item  
       router-link(:to='linkToPortfolio') Портфолио
+    .navbar-item  
       a(@click="signOut") Выйти
+  .columns.is-gapless.is-marginless(v-if='!isSigned', style="height: 100%")
+    .column.is-6
+      a(@click="openSignInPopup") Войти
+    .column.is-6
+      router-link(to='sign_up') Регистрация
 </template>
 <script>
 import Vue from '@/vue-instance';
@@ -20,22 +36,31 @@ import Naming from '@/store/naming'
 const LoginConstructor = Vue.component('login', LoginComponent);
 const Login = new LoginConstructor();
 Login.$mount();
+import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 export default {
+  props: {
+    plain: {
+      default: false,
+    }
+  },
   data: () => ({
     menuOpened: false
   }),
   computed: {
     username(){
-      return this.$store.state.user.username;
+      return this.$store.getters.currentUser.profile.name;
     },
     isSigned () {
       return this.$store.getters.isSigned;
     },
     linkToProfile() {
-      return `/users/${this.$store.state.user.id}/profile`;
+      return `/users/${this.$store.getters.currentUser.id}/profile`;
     },
     linkToPortfolio() {
-      return `/users/${this.$store.state.user.id}/portfolio`;
+      return `/users/${this.$store.getters.currentUser.id}/portfolio`;
+    },
+    avatar() {
+      return this.$store.getters.currentUser.profile.avatar || defaultAvatar;
     }
   },
   methods: {
@@ -50,67 +75,39 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 @import '~assets/css/consts'
-#profile-block-menu-button
-  display inline-block
-  width 40px
-  height 40px
-  background url('~assets/images/arrow-down.png') no-repeat
-  background-size cover
-
-  &:hover
-    cursor pointer
-
 .personal-cabinet
   float right
+  display flex
+  flex-direction column
+  justify-content flex-end
   height 100%
-  width 20%
-
-  .personal-cabinet-wrapper
-    display flex
-    justify-content space-around
-    align-content center
-    align-items center
-    height 100%
+  max-height 100%
+  min-width 200px
+  &.is-plain
     width 100%
-
+    .columns:first-child
+      min-width 200px !important
+      max-width 200px !important
+      padding-bottom 0.5rem
+      border-bottom 1px solid lightgray
+    .navbar-item
+      width 100%
+      text-align center
   a
     display inline-flex
+    justify-content: center;
     height 100%
-    min-height 80px
     align-items center
-  @media screen and (max-width: $header-critical-size)
-    width 40%
-    min-width 200px
 
-.header-avatar
-  height 100%
-  width auto
-  max-width $header-mini-height
-  max-height $header-mini-height
-#profile-block-menu
-  display flex
-  position absolute
-  width 20%
-  right: 0
-  flex-direction column
-  height 150px
-  background rgba(100,100,100,0.98)
-  transition 0.2s
-  z-index 150
-  top $header-mini-height
+  .dropped-button
+    border none
+    &:hover
+      span
+        color pink
+        transition 0.2s 
 
-  @media screen and (max-width: $header-critical-size)
-    width 40%
-  a
-    display flex
-    align-content center
-    box-sizing border-box
-    padding-left 10px
-    height 100%
-    min-height 50px
-    align-items center
-    border-bottom 1px darkgray solid
-    color whitesmoke
+  .dropdown-content
+    background white      
 </style>

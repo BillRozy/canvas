@@ -1,65 +1,102 @@
 <template lang="pug">
-.page-wrapper
-  .portfolio-main-section
-    #switch-buttons-block
-      #photocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='photo'}", @click="setTab('photo')")
-      #videocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='video'}", @click="setTab('video')")
-      .simple_button(v-if='isOwner && inEditMode', id='done_edit_portfolio_button', @click="inEditMode=false")
-      .simple_button(v-if='isOwner && !inEditMode',id='edit_portfolio_button', @click="inEditMode=true")
-    #categories_container.tabs_container_fade
-      #photo-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='photo'}")
-        .horizontal_flex(v-for="offer in appliedPhotoCategories")
-          .photo-category.link-to-category {{offer}}
-          .delete_button(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
-        .horizontal_flex(v-if="isOwner")
-          .link-to-category(v-if="isOwner && inEditMode", @click="addPhotoOffer") Добавить
-      #video-categories-block.tab_item_fade(:class="{active_tab_fade: pageSelector==='video'}")
-        .horizontal_flex(v-for="offer in appliedVideoCategories")
-          .photo-category.link-to-category {{offer}}
-          .delete_button(v-if="isOwner && inEditMode")
-        .horizontal_flex(v-if="isOwner")
-          .link-to-category(v-if="isOwner && inEditMode", @click="addVideoOffer") Добавить
-    .info_and_avatar_block
-      a(href='')
-        img.avatar-photo(src='avatar')
-      .name-surname-block
-        span.name-of-author {{name}}
-        span.name-of-author {{surname}}
-    #rating-regards-block
-      #rating-wrapper(v-if='signed_in')
-      #rating-wrapper(v-else='', style='pointer-events:none;')
-  #contact-and-info-buttons-block
-    #contact-author-button(clicked='false')  Contact
-    #show-info-author-button(clicked='false') Personal info
-  #onButton-clicked-author-block.moving-block-with-information(style='display: none;')
-  .tabs_container
-    .tab_item(v-if="pageSelector==='photo'")
-      .container
-        spoiler(title="Фотосъемка")
-          .shooting-block(v-for="offer in photoOffers")
-            .shooting-description-block
-              div {{offer.category}}
-              div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem(offer.category)")
-            .swiper-container(:data-category="offer.category")
-              .swiper-wrapper
-                .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
-                  img(:src="'/api/uploads/' + photo.path", @click="openImageInModal")
-              .swiper-button-prev
-              .swiper-button-next
-    .tab_item(v-if="pageSelector==='video'")
-      .container
-        spoiler(title="Видеосъемка")
-          .videography-block(v-for="offer in videoOffers")
-            .videography-description-block
-              div {{offer.category}}
-              div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-              .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
-            .slider-container
-  #comments.container
-    spoiler(title="Комментарии")
-      comment(v-for="comment in comments", :comment_data="comment", key="comment.id")
-      new-comment(:portfolio_id="portfolio.id", :user="$store.state.user.username", :avatarsrc="$store.state.user.profile.avatar")
+.container.is-fullhd.noisy
+  .section 
+    .box.is-paddingless(style="background-color: rgba(255, 255, 255, 0.7)")
+      .columns.is-gapless(style="height: 250px")
+        #switch-buttons-block.column.is-one-quarter
+          #photocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='photo'}", @click="setTab('photo')")
+          #videocamera-button.tabs_button.tabs_button_fade(:class="{active_tab_button: pageSelector==='video'}", @click="setTab('video')")
+          .simple_button(v-if='isOwner && inEditMode', id='done_edit_portfolio_button', @click="inEditMode=false")
+          .simple_button(v-if='isOwner && !inEditMode',id='edit_portfolio_button', @click="inEditMode=true")
+        #categories_container.tabs_container_fade.column.is-one-third
+          .columns.is-gapless(style="height:100%;")
+            #photo-categories-block.tab_item_fade.column.is-half(:class="{active_tab_fade: pageSelector==='photo'}")
+              .media(v-for="(offer, index) in appliedPhotoCategories", :key="index")
+                .media-content
+                  .content {{offer}}
+                .media-right
+                  button.button.delete(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
+              .horizontal_flex(v-if="isOwner")
+                .link-to-category(v-if="isOwner && inEditMode", @click="addPhotoOffer") Добавить
+            #video-categories-block.tab_item_fade.column.is-half(:class="{active_tab_fade: pageSelector==='video'}")
+              .horizontal_flex(v-for="offer in appliedVideoCategories")
+                .photo-category.link-to-category {{offer}}
+                .delete_button(v-if="isOwner && inEditMode")
+              .horizontal_flex(v-if="isOwner")
+                .link-to-category(v-if="isOwner && inEditMode", @click="addVideoOffer") Добавить
+        .info_and_avatar_block.column.is-one-quarter
+          .card
+            .card-image
+              router-link(:to='$store.getters.linkToProfile')
+                img.avatar-photo(:src='avatar')
+            .card-footer
+              .card-footer-item {{`${name} ${surname}`}}
+        #rating-regards-block.column.is-one-third(style="height: 100%")
+          interactive-rating(v-if="!!portfolio.rating", :prop_portfolio_id="portfolio.id", :prop_rating="portfolio.rating", :prop_state="ratingState")  
+  .container#contact-and-info-buttons-block
+    b-tabs(type="is-toggle", position="is-centered", :animated="false")
+      b-tab-item(label="Контакты")
+        .box(style="max-width: 400px; margin: 0 auto")
+          b-field(label="Телефон", v-if="!!profile.phone_number")
+            div {{profile.phone_number}}
+          b-field(label="E-Mail", v-if="!!profile.social_email")
+            div {{profile.social_email}}  
+      b-tab-item(label="Об авторе", disabled)
+        .box(style="max-width: 400px; margin: 0 auto")
+  .section
+    .tabs_container
+      .tab_item(v-if="pageSelector==='photo'")
+        b-collapse.card.is-primary(:open.sync="openedPhotos")
+          .card-header(slot="trigger")
+            p.card-header-title.is-centered Фотосъемка
+            a.card-header-icon
+              b-icon(:icon="openedPhotos ? 'menu-down' : 'menu-up'")
+          .card-content
+            .content
+              .shooting-block.columns.is-gapless(v-for="offer in photoOffers")
+                .shooting-description-block.column.is-2
+                  .card.is-shadowless
+                    .card-content
+                      p {{offer.category}}
+                    .card-footer
+                      .card-footer-item
+                        div.is-size-5 {{`${offer.price}  `}}
+                        div.is-size-7 РУБ
+                      .card-footer-item(v-if="isOwner && inEditMode")
+                        span.icon(@click="addNewItem(offer.category)")
+                          i.mdi.mdi-48px.mdi-dark.mdi-plus
+                .swiper-container.column(:data-category="offer.category")
+                  .swiper-wrapper
+                    .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
+                      img(:src="'/api/uploads/' + photo.path", @click="openImageInModal")
+                  .swiper-button-prev
+                  .swiper-button-next
+
+      .tab_item(v-if="pageSelector==='video'")
+        b-collapse.card.is-primary(:open.sync="openedVideos")
+          .card-header(slot="trigger")
+            p.card-header-title.is-centered Видеосъемка
+            a.card-header-icon
+              b-icon(:icon="openedVideos ? 'menu-down' : 'menu-up'")
+          .card-content
+            .content
+              .videography-block(v-for="offer in videoOffers")
+                .videography-description-block
+                  div {{offer.category}}
+                  div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
+                  .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
+                .slider-container       
+  .section
+    b-collapse.card.is-primary(:open.sync="openedComments")
+      .card-header(slot="trigger")
+        p.card-header-title.is-centered Комментарии
+        a.card-header-icon
+          b-icon(:icon="openedComments ? 'menu-down' : 'menu-up'")
+      .card-content
+        .content
+          comment(v-for="comment in comments", :comment_data="comment", key="comment.id")
+          new-comment(:portfolio_id="portfolio.id", :portfolio_user_id="portfolio.userId", :user="$store.getters.currentUser.username", :avatarsrc="avatar")
+  b-loading(:active="!loaded")     
 </template>
 <script>
 /* eslint-disable no-unused-vars */
@@ -69,12 +106,14 @@ import Naming from '@/store/naming';
 import Spoiler from '@/components/global/spoiler.vue'
 import Comment from '@/components/global/comment.vue'
 import NewComment from '@/components/global/new-comment.vue'
+import InteractiveRating from '@/components/portfolio/interactive-rating';
 import Uploader from '@/components/global/uploader'
 const UploaderConstructor = Vue.component('uploader', Uploader)
 import NewOffer from '@/components/portfolio/add-new-offer'
 const NewOfferConstructor = Vue.component('add-new-offer', NewOffer)
 import Swiper from 'swiper';
 import Consts from '@/consts';
+import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 const TAG = "Portfolio";
 const photoCategories = Consts.PHOTO_CATEGORIES;
 const videoCategories = Consts.VIDEO_CATEGORIES;
@@ -85,20 +124,61 @@ export default {
   name: "",
   data: () => ({
     loaded: false,
-    portfolio: {},
     inEditMode: false,
     pageSelector: PHOTO_PAGE,
-    swipers: {}
+    swipers: {},
+    openedComments: false,
+    openedPhotos: true,
+    openedVideos: true,
+    userId: null,
   }),
   components: {
-    Comment, Spoiler, NewComment
+    Comment, Spoiler, NewComment, InteractiveRating
+  },
+  beforeRouteEnter (to, from, next) {
+
+    next(vm => {
+      vm.userId = to.params.id
+      if(vm.$store.getters.portfolioByUserId(to.params.id)){
+        vm.loaded = true;
+      } else {
+        vm.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userId: to.params.id})
+        .then(() => {
+          vm.loaded = true;
+        })
+        .catch(err => {
+          vm.$log.error(TAG, err);
+        })
+      }
+    })
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.loaded = false;
+    this.userId = to.params.id
+    if(this.$store.getters.portfolioByUserId(to.params.id)){
+      this.loaded = true;
+    } else {
+      this.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userId: to.params.id})
+      .then(() => {
+        this.loaded = true;
+      })
+      .catch(err => {
+        this.$log.error(TAG, err);
+      })
+    }
   },
   computed: {
     isOwner() {
-      return this.portfolio.userId === this.$store.state.user.id;
+      return this.$store.getters.currentUser && this.portfolio.userId === this.$store.getters.currentUser.id;
+    },
+    portfolio(){
+      return this.$store.getters.portfolioByUserId(this.userId) || {}
     },
     user() {
       return this.portfolio.user || {};
+    },
+    avatar(){
+      return this.profile.avatar || defaultAvatar;
     },
     profile() {
       return this.user.profile || {};
@@ -116,7 +196,7 @@ export default {
       return this.portfolio.comments;
     },
     photos(){
-      return this.portfolio.user.photos;
+      return this.user.photos;
     },
     photoOffers(){
       return this.portfolio.photoOffers;
@@ -150,17 +230,12 @@ export default {
     availableVideoCategories(){
       return videoCategories.filter(cat => !this.appliedVideoCategories.includes(cat));
     },
+    ratingState() {
+      return this.isOwner ? 'static' : 'interactive';
+    }
   },
   created() {
     this.pageSelector = [VIDEO_PAGE, PHOTO_PAGE].includes(this.$route.query.tab ) ? this.$route.query.tab : PHOTO_PAGE;
-    this.$store.dispatch(Naming.Actions.GET_PORTFOLIO, {userid: this.$route.params.id})
-    .then(portfolio => {
-      this.portfolio = portfolio;
-      this.loaded = true;
-    })
-    .catch(err => {
-      this.$log.error(TAG, err);
-    })
   },
   methods: {
     openImageInModal(e){
@@ -170,14 +245,9 @@ export default {
     },
     deletePhotoOffer(category){
       const offer = this.photoOffers.find(offer => offer.category === category);
-      this.$store.dispatch(Naming.Actions.DELETE_OFFER, {
+      this.$store.dispatch(Naming.Actions.DELETE_PHOTO_OFFER, {
         id: offer.id,
-      })
-      .then(() => {
-        this.portfolio.photoOffers = this.photoOffers.filter(of=> of.id != offer.id)
-      })
-      .catch(err => {
-        this.$log.error(err)
+        userId: this.portfolio.userId,
       })
     },
     addPhotoOffer(){
@@ -186,17 +256,12 @@ export default {
           mode: 'photo',
           categories: this.availablePhotoCategories,
           portfolio_id: this.portfolio.id,
+          portfolio_user_id: this.portfolio.userId,
         }
       })
       form.$store = this.$store
       form.$mount();
       this.showPopup(form.$el);
-      // this.$store.dispatch(Naming.Actions.POST_PHOTO_OFFER, {
-      //   portfolioId: this.portfolio.id,
-      //   category: this.availablePhotoCategories[Math.floor(Math.random() * this.availablePhotoCategories.length)],
-      //   price: Math.floor(Math.random() * 1000),
-      //   description: 'test item'
-      // })
     },
     addVideoOffer(){
       this.$store.dispatch(Naming.Actions.POST_VIDEO_OFFER, {
@@ -259,6 +324,13 @@ export default {
       })
     });
 
+  },
+  watch: {
+    photos(){
+      Object.values(this.swipers).forEach(swiper => {
+        swiper.update();
+      })
+    }
   }
 
 }
@@ -351,6 +423,8 @@ export default {
   width 20%
   height 100%
   min-width 100px
+  border-left 1px solid lightgray
+  border-right 1px solid lightgray
   order 3
   @media only screen and (max-width: $header-critical-size)
     background lightgrey
@@ -377,6 +451,7 @@ export default {
 #rating-regards-block
   display flex
   justify-content center
+  align-items center
   width 40%
   height 100%
   order 4
@@ -391,11 +466,6 @@ export default {
   margin 4px auto
   text-align center
   font-size 0.9em
-
-#contact-and-info-buttons-block
-  width 100%
-  background #ffffff
-  height 120px
 
 #contact-author-button, #show-info-author-button
   margin 10px auto
@@ -428,11 +498,6 @@ export default {
   text-align center
   margin 5px auto
 
-.container
-  width 100%
-  background url('~assets/images/noisy_grid.png') repeat
-  margin 10px auto
-
 .container-for-adding-shootings
   display flex
   align-items center
@@ -449,12 +514,10 @@ export default {
   display flex
   min-width 280px
   height 120px
-  width 80%
   justify-content space-between
   align-content center
   align-items center
-  margin-bottom 5px
-  margin-top 15px
+  margin 10px auto
   background rgba(255, 255, 255, 0.7)
   border-radius 20px;
   overflow hidden
@@ -669,4 +732,41 @@ export default {
 .active_tab_button
   opacity 1 !important
 
+.info_and_avatar_block
+  .card
+  .card-footer
+  .card-footer-item
+    box-shadow none
+    background none 
+    border none
+  .card
+    max-width 200px
+    height 100%
+    margin auto
+    img.avatar-photo
+      min-width 120px
+      min-height 120px
+#categories_container
+  .media
+    padding 10px
+  .media + .media
+    border none
+    margin 0
+    padding 10px      
+#contact-and-info-buttons-block
+  section.tab-content
+    min-height 0    
+.noisy
+  background url('~assets/images/noisy_grid.png') repeat    
+.collapse
+  &.card
+    .card-header
+      background: black
+      .card-header-title
+        color white  
+span.icon
+  cursor pointer
+  transition 0.15s
+  &:hover
+    transform scale(1.1)        
 </style>

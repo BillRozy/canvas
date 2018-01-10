@@ -1,9 +1,9 @@
 <template lang="pug">
 .spoiler
-    .spoiler-title(class="{closed: isClosed}" @click="toggleState")
-        h1 {{title}}
-    .spoiler-body(:class="{closed: isClosed}")
-        slot
+  .spoiler-title(class="{closed: isClosed}" @click="toggleState")
+      h1 {{title}}
+  .spoiler-body.section(:class="{closed: isClosed}")
+      slot
 </template>
 
 <script>
@@ -44,6 +44,8 @@ export default {
     overflow hidden
     transition 0.5s
     opacity 1
+    &.section
+      padding 10px
 
 .spoiler-body.closed
     max-height 0

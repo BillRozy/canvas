@@ -15,7 +15,7 @@ export default {
   }),
   computed:{
     token() {
-      return this.$store.state.user.token;
+      return this.$store.state.session.token;
     }
   },
   mounted(){

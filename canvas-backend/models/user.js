@@ -4,7 +4,7 @@ const SecureHelp = require('../helpers/security');
 const Promise = require('bluebird');
 
 module.exports = (sequelize, DataTypes) => {
-  let User = sequelize.define('user', {
+  let User = sequelize.define('User', {
     username: {
       type: DataTypes.STRING,
       unique: true,
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   User.prototype.isOperator = function() {
-    return this.role && this.role.map(role => role.title).includes('ROLE_OPERATOR');
+    return this.roles && this.roles.map(role => role.title).includes('ROLE_OPERATOR');
   };
 
   User.prototype.validPassword = function(password) {
@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     let values = Object.assign({}, this.get());
 
     delete values.password;
-    if (values.role) {
-      values.role = values.role.map(function(role) {
+    if (values.roles) {
+      values.roles = values.roles.map(function(role) {
         return role.title;
       });
     }
@@ -35,20 +35,27 @@ module.exports = (sequelize, DataTypes) => {
     return values;
   };
   User.associate = function(models) {
-    User.belongsToMany(models.role, {through: 'user_roles', as: 'role'});
-    User.hasMany(models.photo);
-    User.hasMany(models.photoOffer);
-    User.hasMany(models.video);
-    User.hasMany(models.videoOffer);
-    User.hasMany(models.comment);
-    User.hasMany(models.rating);
-    User.hasOne(models.portfolio);
-    User.hasOne(models.profile);
+    User.belongsToMany(models.Role, {through: 'UserRoles', as: 'roles', foreignKey: 'userId', otherKey: 'roleId'});
+    User.hasMany(models.Photo, {as: 'photos' ,foreignKey: 'userId'});
+    User.hasMany(models.PhotoOffer, {as: 'photoOffers',foreignKey: 'userId'});
+    User.hasMany(models.Video, {as: 'videos',foreignKey: 'userId'});
+    User.hasMany(models.VideoOffer, {as: 'videoOffers',foreignKey: 'userId'});
+    User.hasMany(models.Comment, {as: 'comments',foreignKey: 'userId'});
+    User.hasMany(models.Rating, {as: 'ratings',foreignKey: 'userId'});
+    User.hasOne(models.Portfolio, {foreignKey: 'userId', as: 'portfolio'});
+    User.hasOne(models.Profile, {foreignKey: 'userId', as: 'profile'});
     User.addScope('defaultScope', {
       include: [ {
-        model: models.profile,
-        attributes: [ 'avatar', 'name', 'surname' ],
+        model: models.Profile,
+        as: 'profile',
       } ],
+      attributes: {
+        exclude: [ 'password' ],
+      },
+    },{override: true});
+
+    User.addScope('fullInfo', {
+      include: [ 'profile', 'portfolio', 'roles' ],
       attributes: {
         exclude: [ 'password' ],
       },
@@ -56,7 +63,8 @@ module.exports = (sequelize, DataTypes) => {
 
     User.addScope('unsafe', {
       include: [ {
-        model: models.profile,
+        model: models.Profile,
+        as: 'profile',
         attributes: [ 'avatar', 'name', 'surname' ],
       } ],
     },{override: true});
@@ -82,11 +90,9 @@ module.exports = (sequelize, DataTypes) => {
   User.hook('afterSave', (user) => {
 
     return Promise.coroutine(function* () {
-      const pr = yield sequelize.models.profile.create({
+      yield user.createProfile({
         name: 'Guest',
-        userId: user.id,
       });
-      const ref = yield user.setProfile(pr);
     })().catch(err => Log.error(err));
   });
   return User;
