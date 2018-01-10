@@ -6,6 +6,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let stylus = require('stylus');
+const Log = require('./logger');
 const history = require('connect-history-api-fallback');
 const configurePassport = require('./auth/passport-jwt-config');
 
@@ -30,7 +31,10 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(logger('dev', {
+  skip(req, res) { return req.method === 'GET' && res.statusCode < 400; },
+  stream: { write: message => Log.info(message.trim()) },
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(cookieParser());
