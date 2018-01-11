@@ -13,7 +13,7 @@
             #photo-categories-block.tab_item_fade.column.is-half(:class="{active_tab_fade: pageSelector==='photo'}")
               .media(v-for="(offer, index) in appliedPhotoCategories", :key="index")
                 .media-content
-                  .content {{offer}}
+                  .content {{offer.description}}
                 .media-right
                   button.button.delete(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
               .horizontal_flex(v-if="isOwner")
@@ -57,7 +57,7 @@
                 .shooting-description-block.column.is-2
                   .card.is-shadowless
                     .card-content
-                      p {{offer.category}}
+                      p {{offerDescriptionByCategory(offer.category)}}
                     .card-footer
                       .card-footer-item
                         div.is-size-5 {{`${offer.price}  `}}
@@ -115,8 +115,8 @@ import Swiper from 'swiper';
 import Consts from '@/consts';
 import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
 const TAG = "Portfolio";
-const photoCategories = Consts.PHOTO_FILTERS;
-const videoCategories = Consts.VIDEO_FILTERS;
+const photoCategories = Consts.PHOTO_ARRAY;
+const videoCategories = Consts.VIDEO_ARRAY;
 const PHOTO_PAGE = 'photo';
 const VIDEO_PAGE = 'video';
 
@@ -210,7 +210,12 @@ export default {
       }
       let categories = this.photoOffers.reduce(function(prev, curr) {
         const cat = curr.category;
-        return prev.includes(cat) ? prev : [...prev, cat];
+        const obj = Consts.PHOTO_FILTERS[cat];
+        if(!obj){
+          return prev;
+        }
+        obj.category = cat; 
+        return prev.includes(obj) ? prev : [...prev, obj];
       }, []);
       return categories;
     },
@@ -225,10 +230,10 @@ export default {
       return categories;
     },
     availablePhotoCategories(){
-      return Object.values(photoCategories).filter((cat, index) => !this.appliedPhotoCategories.includes(index));
+      return photoCategories.filter((cat, index) => !this.appliedPhotoCategories.includes(cat.category));
     },
     availableVideoCategories(){
-      return Object.values(videoCategories).filter((cat, index) => !this.appliedVideoCategories.includes(index));
+      return videoCategories.filter((cat, index) => !this.appliedVideoCategories.includes(cat.category));
     },
     ratingState() {
       return this.isOwner ? 'static' : 'interactive';
@@ -284,6 +289,9 @@ export default {
     setTab(tab){
       this.pageSelector = tab;
       this.$router.push(this.$route.path + `?tab=${tab}`)
+    },
+    offerDescriptionByCategory(category){
+      return Consts.PHOTO_FILTERS[category] ? Consts.PHOTO_FILTERS[category].description : '???';
     }
   },
 

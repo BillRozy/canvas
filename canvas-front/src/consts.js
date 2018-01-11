@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import tfp from '@/assets/images/sections/tfp.jpg'
 import art from '@/assets/images/sections/art.jpg'
 import clips from '@/assets/images/sections/clips.jpg'
@@ -102,6 +103,17 @@ export default {
       icon: motiondesign,
       description: 'MOTION DESIGN',
     }
-
+  },
+  get PHOTO_ARRAY(){
+    return _.values(_.mapValues(this.PHOTO_FILTERS, function(value, key) { 
+      value.category = key;
+      return value; 
+    }));
+  },
+  get VIDEO_ARRAY(){
+    return _.values(_.mapValues(this.VIDEO_FILTERS, function(value, key) { 
+      value.category = key;
+      return value; 
+    }));
   }
 }

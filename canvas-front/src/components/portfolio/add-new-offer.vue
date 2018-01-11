@@ -2,7 +2,7 @@
 .box(style="min-width: 300px")
   b-field(label="Категория")
     b-select(v-model="category", placeholder="Выбрать категорию")
-      option(v-for="(opt, index) in categories", :value="index") {{opt.description}}
+      option(v-for="(opt, index) in categories", :value="opt.category") {{opt.description}}
   b-field(label="Цена")    
     b-input(type="number", v-model="price")
   b-field(label="Авторское описание")  
@@ -22,7 +22,7 @@ export default {
   },
   data: () => ({
     price: 0,
-    category: Object.keys(this.categories)[0] || '',
+    category: this.categories[0].category || '',
     descr: 'test descr',
   }),
   methods: {

@@ -35,6 +35,7 @@
 <script>
 import Consts from '@/consts';
 import axios from 'axios';
+import queryString from 'query-string';
 import CatalogItem from '@/components/catalog/catalog-item'
 export default {
   name: "",
@@ -53,13 +54,12 @@ export default {
     categories: Consts.PHOTO_FILTERS,
     formOpened: true,
   }),
-  mounted(){
-    this.queryServer(this.objToQueryString(this.$route.query))
-  },
+  mounted(){},
 
   methods: {
-    queryServer(query){
-      axios.get(`/api/catalog/photo?${query}`)
+    queryServer(){
+      const q = (queryString.stringify(this.$route.query, {arrayFormat: 'index'}));
+      axios.get(`/api/catalog/photo?${q}`)
       .then(response => {
         this.$log.info(response.data)
         this.offers = response.data
@@ -73,10 +73,20 @@ export default {
         name: this.name,
         sort: this.sort,
         category: this.category,
+        price: [this.price.min, this.price.max]
       }
-      this.queryServer(this.objToQueryString(obj))
-      this.$router.push(`/catalog/photo?${this.objToQueryString(obj)}`)
+      const q = (queryString.stringify(obj, {arrayFormat: 'index'}));
+      this.$router.push(`/catalog/photo?${q}`)
     },
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.queryServer();
+    })
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.queryServer();
+    next();
   }
 }
 </script>
