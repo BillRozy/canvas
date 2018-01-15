@@ -54,14 +54,24 @@ router.post('/signup', (req, res) => {
   const {username, password, operator} = req.body;
   Promise.coroutine(function* () {
     const user = yield User.create({username, password});
-    if (user && operator) {
-      const opRole = yield models.Role.findOne({
+    if (user) {
+      const roles = [];
+      const basicRole = yield models.Role.findOne({
         where: {
-          title: 'ROLE_OPERATOR',
+          title: 'ROLE_USER',
         },
       });
-      yield user.setRoles([ opRole ]);
-      yield user.createPortfolio();
+      roles.push(basicRole);
+      if (operator) {
+        const opRole = yield models.Role.findOne({
+          where: {
+            title: 'ROLE_OPERATOR',
+          },
+        });
+        roles.push(opRole);
+        yield user.createPortfolio();
+      }
+      yield user.setRoles(roles);
       yield user.reload();
     }
     const reloaded = yield User.unscoped().findOne(
