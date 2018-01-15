@@ -8,22 +8,22 @@
           .box(style="border-radius: 0 0 10px 10px")
             b-field(grouped, group-multiline)
               b-field(label="Цена от", expanded)
-                b-input(type="number", v-model="price.min")
+                b-input(type="number", v-model="filter.price.min")
               b-field(label="До", expanded)
-                b-input(type="number", v-model="price.max")
+                b-input(type="number", v-model="filter.price.max")
               b-field(label="Сортировка", expanded)
-                b-select(v-model="sort", expanded)  
+                b-select(v-model="filter.sort", expanded)  
                   option Цена
                   option Популярность
                   option Категория
               b-field(label="Категория", expanded)
-                b-select(v-model="category", expanded)
-                  option(v-for="(category, index) in categories", :value="index") {{category.description}} 
+                b-select(v-model="filter.category", expanded)
+                  option(v-for="(category, index) in categories", :value="category.category") {{category.description}} 
             b-field(label="Поиск по автору")
               b-field
-                b-input(v-model="name", type="search", icon="magnify", placeholder="Имя или фамилия...", expanded)
+                b-input(v-model="filter.name", type="search", icon="magnify", placeholder="Имя или фамилия...", expanded)
                 .control
-                  button.button.is-primary(@click="applyFilter") ИСКАТЬ      
+                  button.button.is-primary(@click="useFilter") ИСКАТЬ      
                 .control           
                   button.button.is-outlined К ВИДЕО
             noscript This form requires that you have javascript enabled to work properly please enable javascript in your browser
@@ -33,29 +33,43 @@
   .pagination-block
 </template>
 <script>
+import _ from 'lodash';
 import Consts from '@/consts';
 import axios from 'axios';
 import queryString from 'query-string';
 import CatalogItem from '@/components/catalog/catalog-item'
+const PHOTO_CATEGORIES = Consts.PHOTO_ARRAY;
 export default {
   name: "",
   components: {
     CatalogItem
   },
   data: () => ({
-    price: {
-      max: 100,
-      min: 0
+    filter: {
+      price: {
+        max: 100,
+        min: 0
+      },
+      name: '',
+      sort: 'Цена',
+      category: PHOTO_CATEGORIES[0].category,
     },
-    name: '',
-    sort: 'Цена',
     offers: [],
-    category: Object.keys(Consts.PHOTO_FILTERS)[0],
-    categories: Consts.PHOTO_FILTERS,
+    categories: PHOTO_CATEGORIES,
     formOpened: true,
   }),
+  computed: {
+    query(){
+      return this.$route.query;
+    }
+  },
   mounted(){},
-
+  watch: {
+    query(){
+      this.applyFilter(_.cloneDeep(this.query));
+      this.queryServer();
+    }
+  },
   methods: {
     queryServer(){
       const q = (queryString.stringify(this.$route.query, {arrayFormat: 'index'}));
@@ -68,12 +82,19 @@ export default {
         this.$log.error(err)
       })
     },
-    applyFilter(){
+    applyFilter(data){
+        this.filter.name = data.name;
+        this.filter.sort = data.sort || 'Цена';
+        this.filter.category =  this.categories.find(cat => cat.category === data.category).category || this.categories[0].category;
+        this.filter.price.min = parseInt(data['price[0]']) || 0;
+        this.filter.price.max = parseInt(data['price[1]']) || 100
+    },
+    useFilter(){
       const obj = {
-        name: this.name,
-        sort: this.sort,
-        category: this.category,
-        price: [this.price.min, this.price.max]
+        name: this.filter.name,
+        sort: this.filter.sort,
+        category: this.filter.category,
+        price: [this.filter.price.min, this.filter.price.max]
       }
       const q = (queryString.stringify(obj, {arrayFormat: 'index'}));
       this.$router.push(`/catalog/photo?${q}`)
@@ -81,11 +102,11 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
+      vm.applyFilter(_.cloneDeep(to.query));
       vm.queryServer();
     })
   },
   beforeRouteUpdate(to, from, next) {
-    this.queryServer();
     next();
   }
 }
