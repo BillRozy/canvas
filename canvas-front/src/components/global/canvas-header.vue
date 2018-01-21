@@ -1,5 +1,5 @@
 <template lang="pug">
-header
+header(v-show="!isAbout")
   .navbar.is-fixed-top(:class="[{'is-transparent': menuIsOpened},{ 'is-bordered': !menuIsOpened}]")
     .container.is-fullhd
       .navbar-brand(:class="[{'is-white': menuIsOpened},{ 'is-active': !menuIsOpened}]")
@@ -31,6 +31,11 @@ export default {
   data: () => ({
     menuIsOpened: false
   }),
+  computed: {
+    isAbout() {
+      return this.$route.path.indexOf('about') !== -1;
+    }
+  },
   mounted() {
     let resizeTimer;
     window.addEventListener('resize', () => {
