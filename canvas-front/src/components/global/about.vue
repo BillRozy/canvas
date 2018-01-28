@@ -15,23 +15,68 @@
       .city-glow-right
     .layer.layer-21(data-depth="0.2")
       .city-stripe
-    .layer.layer-31(data-depth="0.5")
-      .hero.is-fullheight
-        .hero-head
-        .hero-body
-          .level(style="width: 100%")
-            .level-item
-              .logo CANVAS
-        .hero-foot
-
-  .social-buttons
-    span.icon.is-large.has-text-white
-      i.mdi.mdi-facebook.mdi-48px
-    span.icon.is-large.has-text-white
-      i.mdi.mdi-vk.mdi-48px.is-white
-    span.icon.is-large.has-text-white
-      i.mdi.mdi-twitter.mdi-48px.is-white            
-
+  .hero.is-fullheight
+    .hero-head
+    .hero-body
+      .container.is-widescreen
+        b-tabs(position="is-centered", v-model="activeTab", size="is-large" )
+          b-tab-item(label="О нас", @click="activeTab = 0")
+            .tab-content-wrapper.column
+              .huge-logo CANVAS
+              br
+              span.is-size-3 ОТКРЫТЫЙ КАТАЛОГ ВСЕХ ФОТОГРАФОВ И ВИДЕОГРАФОВ ГОРОДА
+          b-tab-item(label="Детали", @click="activeTab = 1")
+            .tab-content-wrapper.column
+              .level(style="width: 100%; height: 100%")
+                .level-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description Возникла потребность в фото- или видеосъемке? 
+                    img(src="~assets/images/svg/guys.svg")
+                .level-item.short-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description
+                    .divider  
+                .level-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description CANVAS может с этим помочь!
+                    img(src="~assets/images/svg/comp.svg")
+                .level-item.short-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description
+                    .divider      
+                .level-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description Выбер ценовой диапазон (включая бесплатные!) 
+                    img(src="~assets/images/svg/coin.svg")
+                .level-item.short-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description
+                    .divider      
+                .level-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description Выбери раздел, от семейной до коммерческой съемки
+                    img(src="~assets/images/svg/trees.svg")
+                .level-item.short-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description
+                    .divider  
+                .level-item
+                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                    .description Свяжись с понравившимся автором и проверь выбор 
+                    img(src="~assets/images/svg/paperplane.svg")     
+          b-tab-item(label="Контакты", @click="activeTab = 2")
+            .tab-content-wrapper 
+    .hero-foot
+      .container
+        .level(style="width: 100%")
+          .level-item
+              .social-buttons
+                span.icon.is-large.has-text-white
+                  i.mdi.mdi-facebook.mdi-48px
+                span.icon.is-large.has-text-white
+                  i.mdi.mdi-vk.mdi-48px.is-white
+                span.icon.is-large.has-text-white
+                  i.mdi.mdi-twitter.mdi-48px.is-white 
 
 </template>
 
@@ -42,11 +87,22 @@ export default {
   data() {
     return {
       parallax: null,
+      activeTab: 0,
+      noDescriptions: true,
     }
   },
   mounted() {
     const scene = this.$el.querySelector('.scene');
     this.parallax = new Parallax(scene);
+  },
+  watch: {
+    activeTab() {
+      if (this.activeTab === 1) {
+        setTimeout(() => {
+          this.noDescriptions = false;
+        }, 2000);
+      }
+    }
   }
 }
 </script>
@@ -88,19 +144,11 @@ export default {
   box-shadow inset 0 0 40px #000000
 .layer-21
   height 100vh
-.layer-31
-  .logo
-    width 80vw
-    height 40vh
-    border 1px solid white
-    border-radius 20px
-    color black
-    font-weight bold
-    display flex
-    justify-content center
-    align-items center
-    font-size 8em    
-    background rgba(255, 255, 255, 0.5)
+.huge-logo
+  text-align center
+  color black
+  font-weight bold
+  font-size 8em    
 .waves
   height 400px
   width 100%
@@ -168,20 +216,53 @@ export default {
   bottom -5%
 .city-glow-right
   left 65%
-  bottom 0  
+  bottom 0
+.hero
+  position absolute
+  width 100%
+  left 0
+  top 0
+.tab-content-wrapper
+  display flex
+  justify-content center
+  align-items center
+  width 100%
+  height 40vh
+  border-radius 20px 
+  background rgba(255, 255, 255, 0.5)
+
+  .short-item
+    max-width 52px  
+
+.divider
+  width 30px
+  height 3px
+  background white
+  &.transparent
+    background transparent
+.img-with-description
+  transition 0.5s
+  display flex
+  justify-content center
+  align-items center
+  max-width 150px
+  .description
+    transition 0.5s
+    opacity 1
+    height 100px
+    margin-bottom 5px
+  &.hidden-description
+    .description
+      opacity 0
+      height 0  
+  img
+    max-width 110px    
 .social-buttons
   display flex
   justify-content space-around
   align-items center
-  margin 0 auto
-  bottom 10%
-  left calc(50% - 100px)
-  position absolute
   height 80px
   width 200px
-  border 1px solid white
-  border-radius 10px
-
   span.icon
     transition 0.2s
     cursor pointer

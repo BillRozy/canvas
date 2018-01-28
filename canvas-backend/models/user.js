@@ -14,6 +14,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      default: false,
+    },
+    passwordResetToken: {
+      type: DataTypes.STRING,
+    },
+    passwordResetExpires: {
+      type: DataTypes.DATE,
+    },
   });
   User.prototype.isOperator = function() {
     return this.roles && this.roles.map(role => role.title).includes('ROLE_OPERATOR');
@@ -42,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.VideoOffer, {as: 'videoOffers',foreignKey: 'userId'});
     User.hasMany(models.Comment, {as: 'comments',foreignKey: 'userId'});
     User.hasMany(models.Rating, {as: 'ratings',foreignKey: 'userId'});
+    User.hasOne(models.Token, {as: 'token',foreignKey: 'userId'});
     User.hasOne(models.Portfolio, {foreignKey: 'userId', as: 'portfolio'});
     User.hasOne(models.Profile, {foreignKey: 'userId', as: 'profile'});
     User.addScope('defaultScope', {

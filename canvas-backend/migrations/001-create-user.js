@@ -1,38 +1,32 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Events', {
+    return queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      title: {
+      username: {
         type: Sequelize.STRING,
-        allowNulL: false,
-      },
-      summary: {
-        type: Sequelize.STRING,
-      },
-      body: {
-        type: Sequelize.STRING,
-        allowNulL: false,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
+        unique: true,
         allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
       },
-      image: {
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      isVerified: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        default: false,
+      },
+      passwordResetToken: {
         type: Sequelize.STRING,
       },
-      category: {
-        type: Sequelize.STRING,
-        allowNulL: false,
+      passwordResetExpires: {
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
@@ -45,6 +39,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('events');
+    return queryInterface.dropTable('Users');
   },
 };
