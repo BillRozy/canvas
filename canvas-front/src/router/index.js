@@ -8,6 +8,7 @@ import Events from '@/components/global/events.vue'
 import Event from '@/components/global/event.vue'
 import Login from '@/components/auth/login.vue'
 import Signup from '@/components/auth/signup.vue'
+import Confirmator from '@/components/auth/confirmator.vue'
 import Profile from '@/components/global/profile.vue'
 import Portfolio from '@/components/global/portfolio.vue'
 import Upload from '@/components/global/uploader.vue'
@@ -41,6 +42,7 @@ const routes = [
     component: Portfolio,
   },
   { path: '/upload', component: Upload },
+  { path: '/confirmation/:token', component: Confirmator },
   { path: '/404', component: ErrorPage },
   {
     path: '*',

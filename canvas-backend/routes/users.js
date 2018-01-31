@@ -106,7 +106,7 @@ router.post('/signup', (req, res) => {
   })().catch(err => Log.error(err));
 });
 
-router.get('/confirmation/:token', (req, res) => {
+router.post('/confirmation/:token', (req, res) => {
   // Find a matching token
   Promise.coroutine(function* () {
     const token = yield models.Token.findOne({where: { token: req.params.token }});

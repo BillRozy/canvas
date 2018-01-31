@@ -15,6 +15,18 @@ const UserActions = {
         reject(err);
       })
     })
+  },
+
+  confirmRegistration(token) {
+    return new Promise((resolve, reject) => {
+      axios.post(`/confirmation/${token}`)
+      .then(response => {
+        resolve(response.data);
+      })
+      .catch(err => {
+        reject(err);
+      })
+    })
   }
 }
 export default UserActions
