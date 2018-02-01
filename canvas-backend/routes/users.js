@@ -86,10 +86,10 @@ router.post('/signup', (req, res) => {
         const mailOptions = {
           from: 'noreply@canvasrussia.com',
           to: user.username, subject: 'Account Verification Token',
-          text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n',
+          text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '\n',
         };
         transporter.sendMail(mailOptions, (err, info) => {
-          if (err) { return res.status(500).send({ msg: err.message }); }
+          if (err) { return res.status(500).send({ message: err.message }); }
           console.log('Message sent: %s', info.messageId);
           Mailer.printUrl(info);
           res.status(200).send('A verification email has been sent to ' + user.username + '.');
@@ -103,24 +103,27 @@ router.post('/signup', (req, res) => {
     //     include: [ 'roles' ],
     //   });
     // res.json({user: reloaded, token: token(reloaded)});
-  })().catch(err => Log.error(err));
+  })().catch(err => {
+    Log.error(err);
+    return res.status(500).send({ message: err.message }); 
+  });
 });
 
 router.post('/confirmation/:token', (req, res) => {
   // Find a matching token
   Promise.coroutine(function* () {
     const token = yield models.Token.findOne({where: { token: req.params.token }});
-    if (!token) {return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });}
+    if (!token) {return res.status(400).send({ type: 'not-verified', message: 'Мы не нашли вашей заявки на регистрацию. Возможно ссылка истекла или неверна.' });}
     let user = yield User.findById(token.userId);
-    if (!user) {return res.status(400).send({ msg: 'We were unable to find a user for this token.' });}
-    if (user.isVerified) {return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });}
+    if (!user) {return res.status(400).send({ message: 'We were unable to find a user for this token.' });}
+    if (user.isVerified) {return res.status(400).send({ type: 'already-verified', message: 'This user has already been verified.' });}
     user = yield user.update({
       isVerified: true,
     });
     res.status(200).send('The account has been verified. Please log in.');
   })()
     .catch(err => {
-      if (err) { return res.status(500).send({ msg: err.message }); }
+      if (err) { return res.status(500).send({ message: err.message }); }
     });
 });
 

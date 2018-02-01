@@ -19,7 +19,7 @@ const UserActions = {
 
   confirmRegistration(token) {
     return new Promise((resolve, reject) => {
-      axios.post(`/confirmation/${token}`)
+      axios.post(`/api/users/confirmation/${token}`)
       .then(response => {
         resolve(response.data);
       })

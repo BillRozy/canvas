@@ -38,8 +38,8 @@ export default {
         password: this.password,
         operator: this.operator,
       })
-      .then(user => {
-        location.href = `/users/${user.id}/profile`;
+      .then(() => {
+        this.$router.push('/greetings')
       })
       .catch(err => {
         this.$log.error(err);

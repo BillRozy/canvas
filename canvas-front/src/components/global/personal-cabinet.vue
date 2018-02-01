@@ -27,7 +27,7 @@
     .column.is-6
       a(@click="openSignInPopup") Войти
     .column.is-6
-      router-link(to='sign_up') Регистрация
+      router-link(to='/sign_up') Регистрация
 </template>
 <script>
 import Vue from '@/vue-instance';

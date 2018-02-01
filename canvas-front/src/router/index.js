@@ -8,6 +8,7 @@ import Events from '@/components/global/events.vue'
 import Event from '@/components/global/event.vue'
 import Login from '@/components/auth/login.vue'
 import Signup from '@/components/auth/signup.vue'
+import Greetings from '@/components/auth/greetings.vue'
 import Confirmator from '@/components/auth/confirmator.vue'
 import Profile from '@/components/global/profile.vue'
 import Portfolio from '@/components/global/portfolio.vue'
@@ -36,6 +37,7 @@ const routes = [
   { path: '/events/:id', component: Event },
   { path: '/sign_in', component: Login },
   { path: '/sign_up', component: Signup },
+  { path: '/greetings', component: Greetings },
   { path: '/users/:id/profile', component: Profile },
   {
     path: '/users/:id/portfolio',

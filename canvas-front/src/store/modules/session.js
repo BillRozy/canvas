@@ -63,8 +63,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.post('/api/users/signup', user)
         .then(response => {
-          login(commit, response.data)
-          resolve(response.data.user)
+          // login(commit, response.data)
+          resolve(response)
         })
         .catch(err => {
           $log.error(TAG, err)
