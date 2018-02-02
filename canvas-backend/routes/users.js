@@ -12,6 +12,7 @@ const Log = require('../logger');
 const crypto = require('crypto');
 const Mailer = require('../helpers/mailer.js');
 const transporter = Mailer.testTransporter;
+const pug = require('pug');
 
 /* GET users listing. */
 router.get('/', passport.authenticate('jwt', { session: false }),authorizedRoles('ROLE_ADMIN') ,(req, res) => {
@@ -83,10 +84,15 @@ router.post('/signup', (req, res) => {
         token: crypto.randomBytes(16).toString('hex'),
       });
       if (token) {
+        const locals = {
+          name: user.username,
+          confirmUrl: 'http://' + req.headers.host + '/confirmation/' + token.token,
+        };
         const mailOptions = {
           from: 'noreply@canvasrussia.com',
           to: user.username, subject: 'Account Verification Token',
-          text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '\n',
+          text: `Go to: ${locals.confirmUrl}`,
+          html: pug.renderFile('./views/confirmation.pug', locals),
         };
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) { return res.status(500).send({ message: err.message }); }
@@ -105,7 +111,7 @@ router.post('/signup', (req, res) => {
     // res.json({user: reloaded, token: token(reloaded)});
   })().catch(err => {
     Log.error(err);
-    return res.status(500).send({ message: err.message }); 
+    return res.status(500).send({ message: err.message });
   });
 });
 
