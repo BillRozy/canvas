@@ -4,8 +4,8 @@ section.hero.is-fullheight
   .hero-body
     .container.is-desktop
       div(style="max-width: 560px; margin: 0 auto;")
-        .title Добро пожаловать на Canvas!
-        .card
+        .title Присоединяйся к Canvas!
+        .card(:class="{waiting: waiting}")
           .card-header 
             .card-header-title РЕГИСТРАЦИЯ
           .card-content 
@@ -29,10 +29,12 @@ export default {
     username: '',
     password: '',
     passwordConfirmation: '',
-    operator: true
+    operator: true,
+    waiting: false,
   }),
   methods: {
     signup() {
+      this.waiting = true;
       this.$store.dispatch(Naming.Actions.SIGN_UP, {
         username: this.username, 
         password: this.password,
@@ -40,8 +42,12 @@ export default {
       })
       .then(() => {
         this.$router.push('/greetings')
+        setTimeout(() => {
+          this.waiting = false;
+        }, 500);
       })
       .catch(err => {
+        this.waiting = false;
         this.$log.error(err);
       })
     }
@@ -71,4 +77,15 @@ export default {
   max-width 400px
   margin 0 auto
   height 400px
+.card
+  position relative
+  &.waiting
+    &:after
+      content ''
+      position absolute
+      top 0
+      left 0
+      width 100%
+      height 100% 
+      background rgba(255, 255, 255, 0.99) url('~assets/images/animated/loader.svg') no-repeat 50% 50%
 </style>

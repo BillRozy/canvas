@@ -2,11 +2,18 @@
 module.exports = (sequelize, DataTypes) => {
   let Video = sequelize.define('Video', {
     title: DataTypes.STRING,
-    path: {
+    vid: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    category: DataTypes.STRING,
+    type: {
+      type: DataTypes.ENUM('vimeo', 'youtube', 'raw'),
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,

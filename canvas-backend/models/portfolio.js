@@ -38,6 +38,13 @@ module.exports = (sequelize, DataTypes) => {
                 [ models.Photo, 'createdAt', 'DESC' ],
               ],
             },
+            {
+              model: models.Video,
+              as: 'videos',
+              order: [
+                [ models.Video, 'createdAt', 'DESC' ],
+              ],
+            },
           ],
         },
         {

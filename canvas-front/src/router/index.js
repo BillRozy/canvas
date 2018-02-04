@@ -37,7 +37,13 @@ const routes = [
   { path: '/events/:id', component: Event },
   { path: '/sign_in', component: Login },
   { path: '/sign_up', component: Signup },
-  { path: '/greetings', component: Greetings },
+  { 
+    path: '/greetings', 
+    component: Greetings,
+    beforeEnter(to, from, next) {
+      from.path.indexOf('sign_up') === -1 ? next('/') : next();
+    }
+  },
   { path: '/users/:id/profile', component: Profile },
   {
     path: '/users/:id/portfolio',

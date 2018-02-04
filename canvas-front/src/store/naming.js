@@ -34,6 +34,7 @@ const naming = {
     POST_PHOTO_OFFER: 'post photo offer',
     GET_PRICE_EXTENT: 'get price extent',
     DELETE_PHOTO_OFFER: 'delete photo offer',
+    POST_VIDEO: 'post video',
   }
 }
 

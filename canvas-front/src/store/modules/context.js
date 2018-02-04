@@ -66,7 +66,7 @@ const actions = {
         .then(response => {
           commit(Naming.Mutations.ADD_VIDEO_OFFER_TO_PORTFOLIO, {
             videoOffer: response.data,
-            userId: response.data.user.id
+            userId: response.data.userId
           })
           resolve(response.data)
         })
@@ -99,7 +99,21 @@ const actions = {
           resolve(response.data)
         })
         .catch(err => {
-          $log.error(TAG, err)
+          reject(err)
+        })
+    })
+  },
+  [Naming.Actions.POST_VIDEO] ({ state, commit }, video) {
+    return new Promise((resolve, reject) => {
+      axios.post(`/api/videos`, video)
+        .then(response => {
+          commit(Naming.Mutations.ADD_VIDEO_TO_PORTFOLIO, {
+            video: response.data,
+            userId: response.data.userId,
+          })
+          resolve(response.data)
+        })
+        .catch(err => {
           reject(err)
         })
     })

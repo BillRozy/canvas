@@ -27,7 +27,7 @@ export default {
   }),
   methods: {
     send(){
-      this.$store.dispatch(Naming.Actions.POST_PHOTO_OFFER, {
+      this.$store.dispatch(this.mode === 'photo' ? Naming.Actions.POST_PHOTO_OFFER : Naming.Actions.POST_VIDEO_OFFER, {
         offer: {
           portfolioId: this.portfolio_id,
           category: this.category,

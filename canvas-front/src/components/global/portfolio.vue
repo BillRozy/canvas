@@ -17,13 +17,15 @@
                 .media-right
                   button.button.delete(v-if="isOwner && inEditMode", @click="deletePhotoOffer(offer)")
               .horizontal_flex(v-if="isOwner")
-                .link-to-category(v-if="isOwner && inEditMode", @click="addPhotoOffer") Добавить
+                .link-to-category(v-if="isOwner && inEditMode", @click="addOffer('photo')") Добавить
             #video-categories-block.tab_item_fade.column.is-half(:class="{active_tab_fade: pageSelector==='video'}")
-              .horizontal_flex(v-for="offer in appliedVideoCategories")
-                .photo-category.link-to-category {{offer}}
-                .delete_button(v-if="isOwner && inEditMode")
+              .media(v-for="(offer, index) in appliedVideoCategories", :key="index")
+                .media-content
+                  .content {{offer.description}}
+                .media-right
+                  button.button.delete(v-if="isOwner && inEditMode", @click="deleteVideoOffer(offer)")
               .horizontal_flex(v-if="isOwner")
-                .link-to-category(v-if="isOwner && inEditMode", @click="addVideoOffer") Добавить
+                .link-to-category(v-if="isOwner && inEditMode", @click="addOffer('video')") Добавить
         .info_and_avatar_block.column.is-one-quarter
           .card
             .card-image
@@ -63,7 +65,7 @@
                         div.is-size-5 {{`${offer.price}  `}}
                         div.is-size-7 РУБ
                       .card-footer-item(v-if="isOwner && inEditMode")
-                        span.icon(@click="addNewItem(offer.category)")
+                        span.icon(@click="addNewPhotoItem(offer.category)")
                           i.mdi.mdi-48px.mdi-dark.mdi-plus
                 .swiper-container.column(:data-category="offer.category")
                   .swiper-wrapper
@@ -80,12 +82,25 @@
               b-icon(:icon="openedVideos ? 'menu-down' : 'menu-up'")
           .card-content
             .content
-              .videography-block(v-for="offer in videoOffers")
-                .videography-description-block
-                  div {{offer.category}}
-                  div(style="font-size: 0.8em") {{offer.price.toFixed(0) + " РУБ/ЧАС"}}
-                  .add-new-item(v-if="isOwner && inEditMode", @click="addNewItem")
-                .slider-container       
+              .shooting-block.columns.is-gapless(v-for="offer in videoOffers")
+                .shooting-description-block.column.is-2
+                  .card.is-shadowless
+                    .card-content
+                      p {{offerDescriptionByCategory(offer.category)}}
+                    .card-footer
+                      .card-footer-item
+                        div.is-size-5 {{`${offer.price}  `}}
+                        div.is-size-7 РУБ
+                      .card-footer-item(v-if="isOwner && inEditMode")
+                        span.icon(@click="addNewVideoItem(offer.category)")
+                          i.mdi.mdi-48px.mdi-dark.mdi-plus
+                .swiper-container.column(:data-category="offer.category")
+                  .swiper-wrapper
+                    .swiper-slide.swiper-video-slide(v-for="video in videos", v-if="video.category === offer.category")
+                      plyr
+                        div.plyr-div(:data-type="video.type", :data-video-id="video.vid", :data-plyr="{ 'controls': ['play'] }")
+                  .swiper-button-prev
+                  .swiper-button-next    
   .section
     b-collapse.card.is-primary(:open.sync="openedComments")
       .card-header(slot="trigger")
@@ -108,12 +123,15 @@ import Comment from '@/components/global/comment.vue'
 import NewComment from '@/components/global/new-comment.vue'
 import InteractiveRating from '@/components/portfolio/interactive-rating';
 import Uploader from '@/components/global/uploader'
+import AddVideoForm from '@/components/global/add-video-form'
 const UploaderConstructor = Vue.component('uploader', Uploader)
+const AddVideoFormConstructor = Vue.component('add-video-form', AddVideoForm)
 import NewOffer from '@/components/portfolio/add-new-offer'
 const NewOfferConstructor = Vue.component('add-new-offer', NewOffer)
 import Swiper from 'swiper';
 import Consts from '@/consts';
 import defaultAvatar from '@/assets/images/default-avatar-space-astronaut.png'
+import fitvids from 'fitvids';
 const TAG = "Portfolio";
 const photoCategories = Consts.PHOTO_ARRAY;
 const videoCategories = Consts.VIDEO_ARRAY;
@@ -198,6 +216,9 @@ export default {
     photos(){
       return this.user.photos;
     },
+    videos(){
+      return this.user.videos;
+    },
     photoOffers(){
       return this.portfolio.photoOffers;
     },
@@ -225,7 +246,12 @@ export default {
       }
       let categories = this.videoOffers.reduce(function(prev, curr) {
         const cat = curr.category;
-        return prev.includes(cat) ? prev : [...prev, cat];
+        const obj = Consts.VIDEO_FILTERS[cat];
+        if(!obj){
+          return prev;
+        }
+        obj.category = cat; 
+        return prev.includes(obj) ? prev : [...prev, obj];
       }, []);
       return categories;
     },
@@ -255,33 +281,30 @@ export default {
         userId: this.portfolio.userId,
       })
     },
-    addPhotoOffer(){
+    addOffer(mode){
       const form = new NewOfferConstructor({
         propsData: {
-          mode: 'photo',
-          categories: this.availablePhotoCategories,
+          mode,
+          categories: mode === 'photo' ?  this.availablePhotoCategories : this.availableVideoCategories,
           portfolio_id: this.portfolio.id,
           portfolio_user_id: this.portfolio.userId,
-        }
+        },
+        parent: this,
       })
-      form.$store = this.$store
       form.$mount();
       this.showPopup(form.$el);
     },
-    addVideoOffer(){
-      this.$store.dispatch(Naming.Actions.POST_VIDEO_OFFER, {
-        portfolioId: this.portfolio.id,
-        category: this.availableVideoCategories[Math.floor(Math.random() * this.availableVideoCategories.length)],
-        price: Math.floor(Math.random() * 1000),
-        description: 'test item'
-      })
-    },
-    addNewItem(category){
-      const uploader = new UploaderConstructor();
+    addNewPhotoItem(category){
+      const uploader = new UploaderConstructor({parent: this});
       uploader.category = category;
-      uploader.$store = this.$store;
       uploader.$mount();
       this.showPopup(uploader.$el);
+    },
+    addNewVideoItem(category){
+      const form = new AddVideoFormConstructor({parent: this});
+      form.category = category;
+      form.$mount();
+      this.showPopup(form.$el);
     },
     removePhoto(id){
 
@@ -315,6 +338,7 @@ export default {
           })
         }
         clearInterval(stopper)
+        fitvids('.swiper-video-slide');
       }
     },1000)
     EventBus.$on(EventBus.Events.PHOTO_UPDATE, ({photos}) => {
@@ -776,5 +800,14 @@ span.icon
   cursor pointer
   transition 0.15s
   &:hover
-    transform scale(1.1)        
+    transform scale(1.1)
+.swiper-video-slide
+  width auto
+  max-width 360px 
+  height auto
+  min-height 100%
+.swiper-slide *
+  min-height 100%
+  height 100% !important
+
 </style>

@@ -49,14 +49,14 @@ router.post('/', passport.authenticate('jwt', { session: false }),authorizedRole
   if (!req.body) {
     res.status(500).json({msg: 'Empty Body'});
   }
-  const toAdd = JSON.parse(JSON.stringify(req.body));
-  toAdd.userId = req.user.id;
-  VideoOffer.create(toAdd)
+  req.user.createVideoOffer(req.body.offer)
     .then(offer => {
       res.json(offer);
     })
     .catch(err => {
-      res.status(500).json(err);
+      res.status(500).json({
+        message: err.message,
+      });
     });
 });
 

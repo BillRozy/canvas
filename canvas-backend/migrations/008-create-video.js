@@ -11,12 +11,18 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
       },
-      path: {
+      vid: {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      type: {
+        type: Sequelize.ENUM,
+        allowNull: false,
+        values: ['vimeo', 'youtube', 'raw'],
+      },
       category: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       userId: {
         type: Sequelize.INTEGER,
