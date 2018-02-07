@@ -40,8 +40,9 @@ export default {
         password: this.password,
         operator: this.operator,
       })
-      .then(() => {
-        this.$router.push('/greetings')
+      .then(response => {
+        /* eslint-disable no-undef */
+        process.env.NODE_ENV !== 'production' ? this.$router.push(`/confirmation/${response.data.token}`) : this.$router.push('/greetings')
         setTimeout(() => {
           this.waiting = false;
         }, 500);

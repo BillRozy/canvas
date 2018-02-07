@@ -88,6 +88,11 @@ router.post('/signup', (req, res) => {
           name: user.username,
           confirmUrl: 'http://' + req.headers.host + '/confirmation/' + token.token,
         };
+        if(process.env.NODE_ENV !== 'production') {
+          return res.status(200).json({
+            token: token.token,
+          });
+        }
         const mailOptions = {
           from: 'noreply@canvasrussia.com',
           to: user.username, subject: 'Account Verification Token',
@@ -98,7 +103,7 @@ router.post('/signup', (req, res) => {
           if (err) { return res.status(500).send({ message: err.message }); }
           console.log('Message sent: %s', info.messageId);
           Mailer.printUrl(info);
-          res.status(200).send('A verification email has been sent to ' + user.username + '.');
+          res.status(200).send('Письмо с подтверждением было послано ' + user.username + '.');
         });
       }
       // yield user.reload();
