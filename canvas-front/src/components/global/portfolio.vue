@@ -97,8 +97,8 @@
                 .swiper-container.column(:data-category="offer.category")
                   .swiper-wrapper
                     .swiper-slide.swiper-video-slide(v-for="video in videos", v-if="video.category === offer.category")
-                      plyr
-                        div.plyr-div(:data-type="video.type", :data-video-id="video.vid", :data-plyr="{ 'controls': ['play'] }")
+                      plyr(:options="{ 'controls': ['play', 'fullscreen'] }")
+                        div.plyr-div(:data-type="video.type", :data-video-id="video.vid" )
                   .swiper-button-prev
                   .swiper-button-next    
   .section

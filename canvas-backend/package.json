@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "deploy": "npm run migrate && npm run seed && npm start",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "start": "node ./bin/www",

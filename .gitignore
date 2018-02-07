@@ -8,6 +8,7 @@ canvas-front/test/unit/coverage
 
 canvas-backend/node_modules/
 canvas-backend/uploads
+canvas-backend/db/*
 
 # Editor directories and files
 .db
@@ -17,3 +18,12 @@ canvas-backend/uploads
 *.ntvs*
 *.njsproj
 *.sln
+
+
+# Elastic Beanstalk Files
+
+canvas-backend/.elasticbeanstalk/*
+
+canvas-backend/!.elasticbeanstalk/*.cfg.yml
+
+canvas-backend/!.elasticbeanstalk/*.global.yml
