@@ -19,53 +19,62 @@
     .hero-head
     .hero-body
       .container.is-widescreen
-        b-tabs(position="is-centered", v-model="activeTab", size="is-large" )
-          b-tab-item(label="О нас", @click="activeTab = 0")
-            .tab-content-wrapper.column
-              .huge-logo CANVAS
-              br
-              span.is-size-3 ОТКРЫТЫЙ КАТАЛОГ ВСЕХ ФОТОГРАФОВ И ВИДЕОГРАФОВ ГОРОДА
-          b-tab-item(label="Детали", @click="activeTab = 1")
-            .tab-content-wrapper.column
-              .level(style="width: 100%; height: 100%")
-                .level-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description Возникла потребность в фото- или видеосъемке? 
-                    img(src="~assets/images/svg/guys.svg")
-                .level-item.short-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description
-                    .divider  
-                .level-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description CANVAS может с этим помочь!
-                    img(src="~assets/images/svg/comp.svg")
-                .level-item.short-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description
-                    .divider      
-                .level-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description Выбер ценовой диапазон (включая бесплатные!) 
-                    img(src="~assets/images/svg/coin.svg")
-                .level-item.short-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description
-                    .divider      
-                .level-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description Выбери раздел, от семейной до коммерческой съемки
-                    img(src="~assets/images/svg/trees.svg")
-                .level-item.short-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description
-                    .divider  
-                .level-item
-                  .img-with-description.column(:class="{'hidden-description': noDescriptions}")
-                    .description Свяжись с понравившимся автором и проверь выбор 
-                    img(src="~assets/images/svg/paperplane.svg")     
-          b-tab-item(label="Контакты", @click="activeTab = 2")
-            .tab-content-wrapper 
+        div.tabs.is-large.is-boxed.is-centered
+          ul
+            li.about-tab-label(:class="{'is-active': activeTab === 0}", @click="selectTab(0)")
+              a
+                span О НАС
+            li.about-tab-label(:class="{'is-active': activeTab === 1}", @click="selectTab(1)")
+              a
+                span ОПИСАНИЕ
+            li.about-tab-label(:class="{'is-active': activeTab === 2}", @click="selectTab(2)")
+              a
+                span КОНТАКТЫ
+        transition-group(tag="div", class="tab-content-wrapper")
+          .tab-content.column(v-if="activeTab === 0", :key="0")    
+            .huge-logo CANVAS
+            br
+            span.is-size-3 ОТКРЫТЫЙ КАТАЛОГ ВСЕХ ФОТОГРАФОВ И ВИДЕОГРАФОВ ГОРОДА 
+          .tab-content.column(v-if="activeTab === 1", :key="1")    
+            .level(style="width: 100%; height: 100%")
+              .level-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description Возникла потребность в фото- или видеосъемке? 
+                  img(src="~assets/images/svg/guys.svg")
+              .level-item.short-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description
+                  .divider  
+              .level-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description CANVAS может с этим помочь!
+                  img(src="~assets/images/svg/comp.svg")
+              .level-item.short-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description
+                  .divider      
+              .level-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description Выбер ценовой диапазон (включая бесплатные!) 
+                  img(src="~assets/images/svg/coin.svg")
+              .level-item.short-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description
+                  .divider      
+              .level-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description Выбери раздел, от семейной до коммерческой съемки
+                  img(src="~assets/images/svg/trees.svg")
+              .level-item.short-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description
+                  .divider  
+              .level-item
+                .img-with-description.column(:class="{'hidden-description': noDescriptions}")
+                  .description Свяжись с понравившимся автором и проверь выбор 
+                  img(src="~assets/images/svg/paperplane.svg")      
+
+            .tab-content.column(v-if="activeTab === 2", :key="2")   
     .hero-foot
       .container
         .level(style="width: 100%")
@@ -89,6 +98,11 @@ export default {
       parallax: null,
       activeTab: 0,
       noDescriptions: true,
+    }
+  },
+  methods: {
+    selectTab(n) {
+      this.activeTab = n;
     }
   },
   mounted() {
@@ -270,6 +284,22 @@ export default {
       i
         transform scale(1.05)
         color pink
+
+.tabs 
+  margin-bottom 0
+  .about-tab-label
+    &:hover
+      a
+        background inherit
+        text-decoration underline
+    &.is-active
+      a
+        color black
+        border none
+        background-color rgba(255, 255, 255, 0.5)
+    a  
+      font-weight bold
+      color white     
 
 @keyframes cloud-swim 
   from 
