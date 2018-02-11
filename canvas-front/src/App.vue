@@ -54,15 +54,24 @@ export default {
   created() {
     const user = localStorage.getItem('current_user');
     if(user) {
-      const json = JSON.parse(user);
-      this.$store.commit(Naming.Mutations.SET_TOKEN, {
-        token: json.token
-      })
-      axios.defaults.headers.common.Authorization = 'Bearer ' + json.token;
-      this.$store.dispatch(Naming.Actions.USER_INFO)
-      .then(() => {
+      try {
+        const json = JSON.parse(user);
+        if (!json.token) {
+          throw new Error("Damaged JWT");
+        }
+        this.$store.commit(Naming.Mutations.SET_TOKEN, {
+          token: json.token
+        })
+        axios.defaults.headers.common.Authorization = 'Bearer ' + json.token;
+        this.$store.dispatch(Naming.Actions.USER_INFO)
+        .then(() => {
+          this.$store.commit(Naming.Mutations.SET_READY);
+        })
+      } catch(err) {
+        localStorage.removeItem('current_user');
         this.$store.commit(Naming.Mutations.SET_READY);
-      })
+      }
+
     } else {
       this.$store.commit(Naming.Mutations.SET_READY);
     }

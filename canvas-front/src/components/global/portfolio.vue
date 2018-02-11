@@ -70,7 +70,7 @@
                 .swiper-container.column(:data-category="offer.category")
                   .swiper-wrapper
                     .swiper-slide(v-for="photo in photos", v-if="photo.category === offer.category")
-                      img(:src="'/api/uploads/' + photo.path", @click="openImageInModal")
+                      img(:src="'/api/photos/' + userId + '/' + photo.path", @click="openImageInModal")
                   .swiper-button-prev
                   .swiper-button-next
 

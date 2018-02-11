@@ -10,6 +10,7 @@
     "eslint-init": "eslint init"
   },
   "dependencies": {
+    "aws-sdk": "^2.192.0",
     "bcrypt": "^1.0.3",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
@@ -29,6 +30,7 @@
     "lodash": "^4.17.4",
     "morgan": "~1.9.0",
     "multer": "^1.3.0",
+    "multer-s3": "^2.7.0",
     "nodemailer": "^4.4.2",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",

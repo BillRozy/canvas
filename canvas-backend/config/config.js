@@ -15,11 +15,10 @@ const cfg = {
     "dialect": "pg"
   },
   "production": {
-    "username": "billrozy",
-    "password": "4607020a",
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "pg"
+    "dialect": "sqlite",
+    "database": "production",
+    "logging": (msg) => Log.info(msg),
+    "storage": "./db/production.db"
   }
 };
 
